@@ -18,10 +18,10 @@ class Pouch
      * 
      * @var array
      */
-    protected static $repeatables = [];
+    protected static $replaceables = [];
 
     /**
-     * Bind a new element to the repeatables.
+     * Bind a new element to the replaceables.
      * 
      * @param  string   $key
      * @param  Callable $callback
@@ -29,33 +29,33 @@ class Pouch
      */
     public static function bind($key, Callable $callback)
     {
-        static::$repeatables[$key] = $callback();
+        static::$replaceables[$key] = $callback();
     }
 
     /**
-     * Resolve specific key from our repeatables.
+     * Resolve specific key from our replaceables.
      * 
      * @param  string $key
      * @return mixed
      */
     public static function resolve($key)
     {
-        if (!array_key_exists($key, static::$repeatables)) {
+        if (!array_key_exists($key, static::$replaceables)) {
             throw new KeyNotFoundException("The {$key} key could not be found in the container.");
         }
 
-        return static::$repeatables[$key];
+        return static::$replaceables[$key];
     }
 
     /**
-     * See if specific key exists in our repeatables.
+     * See if specific key exists in our replaceables.
      * 
      * @param  string  $key
      * @return boolean
      */
     public static function has($key)
     {
-        return array_key_exists($key, static::$repeatables);
+        return array_key_exists($key, static::$replaceables);
     }
 
     /**

@@ -29,7 +29,7 @@ class Resolvable
      * @param  mixed $element
      * @return string
      */
-    public function getAccurateType($element)
+    public function getType($element)
     {
         if (!is_object($element)) {
             return gettype($element);
@@ -61,7 +61,7 @@ class Resolvable
                     $args[$position] = new $className;
                 } elseif (isset($args[$position]) && !is_a($args[$position], $className)) {
                     throw new InvalidTypeException(
-                        'Invalid argument provided. Expected an instance of '.$className.', '.$this->getAccurateType($args[$position]).' provided.'
+                        'Invalid argument provided. Expected an instance of '.$className.', '.$this->getType($args[$position]).' provided.'
                     );
                 }
 
