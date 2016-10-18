@@ -18,7 +18,10 @@
         "phpunit/phpunit": "5.5.*"
     }, 
     "autoload": {
-        "psr-4": { "Pouch\\": "src/" }
+        "psr-4": { 
+            "Pouch\\": "src/",
+            "Dummies\\": "dummies/"
+        }
     },
     "autoload-dev": {
         "psr-4": { "Pouch\\Tests\\": "tests/" }
