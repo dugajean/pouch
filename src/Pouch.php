@@ -2,6 +2,8 @@
 
 namespace Pouch;
 
+use Pouch\Exceptions\KeyNotFoundException;
+
 class Pouch 
 {
     /**
