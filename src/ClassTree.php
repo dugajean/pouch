@@ -73,7 +73,7 @@ final class ClassTree
      */
     private static function getDefinedNamespaces()
     {
-        $composerJsonPath = self::$root . 'composer.json';
+        $composerJsonPath = self::$root.'composer.json';
         $composerConfig = json_decode(file_get_contents($composerJsonPath));
 
         $psr4 = "psr-4";
@@ -94,11 +94,11 @@ final class ClassTree
         $namespaceFragments = explode('\\', $namespace);
         $undefinedNamespaceFragments = [];
 
-        while($namespaceFragments) {
-            $possibleNamespace = implode('\\', $namespaceFragments) . '\\';
+        while ($namespaceFragments) {
+            $possibleNamespace = implode('\\', $namespaceFragments).'\\';
 
             if (array_key_exists($possibleNamespace, $composerNamespaces)) {
-                return realpath(self::$root . $composerNamespaces[$possibleNamespace] . implode('/', $undefinedNamespaceFragments));
+                return realpath(self::$root.$composerNamespaces[$possibleNamespace].implode('/', $undefinedNamespaceFragments));
             }
 
             array_unshift($undefinedNamespaceFragments, array_pop($namespaceFragments));
