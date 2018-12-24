@@ -24,7 +24,7 @@ You may register your whole `src/` folder with this package in order to enable a
 
 use Pouch\Pouch;
 
-Pouch::setRoot(__DIR__);
+Pouch::bootstrap(__DIR__);
 Pouch::registerNamespace('Foo'); // Foo corresponds to src/
 ```
 

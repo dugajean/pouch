@@ -22,6 +22,16 @@ class Pouch
     protected static $replaceables = [];
 
     /**
+     * Bootstrap pouch.
+     *
+     * @param $dir string
+     */
+    public static function bootstrap($dir)
+    {
+        ClassTree::setRoot($dir);
+    }
+
+    /**
      * Bind a new element to the replaceables.
      * 
      * @param  string   $key
@@ -49,16 +59,6 @@ class Pouch
                 return new Resolvable(new $class);
             });
         }
-    }
-
-    /**
-     * Set the application's root path.
-     *
-     * @param $dir string
-     */
-    public static function setRoot($dir)
-    {
-        ClassTree::setRoot($dir);
     }
 
     /**
