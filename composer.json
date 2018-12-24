@@ -24,7 +24,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Pouch\\Tests\\": "tests/",
+            "Pouch\\Tests\\": "tests/"
         }
     }
 }
