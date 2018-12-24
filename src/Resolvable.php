@@ -18,7 +18,7 @@ class Resolvable
      * 
      * @param mixed $object
      */
-    public function __construct($object)
+    public function __construct(object $object)
     {
         $this->object = $object;
     }
