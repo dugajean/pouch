@@ -61,19 +61,18 @@ class Resolvable
         $params = $r->getParameters();
 
         foreach ($params as $param) {
+            $pos = $param->getPosition();
             if (is_object($param->getClass())) {
                 $className = $param->getClass()->name;
-                $position  = $param->getPosition();
-
                 if (Pouch::has($className)) {
                     $content = Pouch::resolve($className);
                     $content = is_a($content, self::class) ? $content->getObject() : $content;
-                    $args[$position] = $content;
-                } elseif (!isset($args[$position])) {
-                    $args[$position] = new $className;
-                } elseif (isset($args[$position]) && !is_a($args[$position], $className)) {
+                    $args[$pos] = $content;
+                } elseif (!isset($args[$pos])) {
+                    $args[$pos] = new $className;
+                } elseif (isset($args[$pos]) && !is_a($args[$pos], $className)) {
                     throw new InvalidTypeException(
-                        'Invalid argument provided. Expected an instance of '.$className.', '.$this->getType($args[$position]).' provided.'
+                        'Invalid argument provided. Expected an instance of '.$className.', '.$this->getType($args[$pos]).' provided.'
                     );
                 }
             }
