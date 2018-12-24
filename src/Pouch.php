@@ -2,6 +2,7 @@
 
 namespace Pouch;
 
+use HaydenPierce\ClassFinder;
 use Pouch\Exceptions\KeyNotFoundException;
 
 class Pouch 
@@ -25,6 +26,7 @@ class Pouch
      * 
      * @param  string   $key
      * @param  Callable $callback
+     * 
      * @return void
      */
     public static function bind($key, Callable $callback)
@@ -33,9 +35,37 @@ class Pouch
     }
 
     /**
+     * Register a namespace for automatic resolution.
+     *
+     * @param $namespace string
+     */
+    public static function registerNamespace($namespace)
+    {
+        $classes = ClassTree::getClassesInNamespace($namespace);
+
+        foreach ($classes as $class)
+        {
+            self::bind($class, function () use ($class) {
+                return new Resolvable(new $class);
+            });
+        }
+    }
+
+    /**
+     * Set the application's root path.
+     *
+     * @param $dir string
+     */
+    public static function setRoot($dir)
+    {
+        ClassTree::setRoot($dir);
+    }
+
+    /**
      * Resolve specific key from our replaceables.
      * 
      * @param  string $key
+     * 
      * @return mixed
      */
     public static function resolve($key)
@@ -51,6 +81,7 @@ class Pouch
      * See if specific key exists in our replaceables.
      * 
      * @param  string  $key
+     * 
      * @return boolean
      */
     public static function has($key)
@@ -63,6 +94,7 @@ class Pouch
      * 
      * @param  string $key
      * @param  Callable|null $callback
+     * 
      * @return mixed|void
      */
     public static function singleton($key, Callable $callback = null)
@@ -71,6 +103,6 @@ class Pouch
             return static::$singletons[$key];
         }
 
-        $this->singleton[$key] = $callback();
+        static::$singleton[$key] = $callback();
     }
 }

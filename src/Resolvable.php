@@ -24,6 +24,16 @@ class Resolvable
     }
 
     /**
+     * Return the current object of this instance.
+     *
+     * @return mixed
+     */
+    public function getObject()
+    {
+        return $this->object;
+    }
+
+    /**
      * Get the type of an "element" accurately. If it's an object, the exact class name will be returned.
      * 
      * @param  mixed $element
@@ -56,7 +66,9 @@ class Resolvable
                 $position  = $param->getPosition();
 
                 if (Pouch::has($className)) {
-                    $args[$position] = Pouch::resolve($className);
+                    $content = Pouch::resolve($className);
+                    $content = is_a($content, self::class) ? $content->getObject() : $content;
+                    $args[$position] = $content;
                 } elseif (!isset($args[$position])) {
                     $args[$position] = new $className;
                 } elseif (isset($args[$position]) && !is_a($args[$position], $className)) {
@@ -64,8 +76,6 @@ class Resolvable
                         'Invalid argument provided. Expected an instance of '.$className.', '.$this->getType($args[$position]).' provided.'
                     );
                 }
-
-                break;
             }
         }
 
