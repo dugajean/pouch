@@ -22,7 +22,7 @@ final class ClassTree
      */
     public static function setRoot($dir)
     {
-        self::$root = $dir . '/';
+        self::$root = $dir.'/';
     }
 
     /**
@@ -90,8 +90,8 @@ final class ClassTree
     private static function getNamespaceDirectory($namespace)
     {
         $composerNamespaces = self::getDefinedNamespaces();
-
         $namespaceFragments = explode('\\', $namespace);
+
         $undefinedNamespaceFragments = [];
 
         while ($namespaceFragments) {

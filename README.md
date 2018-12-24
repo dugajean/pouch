@@ -3,7 +3,7 @@ Tiny IoC Container with automatic resolution for your PHP project.
 
 ## Requirements
 
-- PHP 7.2
+- PHP 5.6
 - `ext-json`
 - The use of the PSR-4 standard with Composer
 

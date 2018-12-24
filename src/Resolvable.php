@@ -18,8 +18,12 @@ class Resolvable
      * 
      * @param mixed $object
      */
-    public function __construct(object $object)
+    public function __construct($object)
     {
+        if (!is_object($object)) {
+            new InvalidTypeException('The provided value is not an object.');
+        }
+
         $this->object = $object;
     }
 
