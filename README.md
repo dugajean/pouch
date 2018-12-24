@@ -25,7 +25,7 @@ You may register your whole `src/` folder with this package in order to enable a
 use Pouch\Pouch;
 
 Pouch::bootstrap(__DIR__);
-Pouch::registerNamespace('Foo'); // Foo corresponds to src/
+Pouch::registerNamespaces(['Foo']); // Foo corresponds to src/
 ```
 
 You may now just typehint to the objects your method requires and it will be automatically resolved for you.

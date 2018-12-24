@@ -46,17 +46,18 @@ class Pouch
     /**
      * Register a namespace for automatic resolution.
      *
-     * @param $namespace string
+     * @param $namespaces array
      */
-    public static function registerNamespace($namespace)
+    public static function registerNamespaces(array $namespaces)
     {
-        $classes = ClassTree::getClassesInNamespace($namespace);
-
-        foreach ($classes as $class)
-        {
-            self::bind($class, function () use ($class) {
-                return new Resolvable(new $class);
-            });
+        foreach ($namespaces as $namespace) {
+            $classes = ClassTree::getClassesInNamespace($namespace);
+            foreach ($classes as $class)
+            {
+                self::bind($class, function () use ($class) {
+                    return new Resolvable(new $class);
+                });
+            }
         }
     }
 
