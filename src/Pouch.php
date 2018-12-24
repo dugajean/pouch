@@ -2,7 +2,6 @@
 
 namespace Pouch;
 
-use HaydenPierce\ClassFinder;
 use Pouch\Exceptions\KeyNotFoundException;
 
 class Pouch 
