@@ -10,8 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Functionality to store data in an IoC container
 - Ability to retrieve data from the container
-- Register a namespace recursively for own application.
-- Ability to use typehints to fetch new instances of any data within your app, including dependencies.
+- Register a namespace recursively for own application
+- Ability to use typehints to fetch new instances of any data within your app, including dependencies
 
 ### Fixed
 - Inability to have more than one dependency injected through a parameter
