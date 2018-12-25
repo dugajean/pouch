@@ -2,6 +2,7 @@
 
 namespace Pouch;
 
+use Pouch\Exceptions\InvalidTypeException;
 use Pouch\Exceptions\KeyNotFoundException;
 
 class Pouch 
@@ -47,17 +48,36 @@ class Pouch
      * Register a namespace for automatic resolution.
      *
      * @param $namespaces array
+     *
+     * @throws \Pouch\Exceptions\InvalidTypeException
      */
-    public static function registerNamespaces(array $namespaces)
+    public static function registerNamespaces(array $namespaces, array $hooks = [])
     {
         foreach ($namespaces as $namespace) {
             $classes = ClassTree::getClassesInNamespace($namespace);
-            foreach ($classes as $class)
-            {
-                self::bind($class, function () use ($class) {
-                    return new Resolvable(new $class);
+
+            foreach ($classes as $class) {
+                $$class = null;
+                $resolvable = new Resolvable;
+
+                foreach ($hooks as $hookName => $callback) {
+                    $result = $callback($resolvable);
+                    if (!$result instanceof Resolvable) {
+                        throw new InvalidTypeException('The hook must return an instance of '.Resolvable::class);
+                    }
+
+                    if ($hookName == $class) {
+                        $$class = $result;
+                    }
+                }
+
+                $hookContent = $$class;
+                self::bind($class, function () use ($class, $resolvable, $hookContent) {
+                    return $hookContent !== null && $hookContent instanceof Resolvable ?
+                        $hookContent :
+                        $resolvable->make(new $class);
                 });
-            }
+            };
         }
     }
 
@@ -71,7 +91,7 @@ class Pouch
     public static function resolve($key)
     {
         if (!array_key_exists($key, static::$replaceables)) {
-            throw new KeyNotFoundException("The {$key} key could not be found in the container.");
+            throw new KeyNotFoundException("The {$key} key could not be found in the container");
         }
 
         return static::$replaceables[$key];

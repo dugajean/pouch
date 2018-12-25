@@ -18,13 +18,27 @@ class Resolvable
      * 
      * @param mixed $object
      */
-    public function __construct($object)
+    public function __construct($object = null)
+    {
+        $this->make($object);
+    }
+
+    /**
+     * Set the object for the resolvable.
+     *
+     * @param mixed $object
+     *
+     * @return $this
+     */
+    public function make($object)
     {
         if (!is_object($object)) {
-            new InvalidTypeException('The provided value is not an object.');
+            new InvalidTypeException('The provided value is not an object');
         }
 
         $this->object = $object;
+
+        return $this;
     }
 
     /**
@@ -41,15 +55,12 @@ class Resolvable
      * Get the type of an "element" accurately. If it's an object, the exact class name will be returned.
      * 
      * @param  mixed $element
+     *
      * @return string
      */
     public function getType($element)
     {
-        if (!is_object($element)) {
-            return gettype($element);
-        } else {
-            return get_class($element);
-        }
+        return is_object($element) ? get_class($element) : gettype($element);
     }
 
     /**
@@ -57,6 +68,7 @@ class Resolvable
      * 
      * @param  string $method
      * @param  array $args
+     *
      * @return void
      */
     public function __call($method, array $args)
@@ -69,14 +81,15 @@ class Resolvable
             if (is_object($param->getClass())) {
                 $className = $param->getClass()->name;
                 if (Pouch::has($className)) {
+                    $selfName = self::class;
                     $content = Pouch::resolve($className);
-                    $content = is_a($content, self::class) ? $content->getObject() : $content;
+                    $content = $content instanceof $selfName ? $content->getObject() : $content;
                     $args[$pos] = $content;
                 } elseif (!isset($args[$pos])) {
                     $args[$pos] = new $className;
-                } elseif (isset($args[$pos]) && !is_a($args[$pos], $className)) {
+                } elseif (isset($args[$pos]) && !$args[$pos] instanceof $className) {
                     throw new InvalidTypeException(
-                        'Invalid argument provided. Expected an instance of '.$className.', '.$this->getType($args[$pos]).' provided.'
+                        'Invalid argument provided. Expected an instance of '.$className.', '.$this->getType($args[$pos]).' provided'
                     );
                 }
             }
