@@ -54,7 +54,7 @@ class Baz
 
 --------
 
-If some classes within the namespace need parameters and further setup (such as a constructor), you should provide a second parameter to `Pouch::registerNamespaces`, which allows you to override the anything that's about to be created automatically.
+If some classes within the namespace need parameters and further setup (such as a constructor), you should provide a second parameter to `Pouch::registerNamespaces`, which allows you to override anything that's about to be created automatically.
 
 ```php
 <?php
@@ -101,11 +101,11 @@ class Baz
 }
 ```
 
-Now all `Baz` instances will be valid and any time it's seeked via a parameter, the instance with the name _Baz Name_ will be provided.
+Now all `Baz` instances will be valid and any time it's seeked via a parameter the instance with the name _Baz Name_ will be provided.
 
 --------
 
-Constructor arguments will also be automatically injected, unless manually overrided.
+Constructor object arguments will also be automatically injected, unless manually overrided like above.
 
 You can always manually bind data to the container using `Pouch::bind($key, $dataClosure)` and also resolve anything from the container using `Pouch::resolve($key)`.
 
