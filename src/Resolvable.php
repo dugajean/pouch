@@ -20,11 +20,13 @@ class Resolvable
      */
     public function __construct($object = null)
     {
-        $this->make($object);
+        if ($object !== null) {
+            $this->make($object);
+        }
     }
 
     /**
-     * Set the object for the resolvable.
+     * Set the object for the resolvable. Also resolve constructor dependencies if needed.
      *
      * @param mixed $object
      *
@@ -32,11 +34,19 @@ class Resolvable
      */
     public function make($object)
     {
-        if (!is_object($object)) {
-            new InvalidTypeException('The provided value is not an object');
+        if (!is_object($object) && !is_string($object) && !class_exists($object)) {
+            throw new InvalidTypeException('Invalid type provided. Must be either an object or a string with a valid class name');
         }
 
-        $this->object = $object;
+        if (is_object($object)) {
+            $this->object = $object;
+        } elseif (is_string($object)) {
+            $construct = (new \ReflectionClass($object))->getConstructor();
+            $constructParams = $construct ? $construct->getParameters() : [];
+            $dependencies = $this->resolveDependencies($constructParams);
+
+            $this->object = new $object(...$dependencies);
+        }
 
         return $this;
     }
@@ -76,6 +86,24 @@ class Resolvable
         $r = new \ReflectionMethod(get_class($this->object), $method);
         $params = $r->getParameters();
 
+        $dependencies = $this->resolveDependencies($params, $args);
+
+        $this->object->$method(...$dependencies);
+    }
+
+    /**
+     * Resolve the dependency for a parameter.
+     *
+     * @param array $param
+     * @param array $args
+     *
+     * @return array
+     *
+     * @throws \Pouch\Exceptions\InvalidTypeException
+     * @throws \Pouch\Exceptions\KeyNotFoundException
+     */
+    protected function resolveDependencies(array $params, array $args = [])
+    {
         foreach ($params as $param) {
             $pos = $param->getPosition();
             if (is_object($param->getClass())) {
@@ -89,12 +117,12 @@ class Resolvable
                     $args[$pos] = new $className;
                 } elseif (isset($args[$pos]) && !$args[$pos] instanceof $className) {
                     throw new InvalidTypeException(
-                        'Invalid argument provided. Expected an instance of '.$className.', '.$this->getType($args[$pos]).' provided'
+                        'Invalid argument provided. Expected an instance of ' . $className . ', ' . $this->getType($args[$pos]) . ' provided'
                     );
                 }
             }
         }
 
-        $this->object->$method(...$args);
+        return $args;
     }
 }
