@@ -1,4 +1,10 @@
 # Pouch
+
+[![Build Status](https://travis-ci.org/dugajean/pouch.svg?branch=master)](https://travis-ci.org/dugajean/pouch) 
+[![Latest Stable Version](https://poser.pugx.org/dugajean/pouch/v/stable)](https://packagist.org/packages/dugajean/pouch) 
+[![Total Downloads](https://poser.pugx.org/dugajean/pouch/downloads)](https://packagist.org/packages/dugajean/pouch) 
+[![License](https://poser.pugx.org/dugajean/pouch/license)](https://packagist.org/packages/dugajean/pouch) 
+
 Tiny IoC Container with automatic resolution for your PHP project.
 
 ## Requirements
