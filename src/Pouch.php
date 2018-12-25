@@ -47,14 +47,14 @@ class Pouch
     /**
      * Register a namespace for automatic resolution.
      *
-     * @param array $namespaces
+     * @param array|string $namespaces
      * @param array $overriders
      *
      * @throws \Pouch\Exceptions\InvalidTypeException
      */
-    public static function registerNamespaces(array $namespaces, array $overriders = [])
+    public static function registerNamespaces($namespaces, array $overriders = [])
     {
-        foreach ($namespaces as $namespace) {
+        foreach ((array)$namespaces as $namespace) {
             $classes = ClassTree::getClassesInNamespace($namespace);
 
             foreach ($classes as $class) {
@@ -62,13 +62,13 @@ class Pouch
                 $resolvable = new Resolvable;
 
                 foreach ($overriders as $replacerName => $callback) {
-                    $result = $callback($resolvable);
-                    if (!$result instanceof Resolvable) {
-                        throw new InvalidTypeException('The hook must return an instance of '.Resolvable::class);
+                    $result = $callback();
+                    if (!is_object($result)) {
+                        throw new InvalidTypeException('The overrider must return an object');
                     }
 
                     if ($class == $replacerName) {
-                        $$class = $result;
+                        $$class = $resolvable->make($result);
                     }
                 }
 

@@ -83,8 +83,7 @@ class Resolvable
      */
     public function __call($method, array $args)
     {
-        $r = new \ReflectionMethod(get_class($this->object), $method);
-        $params = $r->getParameters();
+        $params = (new \ReflectionMethod(get_class($this->object), $method))->getParameters();
 
         $dependencies = $this->resolveDependencies($params, $args);
 
@@ -102,12 +101,14 @@ class Resolvable
      * @throws \Pouch\Exceptions\InvalidTypeException
      * @throws \Pouch\Exceptions\KeyNotFoundException
      */
-    protected function resolveDependencies(array $params, array $args = [])
+    protected function resolveDependencies($params, array $args = [])
     {
-        foreach ($params as $param) {
+        foreach ((array)$params as $param) {
             $pos = $param->getPosition();
+
             if (is_object($param->getClass())) {
                 $className = $param->getClass()->name;
+
                 if (Pouch::has($className)) {
                     $selfName = self::class;
                     $content = Pouch::resolve($className);
