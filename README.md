@@ -17,7 +17,7 @@ $ composer require dugajean/pouch
 
 ## Usage
 
-You may register your whole `src/` folder with this package in order to enable automatic resolution anywhere:
+You may register your whole `src/` folder with this package in order to enable automatic resolution everywhere within the namespace
 
 ```php
 <?php
@@ -25,7 +25,7 @@ You may register your whole `src/` folder with this package in order to enable a
 use Pouch\Pouch;
 
 Pouch::bootstrap(__DIR__);
-Pouch::registerNamespaces(['Foo']); // Foo corresponds to src/
+Pouch::registerNamespaces('Foo'); // Foo corresponds to src/
 ```
 
 You may now just typehint to the objects your method requires and it will be automatically resolved for you.
@@ -52,7 +52,62 @@ class Baz
 }
 ```
 
-You may also manually bind data to the container using `Pouch::bind()` and also resolve anything from the container using `Pouch::resolve($key)`.
+--------
+
+If some classes within the namespace need parameters and further setup (such as a constructor), you should provide a second parameter to `Pouch::registerNamespaces`, which allows you to override the anything that's about to be created automatically.
+
+```php
+<?php
+
+use Foo\Baz;
+use Pouch\Pouch;
+
+Pouch::bootstrap(__DIR__);
+Pouch::registerNamespaces('Foo', [
+    Baz::class => function () {
+        return Baz('Baz Name');
+    }
+]);
+```
+
+```php
+<?php
+
+namespace Foo;
+
+class Bar
+{
+    public function doSomething(Baz $baz)
+    {
+        $baz->doSomethingElse();
+        
+        echo $baz->name;
+    }
+}
+
+class Baz
+{
+    public $name;
+    
+    public function __construct($name) 
+    {
+        $this->name = $name;
+    }
+    
+    public function doSomethingElse()
+    {
+        echo 'From Baz!';
+    }
+}
+```
+
+Now all `Baz` instances will be valid and any time it's seeked via a parameter, the instance with the name _Baz Name_ will be provided.
+
+--------
+
+Constructor arguments will also be automatically injected, unless manually overrided.
+
+You can always manually bind data to the container using `Pouch::bind($key, $dataClosure)` and also resolve anything from the container using `Pouch::resolve($key)`.
 
 ## Testing
 
