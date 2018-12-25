@@ -74,9 +74,7 @@ class Pouch
 
                 $replacedContent = &$$class;
                 self::bind($class, function () use ($class, $resolvable, $replacedContent) {
-                    return $replacedContent !== null && $replacedContent instanceof Resolvable ?
-                        $replacedContent :
-                        $resolvable->make($class);
+                    return $replacedContent !== null ? $replacedContent : $resolvable->make($class);
                 });
             };
         }
