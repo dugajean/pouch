@@ -3,10 +3,7 @@
 namespace Pouch\Tests\Unit;
 
 use Pouch\Pouch;
-use Pouch\Tests\Data\Bar;
-use Pouch\Tests\Data\Foo;
 use Pouch\Tests\TestCase;
-use Pouch\Tests\Data\Sub\Baz;
 use Pouch\Exceptions\InvalidTypeException;
 use Pouch\Exceptions\KeyNotFoundException;
 
@@ -60,23 +57,5 @@ class PouchTest extends TestCase
 
         $this->assertTrue(Pouch::has('5'));
         $this->assertEquals('FooString', Pouch::resolve('5'));
-    }
-
-    public function test_registering_namespace()
-    {
-        Pouch::registerNamespaces('Pouch\Tests\Data');
-
-        $this->assertTrue(Pouch::has(Foo::class));
-        $this->assertTrue(Pouch::has(Bar::class));
-        $this->assertTrue(Pouch::has(Baz::class));
-    }
-    
-    public function test_automatic_injection_in_foo_class()
-    {
-        Pouch::registerNamespaces('Pouch\Tests\Data');
-
-        $foo = Pouch::resolve(Foo::class);
-
-        $this->assertEquals('FooFunc1BarFunc1BazFunc1', $foo->fooFunc1());
     }
 }

@@ -5,6 +5,7 @@ namespace Pouch;
 use RegexIterator;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
+use Pouch\Exceptions\NamespaceNotFoundException;
 
 final class ClassTree
 {
@@ -53,6 +54,10 @@ final class ClassTree
     {
         $path = self::getNamespaceDirectory($namespace);
         $fqcns = [];
+
+        if ($path === null) {
+            throw new NamespaceNotFoundException('This namespace cannot be found or is not registered in composer.json');
+        }
 
         $allFiles = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
         $phpFiles = new RegexIterator($allFiles, '/\.php$/');
