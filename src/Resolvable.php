@@ -2,6 +2,7 @@
 
 namespace Pouch;
 
+use Pouch\Exceptions\ClassNotFoundException;
 use Pouch\Exceptions\InvalidTypeException;
 use Pouch\Exceptions\MethodNotFoundException;
 
@@ -120,8 +121,27 @@ class Resolvable
         foreach ((array)$params as $param) {
             $pos = $param->getPosition();
 
-            if (is_object($param->getClass())) {
-                $className = $param->getClass()->name;
+            try {
+                $class = $param->getClass();
+            } catch (\ReflectionException $e) {
+                $className = explode(' ', $e->getMessage())[1];
+                if (Pouch::has($className)) {
+                    $anonymousClass = new class ($className) {
+                        public $name;
+                        public function __construct($name) {
+                            $this->name = $name;
+                        }
+                    };
+                    
+                    class_alias(get_class($anonymousClass), $className);
+                    $class = new $className($className);
+                } else {
+                    throw new ClassNotFoundException("Cannot inject class {$className} as it does not appear to exist");
+                }
+            }
+
+            if (is_object($class)) {
+                $className = $class->name;
 
                 if (Pouch::has($className)) {
                     $selfName = self::class;

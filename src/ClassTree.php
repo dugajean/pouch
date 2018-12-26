@@ -27,7 +27,11 @@ final class ClassTree
      */
     public static function setRoot($dir)
     {
-        self::$root = $dir.'/';
+        self::$root = $dir;
+
+        if (substr($dir, -strlen('/')) !== '/') {
+            self::$root .= '/';
+        }
     }
 
     /**
