@@ -13,4 +13,9 @@ class Foo
 
         return "FooFunc1{$barStr}{$bazStr}";
     }
+
+    public function simpleMethod()
+    {
+        return 'simpleMethod';
+    }
 }

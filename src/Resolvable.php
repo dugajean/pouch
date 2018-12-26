@@ -3,6 +3,7 @@
 namespace Pouch;
 
 use Pouch\Exceptions\InvalidTypeException;
+use Pouch\Exceptions\MethodNotFoundException;
 
 class Resolvable
 {
@@ -34,8 +35,14 @@ class Resolvable
      */
     public function make($object)
     {
-        if (!is_object($object) && !is_string($object) && !class_exists($object)) {
-            throw new InvalidTypeException('Invalid type provided. Must be either an object or a string with a valid class name');
+        $expMsg = 'Invalid type provided. Must be either an object or a string with a valid class name';
+
+        if (!is_object($object) && !is_string($object)) {
+            throw new InvalidTypeException($expMsg);
+        }
+
+        if (is_string($object) && !class_exists($object)) {
+            throw new InvalidTypeException($expMsg);
         }
 
         if (is_object($object)) {
@@ -68,8 +75,10 @@ class Resolvable
      *
      * @return string
      */
-    public function getType($element)
+    public function getType($element = null)
     {
+        $element = $element !== null ? $element : $this->getObject();
+
         return is_object($element) ? get_class($element) : gettype($element);
     }
 
@@ -83,7 +92,12 @@ class Resolvable
      */
     public function __call($method, array $args)
     {
-        $params = (new \ReflectionMethod(get_class($this->object), $method))->getParameters();
+        try {
+            $params = (new \ReflectionMethod(get_class($this->object), $method))->getParameters();
+        } catch (\ReflectionException $e) {
+            $currentClass = get_class($this->object);
+            throw new MethodNotFoundException("Cannot find method '{$method}' in {$currentClass}");
+        }
 
         $dependencies = $this->resolveDependencies($params, $args);
 

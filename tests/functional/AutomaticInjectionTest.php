@@ -27,4 +27,14 @@ class AutomaticInjectionTest extends TestCase
 
         $this->assertEquals('FooFunc1BarFunc1BazFunc1', $foo->fooFunc1());
     }
+
+    public function test_automatic_injection_in_foo_constructor()
+    {
+
+    }
+
+    public function test_providing_parameters_to_autoinject_class()
+    {
+
+    }
 }
