@@ -124,20 +124,7 @@ class Resolvable
             try {
                 $class = $param->getClass();
             } catch (\ReflectionException $e) {
-                $className = explode(' ', $e->getMessage())[1];
-                if (Pouch::has($className)) {
-                    $anonymousClass = new class ($className) {
-                        public $name;
-                        public function __construct($name) {
-                            $this->name = $name;
-                        }
-                    };
-                    
-                    class_alias(get_class($anonymousClass), $className);
-                    $class = new $className($className);
-                } else {
-                    throw new ClassNotFoundException("Cannot inject class {$className} as it does not appear to exist");
-                }
+                $class = $this->createClassDependency($e->getMessage());
             }
 
             if (is_object($class)) {
@@ -159,5 +146,40 @@ class Resolvable
         }
 
         return $args;
+    }
+
+    /**
+     * Creates missing class if it can be found in the container.
+     *
+     * @param $rawClassName
+     *
+     * @return mixed
+     *
+     * @throws \Pouch\Exceptions\ClassNotFoundException
+     */
+    public function createClassDependency($rawClassName)
+    {
+        $className = explode(' ', $rawClassName)[1];
+
+        if (!Pouch::has($className)) {
+            throw new ClassNotFoundException("Cannot inject class {$className} as it does not appear to exist");
+        }
+
+        $content = Pouch::resolve($className);
+        $anonymousClass = new class ($className, $content) {
+            public $name, $content;
+            public function __construct($name, $content) {
+                $this->name = $name;
+                $this->content = $content;
+            }
+            public function getContent(){
+                return $this->content;
+            }
+        };
+
+        class_alias(get_class($anonymousClass), $className);
+        Pouch::bind($className, $anonymousClass);
+
+        return new $className($className, $content);
     }
 }
