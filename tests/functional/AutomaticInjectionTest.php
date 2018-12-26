@@ -23,18 +23,19 @@ class AutomaticInjectionTest extends TestCase
     {
         Pouch::registerNamespaces('Pouch\Tests\Data');
 
-        $foo = Pouch::resolve(Foo::class);
+        $fooObject = new Foo;
+        $fooResolvable = Pouch::resolve(Foo::class);
 
-        $this->assertEquals('FooFunc1BarFunc1BazFunc1', $foo->fooFunc1());
+        $this->assertEquals($fooObject->fooFunc1(new Bar, new Baz), $fooResolvable->fooFunc1());
     }
 
     public function test_automatic_injection_in_foo_constructor()
     {
+        Pouch::registerNamespaces('Pouch\Tests\Data');
 
-    }
+        $fooObject = new Foo(new Bar);
+        $fooResolvable = Pouch::resolve(Foo::class);
 
-    public function test_providing_parameters_to_autoinject_class()
-    {
-
+        $this->assertEquals($fooObject->testConstructor(), $fooResolvable->testConstructor());
     }
 }

@@ -6,6 +6,18 @@ use Pouch\Tests\Data\Sub\Baz;
 
 class Foo
 {
+    private $bar;
+
+    public function __construct(Bar $bar = null)
+    {
+        $this->bar = $bar;
+    }
+
+    public function testConstructor()
+    {
+        return 'FromFoo:'.$this->bar->barFunc1();
+    }
+
     public function fooFunc1(Bar $bar, Baz $baz)
     {
         $barStr = $bar->barFunc1();
