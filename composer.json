@@ -16,9 +16,12 @@
     },
     "require-dev": {
         "phpunit/phpunit": "5.5.*"
-    }, 
+    },
     "autoload": {
-        "psr-4": { 
+        "files": [
+            "src/Helpers/functions.php"
+        ],
+        "psr-4": {
             "Pouch\\": "src/"
         }
     },
