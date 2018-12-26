@@ -33,6 +33,8 @@ class Resolvable
      * @param mixed $object
      *
      * @return $this
+     *
+     * @throws \Pouch\Exceptions\InvalidTypeException
      */
     public function make($object)
     {
@@ -90,6 +92,8 @@ class Resolvable
      * @param  array $args
      *
      * @return void
+     *
+     * @throws \Pouch\Exceptions\MethodNotFoundException
      */
     public function __call($method, array $args)
     {
@@ -115,6 +119,7 @@ class Resolvable
      *
      * @throws \Pouch\Exceptions\InvalidTypeException
      * @throws \Pouch\Exceptions\KeyNotFoundException
+     * @throws \Pouch\Exceptions\ClassNotFoundException
      */
     protected function resolveDependencies($params, array $args = [])
     {
@@ -157,9 +162,13 @@ class Resolvable
      *
      * @throws \Pouch\Exceptions\ClassNotFoundException
      */
-    public function createClassDependency($rawClassName)
+    protected function createClassDependency($rawClassName)
     {
         $className = explode(' ', $rawClassName)[1];
+
+        if (strpos($className, 'Pouch\\') !== false) {
+            $className = str_replace('Pouch\\', '', $className);
+        }
 
         if (!Pouch::has($className)) {
             throw new ClassNotFoundException("Cannot inject class {$className} as it does not appear to exist");
@@ -177,9 +186,9 @@ class Resolvable
             }
         };
 
-        class_alias(get_class($anonymousClass), $className);
+        class_alias(get_class($anonymousClass), "\\Pouch\\$className");
         Pouch::bind($className, $anonymousClass);
 
-        return new $className($className, $content);
+        return $anonymousClass;
     }
 }
