@@ -11,7 +11,7 @@ Tiny IoC Container with automatic resolution for your PHP project.
 
 - PHP 5.6
 - `ext-json`
-- The use of the PSR-4 standard with Composer
+- [PSR-4 standard with Composer](https://getcomposer.org/doc/04-schema.md#psr-4)
 
 ## Install
 
