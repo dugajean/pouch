@@ -58,23 +58,16 @@ class Pouch
             $classes = ClassTree::getClassesInNamespace($namespace);
 
             foreach ($classes as $class) {
-                $$class = null;
+                $newContent = null;
                 $resolvable = new Resolvable;
 
-                foreach ($overriders as $replacerName => $callback) {
-                    $result = $callback();
-                    if (!is_object($result)) {
-                        throw new InvalidTypeException('The overrider must return an object');
-                    }
-
-                    if ($class == $replacerName) {
-                        $$class = $resolvable->make($result);
-                    }
+                if (in_array($class, array_keys($overriders))) {
+                    $overrider = is_callable($overriders[$class]) ? $overriders[$class]() : $overriders[$class];
+                    $newContent = $resolvable->make($overrider);
                 }
 
-                $replacedContent = &$$class;
-                self::bind($class, function () use ($class, $resolvable, $replacedContent) {
-                    return $replacedContent !== null ? $replacedContent : $resolvable->make($class);
+                self::bind($class, function () use ($class, $resolvable, $newContent) {
+                    return $newContent !== null ? $newContent : $resolvable->make($class);
                 });
             };
         }
