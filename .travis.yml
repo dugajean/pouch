@@ -1,0 +1,30 @@
+language: php
+
+env: # important!
+
+matrix:
+  fast_finish: true
+  include:
+    - php: nightly
+    - php: 7.3
+    - php: 7.2
+    - php: 7.1
+    - php: 7.0
+  allow_failures:
+  - php: nightly
+
+cache:
+  directories:
+    - vendor
+    - $HOME/.composer/cache
+
+branches:
+  only:
+    - master
+
+before_install:
+  - phpenv config-rm xdebug.ini || true
+  - composer self-update
+
+install:
+  - composer install

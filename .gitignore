@@ -1,3 +1,4 @@
 vendor/
 dummies/
 index.php
+composer.lock
