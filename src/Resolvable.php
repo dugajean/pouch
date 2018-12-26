@@ -87,7 +87,7 @@ class Resolvable
 
         $dependencies = $this->resolveDependencies($params, $args);
 
-        $this->object->$method(...$dependencies);
+        return $this->object->$method(...$dependencies);
     }
 
     /**

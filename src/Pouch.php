@@ -34,14 +34,14 @@ class Pouch
     /**
      * Bind a new element to the replaceables.
      * 
-     * @param  string   $key
-     * @param  Callable $callback
+     * @param  string $key
+     * @param  mixed  $data
      * 
      * @return void
      */
-    public static function bind($key, Callable $callback)
+    public static function bind($key, $data)
     {
-        static::$replaceables[$key] = $callback();
+        static::$replaceables[(string)$key] = is_callable($data) ? $data() : $data;
     }
 
     /**
@@ -89,6 +89,10 @@ class Pouch
      */
     public static function resolve($key)
     {
+        if (!is_string($key)) {
+            throw new InvalidTypeException('The key must be a string');
+        }
+
         if (!array_key_exists($key, static::$replaceables)) {
             throw new KeyNotFoundException("The {$key} key could not be found in the container");
         }

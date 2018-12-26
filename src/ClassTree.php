@@ -16,6 +16,13 @@ final class ClassTree
     private static $root;
 
     /**
+     * Include autoload-dev in results.
+     *
+     * @var bool
+     */
+    private static $includeDev = false;
+
+    /**
      * Set the application's root.
      *
      * @param $dir string
@@ -23,6 +30,16 @@ final class ClassTree
     public static function setRoot($dir)
     {
         self::$root = $dir.'/';
+    }
+
+    /**
+     * Include autoload-dev in the results or not.
+     *
+     * @param bool $load
+     */
+    public static function loadDev($load = false)
+    {
+        self::$includeDev = $load;
     }
 
     /**
@@ -77,7 +94,15 @@ final class ClassTree
         $composerConfig = json_decode(file_get_contents($composerJsonPath));
 
         $psr4 = "psr-4";
-        return (array) $composerConfig->autoload->$psr4;
+        $autoload = (array)$composerConfig->autoload->$psr4;
+
+        if (self::$includeDev) {
+            $composerKey = 'autoload-dev';
+            $autoloadDev = (array)$composerConfig->$composerKey->$psr4;
+            $autoload = array_merge($autoload, $autoloadDev);
+        }
+
+        return $autoload;
     }
 
     /**

@@ -2,9 +2,17 @@
 
 namespace Pouch\Tests;
 
+use Pouch\Pouch;
+use Pouch\ClassTree;
 use PHPUnit\Framework\TestCase as PhpUnitTestCase;
 
-class TestCase extends PhpUnitTestCase
+abstract class TestCase extends PhpUnitTestCase
 {
-    // Wire everything up...
+    protected function setUp()
+    {
+        parent::setUp();
+
+        Pouch::bootstrap(__DIR__.'/..');
+        ClassTree::loadDev(true);
+    }
 }
