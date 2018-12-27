@@ -5,8 +5,7 @@ namespace Pouch\Tests\Unit;
 use Pouch\Resolvable;
 use Pouch\Tests\TestCase;
 use Pouch\Tests\Data\Foo;
-use Pouch\Exceptions\InvalidTypeException;
-use Pouch\Exceptions\MethodNotFoundException;
+use Pouch\Exceptions\ResolvableException;
 
 class ResolvableTest extends TestCase
 {
@@ -39,7 +38,7 @@ class ResolvableTest extends TestCase
 
     public function test_calling_inexistent_method_in_resolvable()
     {
-        $this->expectException(MethodNotFoundException::class);
+        $this->expectException(ResolvableException::class);
 
         $fooResolvable = $this->resolvable->make(new Foo);
 
@@ -48,7 +47,7 @@ class ResolvableTest extends TestCase
 
     public function test_using_inexistent_class_name()
     {
-        $this->expectException(InvalidTypeException::class);
+        $this->expectException(ResolvableException::class);
 
         $this->resolvable->make('FooBar\Foo');
     }

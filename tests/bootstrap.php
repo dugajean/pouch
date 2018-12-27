@@ -9,4 +9,4 @@ if (!file_exists($vendor)) {
 require_once $vendor.'autoload.php';
 
 Pouch\Pouch::bootstrap(__DIR__.'/../');
-Pouch\ClassTree::loadDev(true);
+Pouch\Helpers\ClassTree::loadDev(true);

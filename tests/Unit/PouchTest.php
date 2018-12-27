@@ -4,8 +4,7 @@ namespace Pouch\Tests\Unit;
 
 use Pouch\Pouch;
 use Pouch\Tests\TestCase;
-use Pouch\Exceptions\InvalidTypeException;
-use Pouch\Exceptions\KeyNotFoundException;
+use Pouch\Exceptions\PouchException;
 
 class PouchTest extends TestCase
 {
@@ -34,14 +33,14 @@ class PouchTest extends TestCase
 
     public function test_resolving_inexistent_key()
     {
-        $this->expectException(KeyNotFoundException::class);
+        $this->expectException(PouchException::class);
 
         pouch()->resolve('bar');
     }
 
     public function test_resolving_with_non_string_key()
     {
-        $this->expectException(InvalidTypeException::class);
+        $this->expectException(PouchException::class);
 
         pouch()->bind(5, 'FooString');
 

@@ -2,9 +2,7 @@
 
 namespace Pouch;
 
-use Pouch\Exceptions\ClassNotFoundException;
-use Pouch\Exceptions\InvalidTypeException;
-use Pouch\Exceptions\MethodNotFoundException;
+use Pouch\Exceptions\ResolvableException;
 
 class Resolvable
 {
@@ -34,18 +32,18 @@ class Resolvable
      *
      * @return $this
      *
-     * @throws \Pouch\Exceptions\InvalidTypeException
+     * @throws \Pouch\Exceptions\ResolvableException
      */
     public function make($object)
     {
         $expMsg = 'Invalid type provided. Must be either an object or a string with a valid class name';
 
         if (!is_object($object) && !is_string($object)) {
-            throw new InvalidTypeException($expMsg);
+            throw new ResolvableException($expMsg);
         }
 
         if (is_string($object) && !class_exists($object)) {
-            throw new InvalidTypeException($expMsg);
+            throw new ResolvableException($expMsg);
         }
 
         if (is_object($object)) {
@@ -93,7 +91,7 @@ class Resolvable
      *
      * @return void
      *
-     * @throws \Pouch\Exceptions\MethodNotFoundException
+     * @throws \Pouch\Exceptions\ResolvableException
      */
     public function __call($method, array $args)
     {
@@ -101,7 +99,7 @@ class Resolvable
             $params = (new \ReflectionMethod(get_class($this->object), $method))->getParameters();
         } catch (\ReflectionException $e) {
             $currentClass = get_class($this->object);
-            throw new MethodNotFoundException("Cannot find method '{$method}' in {$currentClass}");
+            throw new ResolvableException("Cannot find method '{$method}' in {$currentClass}");
         }
 
         $dependencies = $this->resolveDependencies($params, $args);
@@ -117,9 +115,7 @@ class Resolvable
      *
      * @return array
      *
-     * @throws \Pouch\Exceptions\InvalidTypeException
-     * @throws \Pouch\Exceptions\KeyNotFoundException
-     * @throws \Pouch\Exceptions\ClassNotFoundException
+     * @throws \Pouch\Exceptions\ResolvableException
      */
     protected function resolveDependencies($params, array $args = [])
     {
@@ -143,7 +139,7 @@ class Resolvable
                 } elseif (!isset($args[$pos])) {
                     $args[$pos] = new $className;
                 } elseif (isset($args[$pos]) && !$args[$pos] instanceof $className) {
-                    throw new InvalidTypeException(
+                    throw new ResolvableException(
                         'Invalid argument provided. Expected an instance of '.$className.', '.$this->getType($args[$pos]).' provided'
                     );
                 }
@@ -161,7 +157,7 @@ class Resolvable
      *
      * @return mixed
      *
-     * @throws \Pouch\Exceptions\ClassNotFoundException
+     * @throws \Pouch\Exceptions\ResolvableException
      */
     protected function createClassDependency($rawClassName)
     {
@@ -172,7 +168,7 @@ class Resolvable
         }
 
         if (!pouch()->has($className)) {
-            throw new ClassNotFoundException("Cannot inject class {$className} as it does not appear to exist");
+            throw new ResolvableException("Cannot inject class {$className} as it does not appear to exist");
         }
 
         $content = resolve($className);

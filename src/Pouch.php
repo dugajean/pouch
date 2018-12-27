@@ -2,11 +2,10 @@
 
 namespace Pouch;
 
-use Pouch\Exceptions\InvalidTypeException;
-use Pouch\Exceptions\KeyNotFoundException;
-use Pouch\Exceptions\MethodNotFoundException;
+use Pouch\Helpers\ClassTree;
+use Pouch\Exceptions\PouchException;
 
-class Pouch 
+class Pouch
 {
     /**
      * Store all singletons.
@@ -58,7 +57,7 @@ class Pouch
      *
      * @return $this
      *
-     * @throws \Pouch\Exceptions\InvalidTypeException
+     * @throws \Pouch\Exceptions\ResolvableException
      */
     protected function registerNamespaces($namespaces, array $overriders = [])
     {
@@ -89,15 +88,17 @@ class Pouch
      * @param  string $key
      * 
      * @return mixed
+     *
+     * @throws \Pouch\Exceptions\PouchException
      */
     protected function resolve($key)
     {
         if (!is_string($key)) {
-            throw new InvalidTypeException('The key must be a string');
+            throw new PouchException('The key must be a string');
         }
 
         if (!array_key_exists($key, $this->replaceables)) {
-            throw new KeyNotFoundException("The {$key} key could not be found in the container");
+            throw new PouchException("The {$key} key could not be found in the container");
         }
 
         return $this->replaceables[$key];
@@ -125,6 +126,8 @@ class Pouch
      * @param $args
      *
      * @return mixed
+     *
+     * @throws \Pouch\Exceptions\PouchException
      */
     public function __call($method, $args)
     {
@@ -132,7 +135,7 @@ class Pouch
             return pouch()->$method(...$args);
         }
 
-        throw new MethodNotFoundException("Method Pouch::{$method} does not exist");
+        throw new PouchException("Method Pouch::{$method} does not exist");
     }
 
     /**
@@ -159,6 +162,8 @@ class Pouch
      * @param $args
      *
      * @return mixed
+     *
+     * @throws \Pouch\Exceptions\PouchException
      */
     public static function __callStatic($method, $args)
     {
@@ -166,6 +171,6 @@ class Pouch
             return pouch()->$method(...$args);
         }
 
-        throw new MethodNotFoundException("Method Pouch::{$method} does not exist");
+        throw new PouchException("Method Pouch::{$method} does not exist");
     }
 }

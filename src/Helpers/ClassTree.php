@@ -1,6 +1,6 @@
 <?php
 
-namespace Pouch;
+namespace Pouch\Helpers;
 
 use Pouch\Exceptions\NamespaceNotFoundException;
 

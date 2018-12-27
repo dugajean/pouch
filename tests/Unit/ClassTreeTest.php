@@ -2,10 +2,10 @@
 
 namespace Pouch\Tests\Unit;
 
-use Pouch\ClassTree;
 use Pouch\Tests\TestCase;
 use Pouch\Tests\Data\Bar;
 use Pouch\Tests\Data\Foo;
+use Pouch\Helpers\ClassTree;
 use Pouch\Tests\Data\Sub\Baz;
 use Pouch\Exceptions\NamespaceNotFoundException;
 
