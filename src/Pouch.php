@@ -4,6 +4,7 @@ namespace Pouch;
 
 use Pouch\Helpers\ClassTree;
 use Pouch\Exceptions\PouchException;
+use Pouch\Exceptions\NotFoundException;
 
 class Pouch
 {
@@ -90,6 +91,7 @@ class Pouch
      * @return mixed
      *
      * @throws \Pouch\Exceptions\PouchException
+     * @throws \Pouch\Exceptions\NotFoundException
      */
     protected function resolve($key)
     {
@@ -98,10 +100,25 @@ class Pouch
         }
 
         if (!array_key_exists($key, $this->replaceables)) {
-            throw new PouchException("The {$key} key could not be found in the container");
+            throw new NotFoundException("The {$key} key could not be found in the container");
         }
 
         return $this->replaceables[$key];
+    }
+
+    /**
+     * Alias for resolve.
+     *
+     * @param  string $key
+     *
+     * @return mixed
+     *
+     * @throws \Pouch\Exceptions\PouchException
+     * @throws \Pouch\Exceptions\NotFoundException
+     */
+    protected function get($key)
+    {
+        return $this->resolve($key);
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace Pouch\Helpers;
 
-use Pouch\Exceptions\NamespaceNotFoundException;
+use Pouch\Exceptions\NotFoundException;
 
 final class ClassTree
 {
@@ -57,7 +57,7 @@ final class ClassTree
         $fqcns = [];
 
         if ($path === null) {
-            throw new NamespaceNotFoundException('This namespace cannot be found or is not registered in composer.json');
+            throw new NotFoundException('This namespace cannot be found or is not registered in composer.json');
         }
 
         $allFiles = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
