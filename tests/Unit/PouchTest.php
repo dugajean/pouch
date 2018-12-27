@@ -2,6 +2,7 @@
 
 namespace Pouch\Tests\Unit;
 
+use Pouch\Exceptions\NotFoundException;
 use Pouch\Pouch;
 use Pouch\Tests\TestCase;
 use Pouch\Exceptions\PouchException;
@@ -33,7 +34,7 @@ class PouchTest extends TestCase
 
     public function test_resolving_inexistent_key()
     {
-        $this->expectException(PouchException::class);
+        $this->expectException(NotFoundException::class);
 
         pouch()->resolve('bar');
     }

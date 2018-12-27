@@ -7,7 +7,7 @@ use Pouch\Tests\Data\Bar;
 use Pouch\Tests\Data\Foo;
 use Pouch\Helpers\ClassTree;
 use Pouch\Tests\Data\Sub\Baz;
-use Pouch\Exceptions\NamespaceNotFoundException;
+use Pouch\Exceptions\NotFoundException;
 
 class ClassTreeTest extends TestCase
 {
@@ -22,7 +22,7 @@ class ClassTreeTest extends TestCase
 
     public function test_fetching_with_invalid_namespace()
     {
-        $this->expectException(NamespaceNotFoundException::class);
+        $this->expectException(NotFoundException::class);
 
         ClassTree::getClassesInNamespace('Foo\Bar');
     }
