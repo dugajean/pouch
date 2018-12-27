@@ -12,29 +12,29 @@ class AutomaticInjectionTest extends TestCase
 {
     public function test_registering_namespace()
     {
-        Pouch::registerNamespaces('Pouch\Tests\Data');
+        pouch()->registerNamespaces('Pouch\Tests\Data');
 
-        $this->assertTrue(Pouch::has(Foo::class));
-        $this->assertTrue(Pouch::has(Bar::class));
-        $this->assertTrue(Pouch::has(Baz::class));
+        $this->assertTrue(pouch()->has(Foo::class));
+        $this->assertTrue(pouch()->has(Bar::class));
+        $this->assertTrue(pouch()->has(Baz::class));
     }
 
     public function test_automatic_injection_in_foo_class()
     {
-        Pouch::registerNamespaces('Pouch\Tests\Data');
+        pouch()->registerNamespaces('Pouch\Tests\Data');
 
         $fooObject = new Foo;
-        $fooResolvable = Pouch::resolve(Foo::class);
+        $fooResolvable = pouch()->resolve(Foo::class);
 
         $this->assertEquals($fooObject->fooFunc1(new Bar, new Baz), $fooResolvable->fooFunc1());
     }
 
     public function test_automatic_injection_in_foo_constructor()
     {
-        Pouch::registerNamespaces('Pouch\Tests\Data');
+        pouch()->registerNamespaces('Pouch\Tests\Data');
 
         $fooObject = new Foo(new Bar);
-        $fooResolvable = Pouch::resolve(Foo::class);
+        $fooResolvable = pouch()->resolve(Foo::class);
 
         $this->assertEquals($fooObject->testConstructor(), $fooResolvable->testConstructor());
     }

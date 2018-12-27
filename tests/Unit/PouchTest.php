@@ -11,51 +11,51 @@ class PouchTest extends TestCase
 {
     public function test_storing_data_in_container()
     {
-        Pouch::bind('foo', 'FooString');
+        pouch()->bind('foo', 'FooString');
 
-        $this->assertTrue(Pouch::has('foo'));
+        $this->assertTrue(pouch()->has('foo'));
     }
 
     public function test_resolving_data_from_container()
     {
-        Pouch::bind('foo', 'FooString');
+        pouch()->bind('foo', 'FooString');
 
-        $this->assertEquals('FooString', Pouch::resolve('foo'));
+        $this->assertEquals('FooString', pouch()->resolve('foo'));
     }
 
     public function test_resolving_data_with_callback()
     {
-        Pouch::bind('foo', function () {
+        pouch()->bind('foo', function () {
             return 'FooString';
         });
 
-        $this->assertEquals('FooString', Pouch::resolve('foo'));
+        $this->assertEquals('FooString', pouch()->resolve('foo'));
     }
 
     public function test_resolving_inexistent_key()
     {
         $this->expectException(KeyNotFoundException::class);
 
-        Pouch::resolve('bar');
+        pouch()->resolve('bar');
     }
 
     public function test_resolving_with_non_string_key()
     {
         $this->expectException(InvalidTypeException::class);
 
-        Pouch::bind(5, 'FooString');
+        pouch()->bind(5, 'FooString');
 
-        Pouch::resolve(5);
+        pouch()->resolve(5);
 
-        $this->assertTrue(Pouch::has('5'));
-        $this->assertEquals('FooString', Pouch::resolve('5'));
+        $this->assertTrue(pouch()->has('5'));
+        $this->assertEquals('FooString', pouch()->resolve('5'));
     }
 
     public function test_resolving_with_non_string_key_converted()
     {
-        Pouch::bind(5, 'FooString');
+        pouch()->bind(5, 'FooString');
 
-        $this->assertTrue(Pouch::has('5'));
-        $this->assertEquals('FooString', Pouch::resolve('5'));
+        $this->assertTrue(pouch()->has('5'));
+        $this->assertEquals('FooString', pouch()->resolve('5'));
     }
 }
