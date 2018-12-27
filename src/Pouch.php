@@ -4,9 +4,10 @@ namespace Pouch;
 
 use Pouch\Helpers\ClassTree;
 use Pouch\Exceptions\PouchException;
+use Psr\Container\ContainerInterface;
 use Pouch\Exceptions\NotFoundException;
 
-class Pouch
+class Pouch implements ContainerInterface
 {
     /**
      * Store all singletons.
@@ -107,6 +108,18 @@ class Pouch
     }
 
     /**
+     * See if specific key exists in our replaceables.
+     * 
+     * @param  string  $key
+     * 
+     * @return boolean
+     */
+    protected function contains($key)
+    {
+        return array_key_exists($key, $this->replaceables);
+    }
+
+    /**
      * Alias for resolve.
      *
      * @param  string $key
@@ -116,21 +129,21 @@ class Pouch
      * @throws \Pouch\Exceptions\PouchException
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    protected function get($key)
+    public function get($key)
     {
         return $this->resolve($key);
     }
 
     /**
-     * See if specific key exists in our replaceables.
-     * 
+     * Alias for contains.
+     *
      * @param  string  $key
-     * 
+     *
      * @return boolean
      */
-    protected function has($key)
+    public function has($key)
     {
-        return array_key_exists($key, $this->replaceables);
+        return $this->contains($key);
     }
 
     /**
