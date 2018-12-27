@@ -30,7 +30,7 @@ class Resolvable
     /**
      * Set the object for the resolvable. Also resolve constructor dependencies if needed.
      *
-     * @param mixed $object
+     * @param mixed $object Object or class name (which will be created) to be made resolavable.
      *
      * @return $this
      *
@@ -110,7 +110,7 @@ class Resolvable
     }
 
     /**
-     * Resolve the dependency for a parameter.
+     * Resolve the dependency for all parameters.
      *
      * @param array $param
      * @param array $args
@@ -154,7 +154,8 @@ class Resolvable
     }
 
     /**
-     * Creates missing class if it can be found in the container.
+     * Creates missing class if it can be found in the container. Auto-injecting classes from within
+     * the container require them to be prefixed with \Pouch\Key.
      *
      * @param $rawClassName
      *

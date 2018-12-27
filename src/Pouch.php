@@ -25,7 +25,7 @@ class Pouch
     /**
      * Bootstrap pouch.
      *
-     * @param $dir string
+     * @param string $dir Path to the app's root (Where composer.json is).
      */
     public static function bootstrap($dir)
     {
@@ -50,9 +50,10 @@ class Pouch
     }
 
     /**
-     * Register a namespace for automatic resolution.
+     * Register one or more namespaces for automatic resolution.
      *
-     * @param array|string $namespaces
+     * @param array|string $namespaces List of namespaces to be made resolvable.
+     *                                 Will go recursively through the namespace.
      * @param array $overriders
      *
      * @return $this
