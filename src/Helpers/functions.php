@@ -9,11 +9,10 @@ use Pouch\Pouch;
  */
 function pouch()
 {
-    return Pouch::singleton('pouch', new Pouch);
+    return Pouch::singleton('pouch', function () { return new Pouch; });
 }
 
-if (!function_exists('resolve'))
-{
+if (!function_exists('resolve')) {
     /**
      * Resolve a key within the container.
      *

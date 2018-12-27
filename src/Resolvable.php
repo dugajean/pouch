@@ -133,7 +133,7 @@ class Resolvable
 
                 if (pouch()->has($className)) {
                     $selfName = self::class;
-                    $content = resolve($className);
+                    $content = pouch()->resolve($className);
                     $content = $content instanceof $selfName ? $content->getObject() : $content;
                     $args[$pos] = $content;
                 } elseif (!isset($args[$pos])) {
@@ -171,7 +171,7 @@ class Resolvable
             throw new ResolvableException("Cannot inject class {$className} as it does not appear to exist");
         }
 
-        $content = resolve($className);
+        $content = pouch()->resolve($className);
         $anonymousClass = new class ($className, $content) {
             public $name, $content;
             public function __construct($name, $content) {
