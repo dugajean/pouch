@@ -121,8 +121,8 @@ class Pouch
      * in order to call the protected methods normally from the singleton
      * instance and everything ends up wired up perfectly.
      *
-     * @param $name
-     * @param $arguments
+     * @param $method
+     * @param $args
      *
      * @return mixed
      */
@@ -155,8 +155,8 @@ class Pouch
     /**
      * Allow calling all the methods of this class statically.
      *
-     * @param $name
-     * @param $arguments
+     * @param $method
+     * @param $args
      *
      * @return mixed
      */
