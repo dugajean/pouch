@@ -5,11 +5,11 @@ use Pouch\Pouch;
 /**
  * Return pouch singleton instance.
  *
- * @return Pouch\Pouch
+ * @return Pouch
  */
 function pouch()
 {
-    return Pouch::singleton('pouchInstance', new Pouch);
+    return Pouch::singleton('pouch', new Pouch);
 }
 
 if (!function_exists('resolve'))

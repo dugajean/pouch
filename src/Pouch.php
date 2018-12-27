@@ -41,7 +41,7 @@ class Pouch
      * 
      * @return $this
      */
-    public function bind($key, $data)
+    protected function bind($key, $data)
     {
         $this->replaceables[(string)$key] = is_callable($data) ? $data() : $data;
 
@@ -58,7 +58,7 @@ class Pouch
      *
      * @throws \Pouch\Exceptions\InvalidTypeException
      */
-    public function registerNamespaces($namespaces, array $overriders = [])
+    protected function registerNamespaces($namespaces, array $overriders = [])
     {
         foreach ((array)$namespaces as $namespace) {
             $classes = ClassTree::getClassesInNamespace($namespace);
@@ -88,7 +88,7 @@ class Pouch
      * 
      * @return mixed
      */
-    public function resolve($key)
+    protected function resolve($key)
     {
         if (!is_string($key)) {
             throw new InvalidTypeException('The key must be a string');
@@ -108,7 +108,7 @@ class Pouch
      * 
      * @return boolean
      */
-    public function has($key)
+    protected function has($key)
     {
         return array_key_exists($key, $this->replaceables);
     }
@@ -128,6 +128,19 @@ class Pouch
         }
 
         return static::$singletons[$key] = is_callable($data) ? $data() : $data;
+    }
+
+    /**
+     * @param $name
+     * @param $arguments
+     *
+     * @return mixed
+     */
+    public function __call($method, $args)
+    {
+        if (method_exists($this, $method)) {
+            return pouch()->$method(...$args);
+        }
     }
 
     /**
