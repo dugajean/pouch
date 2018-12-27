@@ -4,6 +4,7 @@ namespace Pouch;
 
 use Pouch\Exceptions\InvalidTypeException;
 use Pouch\Exceptions\KeyNotFoundException;
+use Pouch\Exceptions\MethodNotFoundException;
 
 class Pouch 
 {
@@ -30,7 +31,7 @@ class Pouch
     {
         ClassTree::setRoot($dir);
 
-        require __DIR__."/../src/Helpers/functions.php";
+        require __DIR__.'/../src/Helpers/functions.php';
     }
 
     /**
@@ -43,7 +44,7 @@ class Pouch
      */
     protected function bind($key, $data)
     {
-        $this->replaceables[(string)$key] = is_callable($data) ? $data() : $data;
+        $this->replaceables[(string)$key] = is_callable($data) ? $data($this) : $data;
 
         return $this;
     }
@@ -68,7 +69,7 @@ class Pouch
                 $resolvable = new Resolvable;
 
                 if (in_array($class, array_keys($overriders))) {
-                    $overrider = is_callable($overriders[$class]) ? $overriders[$class]() : $overriders[$class];
+                    $overrider = is_callable($overriders[$class]) ? $overriders[$class]($this) : $overriders[$class];
                     $newContent = $resolvable->make($overrider);
                 }
 
@@ -141,6 +142,8 @@ class Pouch
         if (method_exists($this, $method)) {
             return pouch()->$method(...$args);
         }
+
+        throw new MethodNotFoundException("Method Pouch::{$method} does not exist");
     }
 
     /**
