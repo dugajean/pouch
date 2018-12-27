@@ -152,8 +152,8 @@ class Pouch implements ContainerInterface
      * in order to call the protected methods normally from the singleton
      * instance and everything ends up wired up perfectly.
      *
-     * @param $method
-     * @param $args
+     * @param string $method
+     * @param array $args
      *
      * @return mixed
      *
@@ -171,8 +171,8 @@ class Pouch implements ContainerInterface
     /**
      * Insert or return a singleton instance from our container.
      *
-     * @param  string     $key
-     * @param  mixed|null $data
+     * @param  string $key
+     * @param  mixed  $data
      *
      * @return mixed
      */
@@ -188,8 +188,8 @@ class Pouch implements ContainerInterface
     /**
      * Allow calling all the methods of this class statically.
      *
-     * @param $method
-     * @param $args
+     * @param string $method
+     * @param array $args
      *
      * @return mixed
      *

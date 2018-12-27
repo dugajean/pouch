@@ -8,4 +8,7 @@ $iterator = Finder::create()
     ->name('*.php')
     ->in(__DIR__.'/src');
 
-return new Sami($iterator);
+return new Sami($iterator, [
+    'title' => 'Pouch API',
+    'build_dir' => __DIR__.'/docs',
+]);
