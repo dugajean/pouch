@@ -115,23 +115,11 @@ class Pouch
     }
 
     /**
-     * Insert or return a singleton instance from our container.
-     * 
-     * @param  string     $key
-     * @param  mixed|null $data
-     * 
-     * @return mixed|void
-     */
-    public static function singleton($key, $data = null)
-    {
-        if (array_key_exists($key, static::$singletons) || $data === null) {
-            return static::$singletons[$key];
-        }
-
-        return static::$singletons[$key] = is_callable($data) ? $data() : $data;
-    }
-
-    /**
+     * To allows for calling the methods of this class statically (via singleton),
+     * this class's methods have to be set to protected. Then we use __call
+     * in order to call the protected methods normally from the singleton
+     * instance and everything ends up wired up perfectly.
+     *
      * @param $name
      * @param $arguments
      *
@@ -147,6 +135,23 @@ class Pouch
     }
 
     /**
+     * Insert or return a singleton instance from our container.
+     *
+     * @param  string     $key
+     * @param  mixed|null $data
+     *
+     * @return mixed
+     */
+    public static function singleton($key, $data = null)
+    {
+        if (array_key_exists($key, self::$singletons) || $data === null) {
+            return self::$singletons[$key];
+        }
+
+        return self::$singletons[$key] = is_callable($data) ? $data() : $data;
+    }
+
+    /**
      * Allow calling all the methods of this class statically.
      *
      * @param $name
@@ -159,5 +164,7 @@ class Pouch
         if (method_exists(pouch(), $method)) {
             return pouch()->$method(...$args);
         }
+
+        throw new MethodNotFoundException("Method Pouch::{$method} does not exist");
     }
 }
