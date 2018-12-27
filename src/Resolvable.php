@@ -135,16 +135,16 @@ class Resolvable
             if (is_object($class)) {
                 $className = $class->name;
 
-                if (Pouch::has($className)) {
+                if (pouch()->has($className)) {
                     $selfName = self::class;
-                    $content = Pouch::resolve($className);
+                    $content = resolve($className);
                     $content = $content instanceof $selfName ? $content->getObject() : $content;
                     $args[$pos] = $content;
                 } elseif (!isset($args[$pos])) {
                     $args[$pos] = new $className;
                 } elseif (isset($args[$pos]) && !$args[$pos] instanceof $className) {
                     throw new InvalidTypeException(
-                        'Invalid argument provided. Expected an instance of ' . $className . ', ' . $this->getType($args[$pos]) . ' provided'
+                        'Invalid argument provided. Expected an instance of '.$className.', '.$this->getType($args[$pos]).' provided'
                     );
                 }
             }
@@ -170,11 +170,11 @@ class Resolvable
             $className = str_replace('Pouch\\', '', $className);
         }
 
-        if (!Pouch::has($className)) {
+        if (!pouch()->has($className)) {
             throw new ClassNotFoundException("Cannot inject class {$className} as it does not appear to exist");
         }
 
-        $content = Pouch::resolve($className);
+        $content = resolve($className);
         $anonymousClass = new class ($className, $content) {
             public $name, $content;
             public function __construct($name, $content) {
@@ -187,7 +187,7 @@ class Resolvable
         };
 
         class_alias(get_class($anonymousClass), "\\Pouch\\$className");
-        Pouch::bind($className, $anonymousClass);
+        pouch()->bind($className, $anonymousClass);
 
         return $anonymousClass;
     }

@@ -29,6 +29,8 @@ class Pouch
     public static function bootstrap($dir)
     {
         ClassTree::setRoot($dir);
+
+        require __DIR__."/../src/Helpers/functions.php";
     }
 
     /**
@@ -92,11 +94,11 @@ class Pouch
             throw new InvalidTypeException('The key must be a string');
         }
 
-        if (!array_key_exists($key, static::$replaceables)) {
+        if (!array_key_exists($key, $this->replaceables)) {
             throw new KeyNotFoundException("The {$key} key could not be found in the container");
         }
 
-        return $this->eplaceables[$key];
+        return $this->replaceables[$key];
     }
 
     /**
@@ -108,7 +110,7 @@ class Pouch
      */
     public function has($key)
     {
-        return array_key_exists($key, static::$replaceables);
+        return array_key_exists($key, $this->replaceables);
     }
 
     /**
@@ -119,13 +121,13 @@ class Pouch
      * 
      * @return mixed|void
      */
-    public static function singleton($key, Callable $data = null)
+    public static function singleton($key, $data = null)
     {
         if (array_key_exists($key, static::$singletons) || $data === null) {
             return static::$singletons[$key];
         }
 
-        static::$singleton[$key] = is_callable($data) ? $data() : $data;
+        return static::$singletons[$key] = is_callable($data) ? $data() : $data;
     }
 
     /**
