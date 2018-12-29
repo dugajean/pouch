@@ -21,7 +21,7 @@ class AutomaticInjectionTest extends TestCase
 
     public function test_registering_namespace_statically()
     {
-        Pouch::registerNamespaces('Pouch\Tests\Data');
+        pouch()->registerNamespaces('Pouch\Tests\Data');
 
         $this->assertTrue(Pouch::contains(Foo::class));
         $this->assertTrue(Pouch::contains(Bar::class));
