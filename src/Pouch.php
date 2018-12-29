@@ -178,8 +178,12 @@ class Pouch implements ContainerInterface
      */
     public static function singleton($key, $data = null)
     {
-        if (array_key_exists($key, self::$singletons) || $data === null) {
+        if (array_key_exists($key, self::$singletons)) {
             return self::$singletons[$key];
+        }
+
+        if ($data === null) {
+            throw new NotFoundException("The {$key} key could not be found in the singleton container");
         }
 
         return self::$singletons[$key] = is_callable($data) ? $data() : $data;

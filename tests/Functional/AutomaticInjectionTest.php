@@ -19,6 +19,15 @@ class AutomaticInjectionTest extends TestCase
         $this->assertTrue(pouch()->has(Baz::class));
     }
 
+    public function test_registering_namespace_statically()
+    {
+        Pouch::registerNamespaces('Pouch\Tests\Data');
+
+        $this->assertTrue(Pouch::contains(Foo::class));
+        $this->assertTrue(Pouch::contains(Bar::class));
+        $this->assertTrue(Pouch::contains(Baz::class));
+    }
+
     public function test_automatic_injection_in_foo_class()
     {
         pouch()->registerNamespaces('Pouch\Tests\Data');
@@ -37,5 +46,18 @@ class AutomaticInjectionTest extends TestCase
         $fooResolvable = pouch()->resolve(Foo::class);
 
         $this->assertEquals($fooObject->testConstructor(), $fooResolvable->testConstructor());
+    }
+
+    public function test_pouch_container_dependency_injection()
+    {
+        pouch()->bind('DateTime', function ($pouch) {
+            return new \DateTime;
+        });
+
+        pouch()->registerNamespaces('Pouch\Tests\Data');
+
+        $fooResolvable = pouch()->resolve(Foo::class);
+
+        $this->assertEquals(time(), $fooResolvable->pouchDependency());
     }
 }

@@ -30,4 +30,9 @@ class Foo
     {
         return 'simpleMethod';
     }
+
+    public function pouchDependency(\Pouch\DateTime $dateTime)
+    {
+        return $dateTime->getContent()->getTimestamp();
+    }
 }
