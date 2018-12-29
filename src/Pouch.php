@@ -68,15 +68,15 @@ class Pouch implements ContainerInterface
 
             foreach ($classes as $class) {
                 $newContent = null;
-                $resolvable = new Resolvable;
 
                 if (in_array($class, array_keys($overriders))) {
-                    $overrider = is_callable($overriders[$class]) ? $overriders[$class]($this) : $overriders[$class];
-                    $newContent = $resolvable->make($overrider);
+                    $newContent = is_callable($overriders[$class]) ? $overriders[$class]($this) : $overriders[$class];
                 }
 
-                $this->bind($class, function () use ($class, $resolvable, $newContent) {
-                    return $newContent !== null ? $newContent : $resolvable->make($class);
+                $toResolve = $newContent !== null ? $newContent : $class;
+
+                $this->bind($class, function () use ($toResolve) {
+                    return new Resolvable($toResolve);
                 });
             };
         }
