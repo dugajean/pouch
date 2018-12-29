@@ -58,7 +58,7 @@ class Baz
 }
 ```
 
-Constructor object arguments will also be automatically injected, unless manually overrided like above.
+Constructor object arguments will also be automatically injected.
 
 You can always manually bind data to the container using `Pouch::bind($key, $dataClosure)` and also resolve anything from the container using `Pouch::resolve($key)`.
 
