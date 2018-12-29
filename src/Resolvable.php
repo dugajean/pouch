@@ -184,7 +184,10 @@ class Resolvable
         };
 
         class_alias(get_class($anonymousClass), "\\Pouch\\$className");
-        pouch()->bind($className, $anonymousClass);
+
+        pouch()->bind($className, function () use ($anonymousClass) {
+            return $anonymousClass;
+        });
 
         return $anonymousClass;
     }

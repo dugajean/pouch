@@ -38,14 +38,14 @@ class Pouch implements ContainerInterface
     /**
      * Bind a new element to the replaceables.
      * 
-     * @param  string $key
-     * @param  mixed  $data
+     * @param  string   $key
+     * @param  Callable $data
      * 
      * @return $this
      */
-    protected function bind($key, $data)
+    protected function bind($key, Callable $data)
     {
-        $this->replaceables[(string)$key] = is_callable($data) ? $data($this) : $data;
+        $this->replaceables[(string)$key] = $data($this);
 
         return $this;
     }
@@ -162,7 +162,7 @@ class Pouch implements ContainerInterface
     public function __call($method, $args)
     {
         if (method_exists($this, $method)) {
-            return pouch()->$method(...$args);
+            return $this->$method(...$args);
         }
 
         throw new PouchException("Method Pouch::{$method} does not exist");
@@ -171,12 +171,12 @@ class Pouch implements ContainerInterface
     /**
      * Insert or return a singleton instance from our container.
      *
-     * @param  string $key
-     * @param  mixed  $data
+     * @param  string   $key
+     * @param  Callable $data
      *
      * @return mixed
      */
-    public static function singleton($key, $data = null)
+    public static function singleton($key, Callable $data = null)
     {
         if (array_key_exists($key, self::$singletons)) {
             return self::$singletons[$key];
@@ -186,7 +186,7 @@ class Pouch implements ContainerInterface
             throw new NotFoundException("The {$key} key could not be found in the singleton container");
         }
 
-        return self::$singletons[$key] = is_callable($data) ? $data() : $data;
+        return self::$singletons[$key] = $data();
     }
 
     /**

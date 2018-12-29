@@ -11,14 +11,18 @@ class PouchTest extends TestCase
 {
     public function test_storing_data_in_container()
     {
-        pouch()->bind('foo', 'FooString');
+        pouch()->bind('foo', function () {
+            return 'FooString';
+        });
 
         $this->assertTrue(pouch()->has('foo'));
     }
 
     public function test_resolving_data_from_container()
     {
-        pouch()->bind('foo', 'FooString');
+        pouch()->bind('foo', function () {
+            return 'FooString';
+        });
 
         $this->assertEquals('FooString', pouch()->resolve('foo'));
     }
@@ -43,7 +47,9 @@ class PouchTest extends TestCase
     {
         $this->expectException(PouchException::class);
 
-        pouch()->bind(5, 'FooString');
+        pouch()->bind(5, function () {
+            return 'FooString';
+        });
 
         pouch()->resolve(5);
 
@@ -53,7 +59,9 @@ class PouchTest extends TestCase
 
     public function test_resolving_with_non_string_key_converted()
     {
-        pouch()->bind(5, 'FooString');
+        pouch()->bind(5, function () {
+            return 'FooString';
+        });
 
         $this->assertTrue(pouch()->has('5'));
         $this->assertEquals('FooString', pouch()->resolve('5'));
