@@ -5,7 +5,7 @@ use Pouch\Pouch;
 /**
  * Return pouch singleton instance.
  *
- * @return Pouch
+ * @return Pouch\Pouch
  */
 function pouch()
 {
@@ -16,7 +16,7 @@ if (!function_exists('resolve')) {
     /**
      * Resolve a key within the container.
      *
-     * @param $key
+     * @param string $key
      *
      * @return mixed
      */

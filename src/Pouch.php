@@ -112,7 +112,7 @@ class Pouch implements ContainerInterface
      * 
      * @param  string  $key
      * 
-     * @return boolean
+     * @return bool
      */
     protected function contains($key)
     {
@@ -137,9 +137,9 @@ class Pouch implements ContainerInterface
     /**
      * Alias for contains.
      *
-     * @param  string  $key
+     * @param string $key
      *
-     * @return boolean
+     * @return bool
      */
     public function has($key)
     {
@@ -175,6 +175,8 @@ class Pouch implements ContainerInterface
      * @param  Callable $data
      *
      * @return mixed
+     *
+     * @throws \Pouch\Exceptions\NotFoundException
      */
     public static function singleton($key, Callable $data = null)
     {

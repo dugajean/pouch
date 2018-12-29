@@ -119,6 +119,8 @@ class Resolvable
      */
     protected function resolveDependencies($params, array $args = [])
     {
+        $selfName = self::class;
+
         foreach ((array)$params as $param) {
             $pos = $param->getPosition();
 
@@ -132,7 +134,6 @@ class Resolvable
                 $className = $class->name;
 
                 if (pouch()->has($className)) {
-                    $selfName = self::class;
                     $content = pouch()->resolve($className);
                     $content = $content instanceof $selfName ? $content->getObject() : $content;
                     $args[$pos] = $content;
@@ -178,7 +179,7 @@ class Resolvable
                 $this->name = $name;
                 $this->content = $content;
             }
-            public function getContent(){
+            public function getContent() {
                 return $this->content;
             }
         };
