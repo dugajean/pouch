@@ -31,7 +31,7 @@ class Foo
         return 'simpleMethod';
     }
 
-    public function pouchDependency(\Pouch\DateTime $dateTime)
+    public function pouchDependency(\Pouch\FancyDateTime $dateTime)
     {
         return $dateTime->getContent()->getTimestamp();
     }

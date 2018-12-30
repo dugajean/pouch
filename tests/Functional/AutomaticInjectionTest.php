@@ -41,7 +41,7 @@ class AutomaticInjectionTest extends TestCase
 
     public function test_pouch_container_dependency_injection()
     {
-        pouch()->bind('DateTime', function ($pouch) {
+        pouch()->bind('FancyDateTime', function ($pouch) {
             return new \DateTime;
         });
 
