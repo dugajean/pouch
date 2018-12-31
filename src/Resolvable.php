@@ -203,7 +203,7 @@ class Resolvable
             /**
              * From createClassDependency's inner class
              *
-             * @return void
+             * @return mixed
              */
             public function getContent() {
                 return $this->content;
