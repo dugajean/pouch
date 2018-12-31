@@ -28,9 +28,9 @@ class Pouch implements ContainerInterface
      *
      * @param string $dir Path to the app's root (Where composer.json is).
      */
-    public static function bootstrap($dir)
+    public static function bootstrap($rootDir)
     {
-        ClassTree::setRoot($dir);
+        ClassTree::setRoot($rootDir);
 
         require __DIR__.'/../src/Helpers/functions.php';
     }
@@ -87,7 +87,7 @@ class Pouch implements ContainerInterface
     /**
      * Resolve specific key from our replaceables.
      * 
-     * @param  string $key
+     * @param string $key
      * 
      * @return mixed
      *
@@ -110,7 +110,7 @@ class Pouch implements ContainerInterface
     /**
      * See if specific key exists in our replaceables.
      * 
-     * @param  string  $key
+     * @param string  $key
      * 
      * @return bool
      */
@@ -147,9 +147,10 @@ class Pouch implements ContainerInterface
     }
 
     /**
-     * To allows for calling the methods of this class statically (via singleton),
+     * To allow calls of the methods of this class "statically" (via singleton),
      * this class's methods have to be set to protected. Then we use __call
-     * in order to call the protected methods normally from the singleton
+     * in order to call the protected methods normally and __callStatic
+     * to simulate static calls of all methods from the singleton
      * instance and everything ends up wired up perfectly.
      *
      * @param string $method

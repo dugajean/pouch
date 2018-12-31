@@ -7,7 +7,7 @@ use Pouch\Exceptions\ResolvableException;
 class Resolvable
 {
     /**
-     * Store the object that we're "decorating".
+     * Contains the original object.
      * 
      * @var mixed
      */
@@ -70,7 +70,7 @@ class Resolvable
     }
 
     /**
-     * Get the type of an "element" accurately. If it's an object, the exact class name will be returned.
+     * Get the type of an anything accurately. If it's an object, the exact class name will be returned.
      * 
      * @param  mixed $element
      *
@@ -89,7 +89,7 @@ class Resolvable
      * @param  string $method
      * @param  array $args
      *
-     * @return void
+     * @return mixed
      *
      * @throws \Pouch\Exceptions\ResolvableException
      */
@@ -154,7 +154,7 @@ class Resolvable
      * Creates missing class if it can be found in the container. Auto-injecting classes from within
      * the container require them to be prefixed with \Pouch\Key.
      *
-     * @param $rawClassName
+     * @param string $rawClassName
      *
      * @return mixed
      *
@@ -173,12 +173,38 @@ class Resolvable
         }
 
         $content = pouch()->resolve($className);
-        $anonymousClass = new class ($className, $content) {
-            public $name, $content;
+        $anonymousClass = new class ($className, $content)
+        {
+            /**
+             * From createClassDependency's inner class
+             *
+             * @var string
+             */
+            public $name;
+
+            /**
+             * From createClassDependency's inner class
+             *
+             * @var mixed
+             */
+            private $content;
+
+            /**
+             * From createClassDependency's inner class
+             *
+             * @param string $name
+             * @param mixed $content
+             */
             public function __construct($name, $content) {
                 $this->name = $name;
                 $this->content = $content;
             }
+
+            /**
+             * From createClassDependency's inner class
+             *
+             * @return void
+             */
             public function getContent() {
                 return $this->content;
             }

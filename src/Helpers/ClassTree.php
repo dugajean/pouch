@@ -35,7 +35,7 @@ final class ClassTree
     }
 
     /**
-     * Include autoload-dev in the results or not.
+     * Choose whether to include autoload-dev in the results.
      *
      * @param bool $load
      */
@@ -45,7 +45,7 @@ final class ClassTree
     }
 
     /**
-     * Get all namespaces recursively for a namespace.
+     * Get all sub-namespaces recursively for a namespace.
      *
      * @param $namespace string
      *
