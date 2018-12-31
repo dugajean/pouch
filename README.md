@@ -31,7 +31,10 @@ You may register your whole `src/` folder with this package in order to enable a
 use Pouch\Pouch;
 
 Pouch::bootstrap(__DIR__);
-Pouch::registerNamespaces('Foo'); // Foo corresponds to src/
+
+// ...
+
+pouch()->registerNamespaces('Foo'); // Foo corresponds to src/
 ```
 
 You may now just typehint to the objects your method requires and it will be automatically resolved for you.
@@ -60,7 +63,7 @@ class Baz
 
 Constructor object arguments will also be automatically injected.
 
-You can always manually bind data to the container using `Pouch::bind($key, $dataClosure)` and also resolve anything from the container using `Pouch::resolve($key)`.
+You can always manually bind data to the container using `pouch()->bind($key, $dataClosure)` and also resolve anything from the container using `pouch()->resolve($key)`.
 
 **Read the [wiki](https://github.com/dugajean/pouch/wiki) and the [API docs](https://dugajean.github.io/pouch/) for further information.**
 

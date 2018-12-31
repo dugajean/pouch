@@ -2,10 +2,11 @@
 
 namespace Pouch\Tests\Unit;
 
-use Pouch\Exceptions\NotFoundException;
 use Pouch\Pouch;
 use Pouch\Tests\TestCase;
 use Pouch\Exceptions\PouchException;
+use Pouch\Exceptions\NotFoundException;
+use Psr\Container\ContainerInterface;
 
 class PouchTest extends TestCase
 {
@@ -65,5 +66,31 @@ class PouchTest extends TestCase
 
         $this->assertTrue(pouch()->has('5'));
         $this->assertEquals('FooString', pouch()->resolve('5'));
+    }
+
+    public function test_pouch_callback_argument()
+    {
+        $expected = 'FooBar';
+
+        pouch()->bind('foo', function () {
+            return 'Foo';
+        });
+
+        pouch()->bind('foobar', function (ContainerInterface $pouch) {
+            return $pouch->get('foo').'Bar';
+        });
+
+        $this->assertEquals($expected, pouch()->get('foobar'));
+    }
+
+    public function test_pouch_methods_with_static_calls()
+    {
+        $this->markTestSkipped('Does not pass until PHP 7.3.1');
+
+        Pouch::bind('foo', function () {
+            return 'Foo';
+        });
+
+        $this->assertEquals('Foo', Pouch::resolve('foo'));
     }
 }
