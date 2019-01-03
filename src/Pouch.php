@@ -51,6 +51,22 @@ class Pouch implements ContainerInterface
     }
 
     /**
+     * Remove something from the container.
+     *
+     * @param $key
+     *
+     * @return $this
+     */
+    protected function remove($key)
+    {
+        if ($this->has($key)) {
+            unset($this->replaceables[$key]);
+        }
+
+        return $this;
+    }
+
+    /**
      * Register one or more namespaces for automatic resolution.
      *
      * @param array|string $namespaces List of namespaces to be made resolvable.
@@ -67,18 +83,24 @@ class Pouch implements ContainerInterface
             $classes = ClassTree::getClassesInNamespace($namespace);
 
             foreach ($classes as $class) {
-                $newContent = null;
+                $newContent = $class;
 
                 if (in_array($class, array_keys($overriders))) {
-                    $newContent = is_callable($overriders[$class]) ? $overriders[$class]($this) : $overriders[$class];
+                    if (!is_callable($overriders[$class])) {
+                        throw new PouchException('Overrider value must be a function.');
+                    }
+
+                    $newContent = $overriders[$class]($this);
                 }
 
-                $toResolve = $newContent !== null ? $newContent : $class;
-
-                $this->bind($class, function () use ($toResolve) {
-                    return new Resolvable($toResolve);
+                $this->bind($class, function () use ($newContent) {
+                    return new Resolvable($newContent);
                 });
-            };
+
+                unset($newContent);
+            }
+
+            unset($classes);
         }
 
         return $this;
@@ -167,6 +189,33 @@ class Pouch implements ContainerInterface
         }
 
         throw new PouchException("Method Pouch::{$method} does not exist");
+    }
+
+    /**
+     * Allow retrieving container values via magic properties.
+     *
+     * @param $key
+     *
+     * @return mixed
+     *
+     * @throws \Pouch\Exceptions\NotFoundException
+     * @throws \Pouch\Exceptions\PouchException
+     */
+    public function __get($key)
+    {
+        return $this->resolve($key);
+    }
+
+    /**
+     * Allows the use of isset() to determine if something exists in the container.
+     *
+     * @param $key
+     *
+     * @return bool
+     */
+    public function __isset($key)
+    {
+        return $this->has($key);
     }
 
     /**

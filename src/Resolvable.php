@@ -145,6 +145,8 @@ class Resolvable
                     );
                 }
             }
+
+            unset($pos);
         }
 
         return $args;

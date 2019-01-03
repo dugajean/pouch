@@ -93,4 +93,27 @@ class PouchTest extends TestCase
 
         $this->assertEquals('Foo', Pouch::resolve('foo'));
     }
+
+    public function test_using_magic_props_to_get_container_value()
+    {
+        pouch()->bind('foo', function () {
+           return 'Foo';
+        });
+
+        $this->assertEquals('Foo', pouch()->foo);
+        $this->assertTrue(isset(pouch()->foo));
+    }
+
+    public function test_removing_key_from_container()
+    {
+        pouch()->bind('foo', function () {
+            return 'Foo';
+        });
+
+        $this->assertTrue(pouch()->has('foo'));
+
+        pouch()->remove('foo');
+
+        $this->assertFalse(pouch()->has('foo'));
+    }
 }

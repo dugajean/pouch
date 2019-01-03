@@ -114,7 +114,7 @@ final class ClassTree
     /**
      * Prepare the paths.
      *
-     * @param $namespace
+     * @param string $namespace
      *
      * @return string
      */
