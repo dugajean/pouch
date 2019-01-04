@@ -17,6 +17,8 @@ class Resolvable
      * Inject the decorated object.
      * 
      * @param mixed $object
+     *
+     * @return void
      */
     public function __construct($object = null)
     {
@@ -72,7 +74,7 @@ class Resolvable
     /**
      * Get the type of an anything accurately. If it's an object, the exact class name will be returned.
      * 
-     * @param  mixed $element
+     * @param mixed $element
      *
      * @return string
      */
@@ -86,8 +88,8 @@ class Resolvable
     /**
      * Magic __call method to handle the automatic resolution of parameters.
      * 
-     * @param  string $method
-     * @param  array $args
+     * @param string $method
+     * @param array $args
      *
      * @return mixed
      *
@@ -110,7 +112,7 @@ class Resolvable
     /**
      * Resolve the dependency for all parameters.
      *
-     * @param array $param
+     * @param \ReflectionParameter[] $param
      * @param array $args
      *
      * @return array
@@ -145,8 +147,6 @@ class Resolvable
                     );
                 }
             }
-
-            unset($pos);
         }
 
         return $args;
@@ -196,6 +196,8 @@ class Resolvable
              *
              * @param string $name
              * @param mixed $content
+             *
+             * @return void
              */
             public function __construct($name, $content) {
                 $this->name = $name;

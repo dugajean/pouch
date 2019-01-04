@@ -12,7 +12,14 @@ class Apcu implements CacheInterface
     const RESERVED_CHARACTERS = ['{','}','(',')','/','@',':'];
 
     /**
-     * {@inheritDoc}
+     * Fetches a value from the cache.
+     *
+     * @param string $key     The unique key of this item in the cache.
+     * @param mixed  $default Default value to return if the key does not exist.
+     *
+     * @return mixed The value of the item from the cache, or $default in case of cache miss.
+     *
+     * @throws \Pouch\Exceptions\InvalidArgumentException
      */
     public function get($key, $default = null)
     {
@@ -23,7 +30,17 @@ class Apcu implements CacheInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Persists data in the cache, uniquely referenced by a key with an optional expiration TTL time.
+     *
+     * @param string                 $key   The key of the item to store.
+     * @param mixed                  $value The value of the item to store, must be serializable.
+     * @param null|int|\DateInterval $ttl   Optional. The TTL value of this item. If no value is sent and
+     *                                      the driver supports TTL then the library may set a default value
+     *                                      for it or let the driver take care of that.
+     *
+     * @return bool True on success and false on failure.
+     *
+     * @throws \Pouch\Exceptions\InvalidArgumentException
      */
     public function set($key, $value, $ttl = null)
     {
@@ -37,7 +54,13 @@ class Apcu implements CacheInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Delete an item from the cache by its unique key.
+     *
+     * @param string $key The unique cache key of the item to delete.
+     *
+     * @return bool True if the item was successfully removed. False if there was an error.
+     *
+     * @throws \Pouch\Exceptions\InvalidArgumentException
      */
     public function delete($key)
     {
@@ -47,7 +70,9 @@ class Apcu implements CacheInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Wipes clean the entire cache's keys.
+     *
+     * @return bool True on success and false on failure.
      */
     public function clear()
     {
@@ -55,7 +80,14 @@ class Apcu implements CacheInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Obtains multiple cache items by their unique keys.
+     *
+     * @param iterable $keys    A list of keys that can obtained in a single operation.
+     * @param mixed    $default Default value to return for keys that do not exist.
+     *
+     * @return iterable A list of key => value pairs. Cache keys that do not exist or are stale will have $default as value.
+     *
+     * @throws \Pouch\Exceptions\InvalidArgumentException
      */
     public function getMultiple($keys, $default = null)
     {
@@ -69,7 +101,16 @@ class Apcu implements CacheInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Persists a set of key => value pairs in the cache, with an optional TTL.
+     *
+     * @param iterable               $values A list of key => value pairs for a multiple-set operation.
+     * @param null|int|\DateInterval $ttl    Optional. The TTL value of this item. If no value is sent and
+     *                                       the driver supports TTL then the library may set a default value
+     *                                       for it or let the driver take care of that.
+     *
+     * @return bool True on success and false on failure.
+     *
+     * @throws \Pouch\Exceptions\InvalidArgumentException
      */
     public function setMultiple($values, $ttl = null)
     {
@@ -87,7 +128,13 @@ class Apcu implements CacheInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Deletes multiple cache items in a single operation.
+     *
+     * @param iterable $keys A list of string-based keys to be deleted.
+     *
+     * @return bool True if the items were successfully removed. False if there was an error.
+     *
+     * @throws \Pouch\Exceptions\InvalidArgumentException
      */
     public function deleteMultiple($keys)
     {
@@ -101,7 +148,18 @@ class Apcu implements CacheInterface
     }
 
     /**
-     * {@inheritDoc}
+     * Determines whether an item is present in the cache.
+     *
+     * NOTE: It is recommended that has() is only to be used for cache warming type purposes
+     * and not to be used within your live applications operations for get/set, as this method
+     * is subject to a race condition where your has() will return true and immediately after,
+     * another script can remove it making the state of your app out of date.
+     *
+     * @param string $key The cache item key.
+     *
+     * @return bool
+     *
+     * @throws \Pouch\Exceptions\InvalidArgumentException
      */
     public function has($key)
     {
@@ -120,14 +178,14 @@ class Apcu implements CacheInterface
     private function checkReservedCharacters($key)
     {
         if (!is_string($key)) {
-            $message = sprintf('key %s is not a string.', $key);
-            throw new InvalidArgumentException($message);
+            $type = gettype($key);
+            throw new InvalidArgumentException("The key must be a string. {$type} provided");
         }
 
         foreach (self::RESERVED_CHARACTERS as $needle) {
             if (strpos($key, $needle) !== false) {
-                $message = sprintf('%s string is not a legal value.', $key);
-                throw new InvalidArgumentException($message);
+                $badChars = implode('', self::RESERVED_CHARACTERS);
+                throw new InvalidArgumentException("$key is not a legal value. The key cannot contain {$badChars}");
             }
         }
     }

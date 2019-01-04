@@ -6,7 +6,7 @@ use \Pouch\Cache\Apcu;
 /**
  * Return pouch singleton instance.
  *
- * @return Pouch\Pouch
+ * @return \Pouch\Pouch
  */
 function pouch()
 {

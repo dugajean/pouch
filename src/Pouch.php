@@ -33,14 +33,18 @@ class Pouch implements ContainerInterface
     /**
      * Bootstrap pouch.
      *
-     * @param string $dir Path to the app's root (Where composer.json is).
+     * @param string              $dir Path to the app's root (Where composer.json is).
+     * @param CacheInterface|null $cacheStore PSR-16 compatible cache store instance. Will be used to speed up
+     *                                        Pouch's performance by caching some heavy-ish tasks.
+     *
+     * @return void
      */
     public static function bootstrap($rootDir, CacheInterface $cacheStore = null)
     {
         ClassTree::setRoot($rootDir);
 
         self::singleton(self::CACHE_KEY, function () use ($cacheStore) {
-            return $cacheStore ?: new Apcu;
+            return $cacheStore ?? new Apcu;
         });
 
         require __DIR__.'/../src/Helpers/functions.php';
@@ -80,9 +84,12 @@ class Pouch implements ContainerInterface
     /**
      * Register one or more namespaces for automatic resolution.
      *
-     * @param array|string $namespaces List of namespaces to be made resolvable.
-     *                                 Will go recursively through the namespace.
-     * @param array $overriders
+     * @param string|string[] $namespaces List of namespaces to be made resolvable.
+     *                                    Will go recursively through the namespace.
+     * @param array           $overriders Overriders can be used to hook into the process of fetching
+     *                                    namespace paths and allow you to replace the minimal instantiation
+     *                                    process (which is a simple 'new Class' call to something specific
+     *                                    for those classes (e.g. provide constructor parameters etc.).
      *
      * @return $this
      *
@@ -109,11 +116,7 @@ class Pouch implements ContainerInterface
                 $this->bind($class, function () use ($newContent) {
                     return new Resolvable($newContent);
                 });
-
-                unset($newContent);
             }
-
-            unset($classes);
         }
 
         return $this;
@@ -207,7 +210,7 @@ class Pouch implements ContainerInterface
     /**
      * Allow retrieving container values via magic properties.
      *
-     * @param $key
+     * @param string $key
      *
      * @return mixed
      *
@@ -222,13 +225,25 @@ class Pouch implements ContainerInterface
     /**
      * Allows the use of isset() to determine if something exists in the container.
      *
-     * @param $key
+     * @param string $key
      *
      * @return bool
      */
     public function __isset($key)
     {
         return $this->has($key);
+    }
+
+    /**
+     * Allows the use of unset() to remove key a key from the container.
+     *
+     * @param string $key
+     *
+     * @return void
+     */
+    public function __unset($key)
+    {
+        $this->remove($key);
     }
 
     /**
