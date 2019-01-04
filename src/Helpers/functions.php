@@ -33,13 +33,13 @@ function pouchCache($key, Closure $value)
         return $cacheValue;
     }
 
-    $cKey = Pouch::CACHE_KEY.'_'.$key;
+    $key = Pouch::CACHE_KEY.'_'.$key;
 
-    if ($cacheStore->has($cKey)) {
-        $item = $cacheStore->get($cKey, $cacheValue);
+    if ($cacheStore->has($key)) {
+        $item = $cacheStore->get($key, $cacheValue);
     } else {
         $item = $cacheValue;
-        $cacheStore->set($cKey, $cacheValue);
+        $cacheStore->set($key, $cacheValue);
     }
 
     return $item;
