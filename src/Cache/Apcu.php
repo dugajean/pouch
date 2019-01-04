@@ -9,6 +9,9 @@ use Pouch\Exceptions\InvalidArgumentException;
 
 class Apcu implements CacheInterface
 {
+    /**
+     * Characters that should not be part of the cache key.
+     */
     const RESERVED_CHARACTERS = ['{','}','(',')','/','@',':'];
 
     /**

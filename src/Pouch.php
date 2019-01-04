@@ -33,7 +33,7 @@ class Pouch implements ContainerInterface
     /**
      * Bootstrap pouch.
      *
-     * @param string              $dir Path to the app's root (Where composer.json is).
+     * @param string              $dir        Path to the app's root (Where composer.json is).
      * @param CacheInterface|null $cacheStore PSR-16 compatible cache store instance. Will be used to speed up
      *                                        Pouch's performance by caching some heavy-ish tasks.
      *

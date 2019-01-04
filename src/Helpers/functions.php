@@ -1,7 +1,7 @@
 <?php
 
 use Pouch\Pouch;
-use \Pouch\Cache\Apcu;
+use Pouch\Cache\Apcu;
 
 /**
  * Return pouch singleton instance.
@@ -17,16 +17,16 @@ function pouch()
  * Helper to retrieve data from cache store.
  *
  * @param string   $key
- * @param \Closure $closure
+ * @param \Closure $value
  *
  * @return mixed
  *
  * @throws \Pouch\Exceptions\NotFoundException
- * @throws \Psr\SimpleCache\InvalidArgumentException
+ * @throws \Pouch\Exceptions\InvalidArgumentException
  */
-function pouchCache($key, Closure $closure)
+function pouchCache($key, Closure $value)
 {
-    $cacheValue = $closure();
+    $cacheValue = $value();
     $cacheStore = Pouch::singleton(Pouch::CACHE_KEY);
 
     if ($cacheStore instanceof Apcu && !Apcu::enabled()) {
@@ -34,9 +34,11 @@ function pouchCache($key, Closure $closure)
     }
 
     $cKey = Pouch::CACHE_KEY.'_'.$key;
-    $item = $cacheStore->get($cKey, $cacheValue);
 
-    if (!$cacheStore->has($cKey)) {
+    if ($cacheStore->has($cKey)) {
+        $item = $cacheStore->get($cKey, $cacheValue);
+    } else {
+        $item = $cacheValue;
         $cacheStore->set($cKey, $cacheValue);
     }
 
