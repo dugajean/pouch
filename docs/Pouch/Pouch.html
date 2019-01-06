@@ -141,7 +141,7 @@
                     $this
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_bind">bind</a>($keyOrData, callable $data = null)
+                    <a href="#method_bind">bind</a>(string|array $keyOrData, callable $data = null)
         
                                             <p>Bind a new element to the replaceables.</p>                </div>
                 <div class="col-md-2"></div>
@@ -345,7 +345,7 @@ instance and everything ends up wired up perfectly.</p>                </div>
                     <h3 id="method_bind">
         <div class="location">at         line 64</div>
         <code>            protected        $this
-    <strong>bind</strong>($keyOrData, callable $data = null)
+    <strong>bind</strong>(string|array $keyOrData, callable $data = null)
         </code>
     </h3>
     <div class="details">
@@ -359,14 +359,15 @@ instance and everything ends up wired up perfectly.</p>                </div>
 
                     <table class="table table-condensed">
                     <tr>
-                <td></td>
+                <td>string|array</td>
                 <td>$keyOrData</td>
-                <td></td>
+                <td>Can be a string for the key when binding a single thing, but can also
+                                 be an array with $key => $data format if providing multiple things to bind.</td>
             </tr>
                     <tr>
                 <td>callable</td>
                 <td>$data</td>
-                <td></td>
+                <td>The data to be bound. Must be provided if $key is a string.</td>
             </tr>
             </table>
 

@@ -53,9 +53,9 @@ class Pouch implements ContainerInterface
     /**
      * Bind a new element to the replaceables.
      * 
-     * @param  string|array  $key  Can be a string for the key when binding a single thing, but can also
-     *                             be an array with $key => $data format if providing multiple things to bind.
-     * @param  Callable|null $data The data to be bound. Must be provided if $key is a string.
+     * @param  string|array  $keyOrData Can be a string for the key when binding a single thing, but can also
+     *                                  be an array with $key => $data format if providing multiple things to bind.
+     * @param  Callable|null $data      The data to be bound. Must be provided if $key is a string.
      * 
      * @return $this
      *
