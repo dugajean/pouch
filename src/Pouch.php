@@ -53,32 +53,52 @@ class Pouch implements ContainerInterface
     /**
      * Bind a new element to the replaceables.
      * 
-     * @param  string   $key
-     * @param  Callable $data
+     * @param  string|array  $key  Can be a string for the key when binding a single thing, but can also
+     *                             be an array with $key => $data format if providing multiple things to bind.
+     * @param  Callable|null $data The data to be bound. Must be provided if $key is a string.
      * 
      * @return $this
+     *
+     * @throws \Pouch\Exceptions\PouchException
      */
-    protected function bind($key, Callable $data)
+    protected function bind($keyOrData, Callable $data = null)
     {
-        $this->replaceables[(string)$key] = $data($this);
+        $bind = function ($key, Callable $value) {
+            $this->replaceables[(string)$key] = $value($this);
+        };
+
+        if (is_array($keyOrData)) {
+            foreach ($keyOrData as $key => $callable) {
+                if (!is_callable($callable)) {
+                    throw new PouchException("The array value must be a function for {$key}");
+                }
+
+                $bind($key, $callable);
+            }
+        } else {
+            if ($data === null) {
+                throw new PouchException('Data argument must be set when binding single value.');
+            }
+
+            $bind($keyOrData, $data);
+        }
 
         return $this;
     }
 
     /**
-     * Remove something from the container.
+     * Alias for bind.
      *
-     * @param $key
+     * @param string|array  $keyOrData
+     * @param Callable|null $data
      *
      * @return $this
+     *
+     * @throws \Pouch\Exceptions\PouchException
      */
-    protected function remove($key)
+    public function register($keyOrData, Callable $data = null)
     {
-        if ($this->has($key)) {
-            unset($this->replaceables[$key]);
-        }
-
-        return $this;
+        return $this->bind($keyOrData, $data);
     }
 
     /**
@@ -146,18 +166,6 @@ class Pouch implements ContainerInterface
     }
 
     /**
-     * See if specific key exists in our replaceables.
-     * 
-     * @param string  $key
-     * 
-     * @return bool
-     */
-    protected function contains($key)
-    {
-        return array_key_exists($key, $this->replaceables);
-    }
-
-    /**
      * Alias for resolve.
      *
      * @param  string $key
@@ -173,6 +181,18 @@ class Pouch implements ContainerInterface
     }
 
     /**
+     * See if specific key exists in our replaceables.
+     *
+     * @param string  $key
+     *
+     * @return bool
+     */
+    protected function contains($key)
+    {
+        return array_key_exists($key, $this->replaceables);
+    }
+
+    /**
      * Alias for contains.
      *
      * @param string $key
@@ -182,6 +202,22 @@ class Pouch implements ContainerInterface
     public function has($key)
     {
         return $this->contains($key);
+    }
+
+    /**
+     * Remove something from the container.
+     *
+     * @param $key
+     *
+     * @return $this
+     */
+    protected function remove($key)
+    {
+        if ($this->has($key)) {
+            unset($this->replaceables[$key]);
+        }
+
+        return $this;
     }
 
     /**
@@ -244,6 +280,21 @@ class Pouch implements ContainerInterface
     public function __unset($key)
     {
         $this->remove($key);
+    }
+
+    /**
+     * String representation of a pouch instance.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $containers = [
+            'singletons' => self::$singletons,
+            'replaceables' => $this->replaceables,
+        ];
+
+        return json_encode($containers);
     }
 
     /**

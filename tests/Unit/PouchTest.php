@@ -116,4 +116,40 @@ class PouchTest extends TestCase
 
         $this->assertFalse(pouch()->has('foo'));
     }
+
+    public function test_binding_multiple_values()
+    {
+        pouch()->bind([
+            'foo' => function () {
+                return 'Foo';
+            },
+            'bar' => function ($pouch) {
+                return $pouch->resolve('foo').'Bar';
+            },
+            'baz' => function ($pouch) {
+                return $pouch->resolve('bar').'Baz';
+            }
+        ]);
+
+        $this->assertTrue(pouch()->has('foo'));
+        $this->assertTrue(pouch()->has('bar'));
+        $this->assertTrue(pouch()->has('baz'));
+        $this->assertEquals('Foo', pouch()->resolve('foo'));
+        $this->assertEquals('FooBar', pouch()->resolve('bar'));
+        $this->assertEquals('FooBarBaz', pouch()->resolve('baz'));
+    }
+
+    public function test_multibind_with_invalid_value()
+    {
+        $this->expectException(PouchException::class);
+
+        pouch()->bind(['foo' => 'Foo']);
+    }
+
+    public function test_single_bind_with_no_data_argument()
+    {
+        $this->expectException(PouchException::class);
+
+        pouch()->bind('foo');
+    }
 }
