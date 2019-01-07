@@ -148,7 +148,7 @@ class PouchTest extends TestCase
             return 'Bar';
         });
 
-        $this->assertFalse($pouch->has('foo'));
         $this->assertFalse(pouch()->has('bar'));
+        $this->assertFalse($pouch->has('foo'));
     }
 }
