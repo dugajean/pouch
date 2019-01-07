@@ -46,8 +46,6 @@ class PouchTest extends TestCase
 
     public function test_resolving_with_non_string_key()
     {
-        $this->expectException(PouchException::class);
-
         pouch()->bind(5, function () {
             return 'FooString';
         });
@@ -55,7 +53,7 @@ class PouchTest extends TestCase
         pouch()->resolve(5);
 
         $this->assertTrue(pouch()->has('5'));
-        $this->assertEquals('FooString', pouch()->resolve('5'));
+        $this->assertEquals('FooString', pouch()->resolve(5));
     }
 
     public function test_resolving_with_non_string_key_converted()
@@ -83,24 +81,14 @@ class PouchTest extends TestCase
         $this->assertEquals($expected, pouch()->get('foobar'));
     }
 
-    public function test_pouch_methods_with_static_calls()
-    {
-        $this->markTestSkipped('Does not pass until PHP 7.3.1');
-
-        Pouch::bind('foo', function () {
-            return 'Foo';
-        });
-
-        $this->assertEquals('Foo', Pouch::resolve('foo'));
-    }
-
-    public function test_using_magic_props_to_get_container_value()
+    public function test_using_magic_prop_and_method_to_get_container_value()
     {
         pouch()->bind('foo', function () {
            return 'Foo';
         });
 
         $this->assertEquals('Foo', pouch()->foo);
+        $this->assertEquals('Foo', pouch()->foo());
         $this->assertTrue(isset(pouch()->foo));
     }
 
@@ -139,17 +127,28 @@ class PouchTest extends TestCase
         $this->assertEquals('FooBarBaz', pouch()->resolve('baz'));
     }
 
-    public function test_multibind_with_invalid_value()
+    public function test_dynamic_data_binding()
     {
-        $this->expectException(PouchException::class);
+        pouch()->foo(function () {
+            return 'Foo';
+        });
 
-        pouch()->bind(['foo' => 'Foo']);
+        $this->assertTrue(pouch()->has('foo'));
+        $this->assertEquals('Foo', pouch()->resolve('foo'));
     }
 
-    public function test_single_bind_with_no_data_argument()
+    public function test_working_with_a_new_pouch_instance()
     {
-        $this->expectException(PouchException::class);
+        pouch()->bind('foo', function () {
+            return 'Foo';
+        });
 
-        pouch()->bind('foo');
+        $pouch = new Pouch;
+        $pouch->bind('bar', function () {
+            return 'Bar';
+        });
+
+        $this->assertFalse($pouch->has('foo'));
+        $this->assertFalse(pouch()->has('bar'));
     }
 }

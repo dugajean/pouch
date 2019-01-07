@@ -39,7 +39,7 @@ function pouchCache($key, Closure $value)
         $item = $cacheStore->get($key, $cacheValue);
     } else {
         $item = $cacheValue;
-        $cacheStore->set($key, $cacheValue);
+        $cacheStore->set($key, $item);
     }
 
     return $item;

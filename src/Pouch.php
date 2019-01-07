@@ -9,6 +9,7 @@ use Psr\Container\ContainerInterface;
 use Pouch\Exceptions\PouchException;
 use Pouch\Exceptions\NotFoundException;
 
+
 class Pouch implements ContainerInterface
 {
     /**
@@ -33,7 +34,7 @@ class Pouch implements ContainerInterface
     /**
      * Bootstrap pouch.
      *
-     * @param string              $dir        Path to the app's root (Where composer.json is).
+     * @param string              $rootDir    Path to the app's root (Where composer.json is).
      * @param CacheInterface|null $cacheStore PSR-16 compatible cache store instance. Will be used to speed up
      *                                        Pouch's performance by caching some heavy-ish tasks.
      *
@@ -51,17 +52,38 @@ class Pouch implements ContainerInterface
     }
 
     /**
+     * Insert or return a singleton instance from our container.
+     *
+     * @param  string   $key
+     * @param  Callable $data
+     *
+     * @return mixed
+     *
+     * @throws \Pouch\Exceptions\NotFoundException
+     */
+    public static function singleton($key, Callable $data = null)
+    {
+        if (array_key_exists($key, self::$singletons)) {
+            return self::$singletons[$key];
+        }
+
+        if ($data === null) {
+            throw new NotFoundException("The {$key} key could not be found in the singleton container");
+        }
+
+        return self::$singletons[$key] = $data();
+    }
+
+    /**
      * Bind a new element to the replaceables.
      * 
      * @param  string|array  $keyOrData Can be a string for the key when binding a single thing, but can also
-     *                                  be an array with $key => $data format if providing multiple things to bind.
+     *                                  be an array with $key => $callable format if providing multiple things to bind.
      * @param  Callable|null $data      The data to be bound. Must be provided if $key is a string.
      * 
      * @return $this
-     *
-     * @throws \Pouch\Exceptions\PouchException
      */
-    protected function bind($keyOrData, Callable $data = null)
+    public function bind($keyOrData, Callable $data = null)
     {
         $bind = function ($key, Callable $value) {
             $this->replaceables[(string)$key] = $value($this);
@@ -69,17 +91,9 @@ class Pouch implements ContainerInterface
 
         if (is_array($keyOrData)) {
             foreach ($keyOrData as $key => $callable) {
-                if (!is_callable($callable)) {
-                    throw new PouchException("The array value must be a function for {$key}");
-                }
-
                 $bind($key, $callable);
             }
         } else {
-            if ($data === null) {
-                throw new PouchException('Data argument must be set when binding single value.');
-            }
-
             $bind($keyOrData, $data);
         }
 
@@ -93,8 +107,6 @@ class Pouch implements ContainerInterface
      * @param Callable|null $data
      *
      * @return $this
-     *
-     * @throws \Pouch\Exceptions\PouchException
      */
     public function register($keyOrData, Callable $data = null)
     {
@@ -115,7 +127,7 @@ class Pouch implements ContainerInterface
      *
      * @throws \Pouch\Exceptions\ResolvableException
      */
-    protected function registerNamespaces($namespaces, array $overriders = [])
+    public function registerNamespaces($namespaces, array $overriders = [])
     {
         foreach ((array)$namespaces as $namespace) {
             $classes = pouchCache($namespace, function () use ($namespace) {
@@ -149,20 +161,15 @@ class Pouch implements ContainerInterface
      * 
      * @return mixed
      *
-     * @throws \Pouch\Exceptions\PouchException
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    protected function resolve($key)
+    public function resolve($key)
     {
-        if (!is_string($key)) {
-            throw new PouchException('The key must be a string');
-        }
-
         if (!array_key_exists($key, $this->replaceables)) {
             throw new NotFoundException("The {$key} key could not be found in the container");
         }
 
-        return $this->replaceables[$key];
+        return $this->replaceables[(string)$key];
     }
 
     /**
@@ -187,7 +194,7 @@ class Pouch implements ContainerInterface
      *
      * @return bool
      */
-    protected function contains($key)
+    public function contains($key)
     {
         return array_key_exists($key, $this->replaceables);
     }
@@ -205,42 +212,19 @@ class Pouch implements ContainerInterface
     }
 
     /**
-     * Remove something from the container.
+     * Remove key from the container.
      *
      * @param $key
      *
      * @return $this
      */
-    protected function remove($key)
+    public function remove($key)
     {
         if ($this->has($key)) {
             unset($this->replaceables[$key]);
         }
 
         return $this;
-    }
-
-    /**
-     * To allow calls of the methods of this class "statically" (via singleton),
-     * this class's methods have to be set to protected. Then we use __call
-     * in order to call the protected methods normally and __callStatic
-     * to simulate static calls of all methods from the singleton
-     * instance and everything ends up wired up perfectly.
-     *
-     * @param string $method
-     * @param array $args
-     *
-     * @return mixed
-     *
-     * @throws \Pouch\Exceptions\PouchException
-     */
-    public function __call($method, $args)
-    {
-        if (method_exists($this, $method)) {
-            return $this->$method(...$args);
-        }
-
-        throw new PouchException("Method Pouch::{$method} does not exist");
     }
 
     /**
@@ -298,44 +282,20 @@ class Pouch implements ContainerInterface
     }
 
     /**
-     * Insert or return a singleton instance from our container.
+     * Bind a new key or fetch an existing one if no argument is provided..
+     * If an argument is provided: Only the first one will be considered and it must be a callable.
      *
-     * @param  string   $key
-     * @param  Callable $data
+     * @param string $key
+     * @param array  $data
      *
-     * @return mixed
-     *
-     * @throws \Pouch\Exceptions\NotFoundException
+     * @return $this
      */
-    public static function singleton($key, Callable $data = null)
+    public function __call($key, array $data)
     {
-        if (array_key_exists($key, self::$singletons)) {
-            return self::$singletons[$key];
+        if (!$data) {
+            return $this->resolve($key);
         }
 
-        if ($data === null) {
-            throw new NotFoundException("The {$key} key could not be found in the singleton container");
-        }
-
-        return self::$singletons[$key] = $data();
-    }
-
-    /**
-     * Allow calling all the methods of this class statically.
-     *
-     * @param string $method
-     * @param array $args
-     *
-     * @return mixed
-     *
-     * @throws \Pouch\Exceptions\PouchException
-     */
-    public static function __callStatic($method, $args)
-    {
-        if (method_exists(pouch(), $method)) {
-            return pouch()->$method(...$args);
-        }
-
-        throw new PouchException("Method Pouch::{$method} does not exist");
+        return $this->bind($key, $data[0]);
     }
 }
