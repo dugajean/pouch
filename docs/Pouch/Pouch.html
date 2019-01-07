@@ -131,9 +131,19 @@
                     static&nbsp;void
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_bootstrap">bootstrap</a>($rootDir, <abbr title="Psr\SimpleCache\CacheInterface">CacheInterface</abbr> $cacheStore = null)
+                    <a href="#method_bootstrap">bootstrap</a>(string $rootDir, <abbr title="Psr\SimpleCache\CacheInterface">CacheInterface</abbr> $cacheStore = null)
         
                                             <p>Bootstrap pouch.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;mixed
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_singleton">singleton</a>(string $key, callable $data = null)
+        
+                                            <p>Insert or return a singleton instance from our container.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
@@ -213,21 +223,7 @@
                 <div class="col-md-8 type">
                     <a href="#method_remove">remove</a>($key)
         
-                                            <p>Remove something from the container.</p>                </div>
-                <div class="col-md-2"></div>
-            </div>
-                    <div class="row">
-                <div class="col-md-2 type">
-                    mixed
-                </div>
-                <div class="col-md-8 type">
-                    <a href="#method___call">__call</a>(string $method, array $args)
-        
-                                            <p>To allow calls of the methods of this class "statically" (via singleton),
-this class's methods have to be set to protected. Then we use __call
-in order to call the protected methods normally and __callStatic
-to simulate static calls of all methods from the singleton
-instance and everything ends up wired up perfectly.</p>                </div>
+                                            <p>Remove key from the container.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
@@ -272,22 +268,12 @@ instance and everything ends up wired up perfectly.</p>                </div>
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
-                    static&nbsp;mixed
+                    $this
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_singleton">singleton</a>(string $key, callable $data = null)
+                    <a href="#method___call">__call</a>(string $key, array $data)
         
-                                            <p>Insert or return a singleton instance from our container.</p>                </div>
-                <div class="col-md-2"></div>
-            </div>
-                    <div class="row">
-                <div class="col-md-2 type">
-                    static&nbsp;mixed
-                </div>
-                <div class="col-md-8 type">
-                    <a href="#method___callStatic">__callStatic</a>(string $method, array $args)
-        
-                                            <p>Allow calling all the methods of this class statically.</p>                </div>
+                                            <p>Bind a new key or fetch an existing one if no argument is provided.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
             </div>
@@ -298,9 +284,9 @@ instance and everything ends up wired up perfectly.</p>                </div>
             <div id="method-details">
                     <div class="method-item">
                     <h3 id="method_bootstrap">
-        <div class="location">at         line 42</div>
+        <div class="location">at         line 43</div>
         <code>        static            void
-    <strong>bootstrap</strong>($rootDir, <abbr title="Psr\SimpleCache\CacheInterface">CacheInterface</abbr> $cacheStore = null)
+    <strong>bootstrap</strong>(string $rootDir, <abbr title="Psr\SimpleCache\CacheInterface">CacheInterface</abbr> $cacheStore = null)
         </code>
     </h3>
     <div class="details">
@@ -314,14 +300,15 @@ instance and everything ends up wired up perfectly.</p>                </div>
 
                     <table class="table table-condensed">
                     <tr>
-                <td></td>
+                <td>string</td>
                 <td>$rootDir</td>
-                <td></td>
+                <td>Path to the app's root (Where composer.json is).</td>
             </tr>
                     <tr>
                 <td><abbr title="Psr\SimpleCache\CacheInterface">CacheInterface</abbr></td>
                 <td>$cacheStore</td>
-                <td></td>
+                <td>PSR-16 compatible cache store instance. Will be used to speed up
+                                       Pouch's performance by caching some heavy-ish tasks.</td>
             </tr>
             </table>
 
@@ -342,9 +329,63 @@ instance and everything ends up wired up perfectly.</p>                </div>
 
             </div>
                     <div class="method-item">
-                    <h3 id="method_bind">
+                    <h3 id="method_singleton">
         <div class="location">at         line 64</div>
-        <code>            protected        $this
+        <code>        static            mixed
+    <strong>singleton</strong>(string $key, callable $data = null)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Insert or return a singleton instance from our container.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$key</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>callable</td>
+                <td>$data</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>mixed</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../Pouch/Exceptions/NotFoundException.html"><abbr title="Pouch\Exceptions\NotFoundException">NotFoundException</abbr></a></td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_bind">
+        <div class="location">at         line 86</div>
+        <code>                    $this
     <strong>bind</strong>(string|array $keyOrData, callable $data = null)
         </code>
     </h3>
@@ -362,7 +403,7 @@ instance and everything ends up wired up perfectly.</p>                </div>
                 <td>string|array</td>
                 <td>$keyOrData</td>
                 <td>Can be a string for the key when binding a single thing, but can also
-                                 be an array with $key => $data format if providing multiple things to bind.</td>
+                                 be an array with $key => $callable format if providing multiple things to bind.</td>
             </tr>
                     <tr>
                 <td>callable</td>
@@ -382,15 +423,6 @@ instance and everything ends up wired up perfectly.</p>                </div>
     </table>
 
             
-                            <h4>Exceptions</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td><a href="../Pouch/Exceptions/PouchException.html"><abbr title="Pouch\Exceptions\PouchException">PouchException</abbr></a></td>
-                <td></td>
-            </tr>
-            </table>
-
             
                     </div>
     </div>
@@ -398,7 +430,7 @@ instance and everything ends up wired up perfectly.</p>                </div>
             </div>
                     <div class="method-item">
                     <h3 id="method_register">
-        <div class="location">at         line 99</div>
+        <div class="location">at         line 111</div>
         <code>                    $this
     <strong>register</strong>(string|array $keyOrData, callable $data = null)
         </code>
@@ -436,15 +468,6 @@ instance and everything ends up wired up perfectly.</p>                </div>
     </table>
 
             
-                            <h4>Exceptions</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td><a href="../Pouch/Exceptions/PouchException.html"><abbr title="Pouch\Exceptions\PouchException">PouchException</abbr></a></td>
-                <td></td>
-            </tr>
-            </table>
-
             
                     </div>
     </div>
@@ -452,8 +475,8 @@ instance and everything ends up wired up perfectly.</p>                </div>
             </div>
                     <div class="method-item">
                     <h3 id="method_registerNamespaces">
-        <div class="location">at         line 118</div>
-        <code>            protected        $this
+        <div class="location">at         line 130</div>
+        <code>                    $this
     <strong>registerNamespaces</strong>(string|string[] $namespaces, array $overriders = [])
         </code>
     </h3>
@@ -510,8 +533,8 @@ instance and everything ends up wired up perfectly.</p>                </div>
             </div>
                     <div class="method-item">
                     <h3 id="method_resolve">
-        <div class="location">at         line 155</div>
-        <code>            protected        mixed
+        <div class="location">at         line 166</div>
+        <code>                    mixed
     <strong>resolve</strong>(string $key)
         </code>
     </h3>
@@ -547,10 +570,6 @@ instance and everything ends up wired up perfectly.</p>                </div>
 
                     <table class="table table-condensed">
                     <tr>
-                <td><a href="../Pouch/Exceptions/PouchException.html"><abbr title="Pouch\Exceptions\PouchException">PouchException</abbr></a></td>
-                <td></td>
-            </tr>
-                    <tr>
                 <td><a href="../Pouch/Exceptions/NotFoundException.html"><abbr title="Pouch\Exceptions\NotFoundException">NotFoundException</abbr></a></td>
                 <td></td>
             </tr>
@@ -563,7 +582,7 @@ instance and everything ends up wired up perfectly.</p>                </div>
             </div>
                     <div class="method-item">
                     <h3 id="method_get">
-        <div class="location">at         line 178</div>
+        <div class="location">at         line 185</div>
         <code>                    mixed
     <strong>get</strong>(string $key)
         </code>
@@ -616,8 +635,8 @@ instance and everything ends up wired up perfectly.</p>                </div>
             </div>
                     <div class="method-item">
                     <h3 id="method_contains">
-        <div class="location">at         line 190</div>
-        <code>            protected        bool
+        <div class="location">at         line 197</div>
+        <code>                    bool
     <strong>contains</strong>(string $key)
         </code>
     </h3>
@@ -656,7 +675,7 @@ instance and everything ends up wired up perfectly.</p>                </div>
             </div>
                     <div class="method-item">
                     <h3 id="method_has">
-        <div class="location">at         line 202</div>
+        <div class="location">at         line 209</div>
         <code>                    bool
     <strong>has</strong>(string $key)
         </code>
@@ -696,8 +715,8 @@ instance and everything ends up wired up perfectly.</p>                </div>
             </div>
                     <div class="method-item">
                     <h3 id="method_remove">
-        <div class="location">at         line 214</div>
-        <code>            protected        $this
+        <div class="location">at         line 221</div>
+        <code>                    $this
     <strong>remove</strong>($key)
         </code>
     </h3>
@@ -706,7 +725,7 @@ instance and everything ends up wired up perfectly.</p>                </div>
     
 
                     <div class="method-description">
-                                    <p>Remove something from the container.</p>                                                </div>
+                                    <p>Remove key from the container.</p>                                                </div>
                 <div class="tags">
                             <h4>Parameters</h4>
 
@@ -735,66 +754,8 @@ instance and everything ends up wired up perfectly.</p>                </div>
 
             </div>
                     <div class="method-item">
-                    <h3 id="method___call">
-        <div class="location">at         line 237</div>
-        <code>                    mixed
-    <strong>__call</strong>(string $method, array $args)
-        </code>
-    </h3>
-    <div class="details">
-            
-    
-
-                    <div class="method-description">
-                                    <p>To allow calls of the methods of this class "statically" (via singleton),
-this class's methods have to be set to protected. Then we use __call
-in order to call the protected methods normally and __callStatic
-to simulate static calls of all methods from the singleton
-instance and everything ends up wired up perfectly.</p>                                                </div>
-                <div class="tags">
-                            <h4>Parameters</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td>string</td>
-                <td>$method</td>
-                <td></td>
-            </tr>
-                    <tr>
-                <td>array</td>
-                <td>$args</td>
-                <td></td>
-            </tr>
-            </table>
-
-            
-                            <h4>Return Value</h4>
-
-                    <table class="table table-condensed">
-        <tr>
-            <td>mixed</td>
-            <td></td>
-        </tr>
-    </table>
-
-            
-                            <h4>Exceptions</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td><a href="../Pouch/Exceptions/PouchException.html"><abbr title="Pouch\Exceptions\PouchException">PouchException</abbr></a></td>
-                <td></td>
-            </tr>
-            </table>
-
-            
-                    </div>
-    </div>
-
-            </div>
-                    <div class="method-item">
                     <h3 id="method___get">
-        <div class="location">at         line 256</div>
+        <div class="location">at         line 240</div>
         <code>                    mixed
     <strong>__get</strong>(string $key)
         </code>
@@ -847,7 +808,7 @@ instance and everything ends up wired up perfectly.</p>                         
             </div>
                     <div class="method-item">
                     <h3 id="method___isset">
-        <div class="location">at         line 268</div>
+        <div class="location">at         line 252</div>
         <code>                    bool
     <strong>__isset</strong>(string $key)
         </code>
@@ -887,7 +848,7 @@ instance and everything ends up wired up perfectly.</p>                         
             </div>
                     <div class="method-item">
                     <h3 id="method___unset">
-        <div class="location">at         line 280</div>
+        <div class="location">at         line 264</div>
         <code>                    void
     <strong>__unset</strong>(string $key)
         </code>
@@ -927,7 +888,7 @@ instance and everything ends up wired up perfectly.</p>                         
             </div>
                     <div class="method-item">
                     <h3 id="method___toString">
-        <div class="location">at         line 290</div>
+        <div class="location">at         line 274</div>
         <code>                    string
     <strong>__toString</strong>()
         </code>
@@ -956,10 +917,10 @@ instance and everything ends up wired up perfectly.</p>                         
 
             </div>
                     <div class="method-item">
-                    <h3 id="method_singleton">
-        <div class="location">at         line 310</div>
-        <code>        static            mixed
-    <strong>singleton</strong>(string $key, callable $data = null)
+                    <h3 id="method___call">
+        <div class="location">at         line 293</div>
+        <code>                    $this
+    <strong>__call</strong>(string $key, array $data)
         </code>
     </h3>
     <div class="details">
@@ -967,7 +928,8 @@ instance and everything ends up wired up perfectly.</p>                         
     
 
                     <div class="method-description">
-                                    <p>Insert or return a singleton instance from our container.</p>                                                </div>
+                                    <p>Bind a new key or fetch an existing one if no argument is provided.</p>                    <p>.
+If an argument is provided: Only the first one will be considered and it must be a callable.</p>                            </div>
                 <div class="tags">
                             <h4>Parameters</h4>
 
@@ -978,7 +940,7 @@ instance and everything ends up wired up perfectly.</p>                         
                 <td></td>
             </tr>
                     <tr>
-                <td>callable</td>
+                <td>array</td>
                 <td>$data</td>
                 <td></td>
             </tr>
@@ -989,75 +951,12 @@ instance and everything ends up wired up perfectly.</p>                         
 
                     <table class="table table-condensed">
         <tr>
-            <td>mixed</td>
+            <td>$this</td>
             <td></td>
         </tr>
     </table>
 
             
-                            <h4>Exceptions</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td><a href="../Pouch/Exceptions/NotFoundException.html"><abbr title="Pouch\Exceptions\NotFoundException">NotFoundException</abbr></a></td>
-                <td></td>
-            </tr>
-            </table>
-
-            
-                    </div>
-    </div>
-
-            </div>
-                    <div class="method-item">
-                    <h3 id="method___callStatic">
-        <div class="location">at         line 333</div>
-        <code>        static            mixed
-    <strong>__callStatic</strong>(string $method, array $args)
-        </code>
-    </h3>
-    <div class="details">
-            
-    
-
-                    <div class="method-description">
-                                    <p>Allow calling all the methods of this class statically.</p>                                                </div>
-                <div class="tags">
-                            <h4>Parameters</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td>string</td>
-                <td>$method</td>
-                <td></td>
-            </tr>
-                    <tr>
-                <td>array</td>
-                <td>$args</td>
-                <td></td>
-            </tr>
-            </table>
-
-            
-                            <h4>Return Value</h4>
-
-                    <table class="table table-condensed">
-        <tr>
-            <td>mixed</td>
-            <td></td>
-        </tr>
-    </table>
-
-            
-                            <h4>Exceptions</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td><a href="../Pouch/Exceptions/PouchException.html"><abbr title="Pouch\Exceptions\PouchException">PouchException</abbr></a></td>
-                <td></td>
-            </tr>
-            </table>
-
             
                     </div>
     </div>
