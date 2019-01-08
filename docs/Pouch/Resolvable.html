@@ -100,6 +100,14 @@
                 <td></td>
             </tr>
                     <tr>
+                <td class="type" id="property_pouch">
+                                        protected                                        <a href="../Pouch/Pouch.html"><abbr title="Pouch\Pouch">Pouch</abbr></a>
+                </td>
+                <td>$pouch</td>
+                <td class="last">Holds the Pouch instance. Default to singleton version (pouch()).</td>
+                <td></td>
+            </tr>
+                    <tr>
                 <td class="type" id="property_name">
                                                                                 string
                 </td>
@@ -202,7 +210,7 @@ the container require them to be prefixed with \Pouch\Key.</p>                </
             <div id="method-details">
                     <div class="method-item">
                     <h3 id="method___construct">
-        <div class="location">at         line 202</div>
+        <div class="location">at         line 211</div>
         <code>                    void
     <strong>__construct</strong>(string $name, mixed $content)
         </code>
@@ -247,7 +255,7 @@ the container require them to be prefixed with \Pouch\Key.</p>                </
             </div>
                     <div class="method-item">
                     <h3 id="method_make">
-        <div class="location">at         line 39</div>
+        <div class="location">at         line 48</div>
         <code>                    $this
     <strong>make</strong>(mixed $object)
         </code>
@@ -296,7 +304,7 @@ the container require them to be prefixed with \Pouch\Key.</p>                </
             </div>
                     <div class="method-item">
                     <h3 id="method_getObject">
-        <div class="location">at         line 69</div>
+        <div class="location">at         line 78</div>
         <code>                    mixed
     <strong>getObject</strong>()
         </code>
@@ -326,7 +334,7 @@ the container require them to be prefixed with \Pouch\Key.</p>                </
             </div>
                     <div class="method-item">
                     <h3 id="method_getType">
-        <div class="location">at         line 81</div>
+        <div class="location">at         line 90</div>
         <code>                    string
     <strong>getType</strong>(mixed $element = null)
         </code>
@@ -366,7 +374,7 @@ the container require them to be prefixed with \Pouch\Key.</p>                </
             </div>
                     <div class="method-item">
                     <h3 id="method___call">
-        <div class="location">at         line 98</div>
+        <div class="location">at         line 107</div>
         <code>                    mixed
     <strong>__call</strong>(string $method, array $args)
         </code>
@@ -420,7 +428,7 @@ the container require them to be prefixed with \Pouch\Key.</p>                </
             </div>
                     <div class="method-item">
                     <h3 id="method_resolveDependencies">
-        <div class="location">at         line 122</div>
+        <div class="location">at         line 131</div>
         <code>            protected        array
     <strong>resolveDependencies</strong>($params, array $args = [])
         </code>
@@ -474,7 +482,7 @@ the container require them to be prefixed with \Pouch\Key.</p>                </
             </div>
                     <div class="method-item">
                     <h3 id="method_createClassDependency">
-        <div class="location">at         line 165</div>
+        <div class="location">at         line 174</div>
         <code>            protected        mixed
     <strong>createClassDependency</strong>(string $rawClassName)
         </code>
@@ -524,7 +532,7 @@ the container require them to be prefixed with \Pouch\Key.</p>                  
             </div>
                     <div class="method-item">
                     <h3 id="method_getContent">
-        <div class="location">at         line 212</div>
+        <div class="location">at         line 221</div>
         <code>                    mixed
     <strong>getContent</strong>()
         </code>
