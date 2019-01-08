@@ -14,14 +14,23 @@ class Resolvable
     protected $object;
 
     /**
+     * Holds the Pouch instance. Default to singleton version (pouch()).
+     *
+     * @var Pouch
+     */
+    protected $pouch;
+
+    /**
      * Inject the decorated object.
      * 
      * @param mixed $object
      *
      * @return void
      */
-    public function __construct($object = null)
+    public function __construct($object = null, Pouch $pouch = null)
     {
+        $this->pouch = $pouch ?? pouch();
+
         if ($object !== null) {
             $this->make($object);
         }
@@ -113,7 +122,7 @@ class Resolvable
      * Resolve the dependency for all parameters.
      *
      * @param \ReflectionParameter[] $param
-     * @param array $args
+     * @param array                  $args
      *
      * @return array
      *
@@ -135,8 +144,8 @@ class Resolvable
             if (is_object($class)) {
                 $className = $class->name;
 
-                if (pouch()->has($className)) {
-                    $content = pouch()->resolve($className);
+                if ($this->pouch->has($className)) {
+                    $content = $this->pouch->resolve($className);
                     $content = $content instanceof $selfName ? $content->getObject() : $content;
                     $args[$pos] = $content;
                 } elseif (!isset($args[$pos])) {
@@ -170,11 +179,11 @@ class Resolvable
             $className = str_replace('Pouch\\', '', $className);
         }
 
-        if (!pouch()->has($className)) {
+        if (!$this->pouch->has($className)) {
             throw new ResolvableException("Cannot inject class {$className} as it does not appear to exist");
         }
 
-        $content = pouch()->resolve($className);
+        $content = $this->pouch->resolve($className);
         $anonymousClass = new class ($className, $content)
         {
             /**
@@ -216,7 +225,7 @@ class Resolvable
 
         class_alias(get_class($anonymousClass), "\\Pouch\\$className");
 
-        pouch()->bind($className, function () use ($anonymousClass) {
+        $this->pouch->bind($className, function () use ($anonymousClass) {
             return $anonymousClass;
         });
 

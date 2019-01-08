@@ -2,20 +2,16 @@
 
 namespace Pouch;
 
-use Pouch\Cache\Apcu;
+use Pouch\Cache\Cacheable;
 use Pouch\Helpers\ClassTree;
 use Psr\SimpleCache\CacheInterface;
 use Psr\Container\ContainerInterface;
 use Pouch\Exceptions\PouchException;
 use Pouch\Exceptions\NotFoundException;
 
-
 class Pouch implements ContainerInterface
 {
-    /**
-     * Key of the singleton holding the cache handler.
-     */
-    const CACHE_KEY = 'pouchCacheStore';
+    use Cacheable;
 
     /**
      * Store all singletons.
@@ -43,10 +39,8 @@ class Pouch implements ContainerInterface
     public static function bootstrap($rootDir, CacheInterface $cacheStore = null)
     {
         ClassTree::setRoot($rootDir);
-
-        self::singleton(self::CACHE_KEY, function () use ($cacheStore) {
-            return $cacheStore ?? new Apcu;
-        });
+        
+        self::initCache($cacheStore);
 
         require __DIR__.'/../src/Helpers/functions.php';
     }
@@ -130,7 +124,7 @@ class Pouch implements ContainerInterface
     public function registerNamespaces($namespaces, array $overriders = [])
     {
         foreach ((array)$namespaces as $namespace) {
-            $classes = pouchCache($namespace, function () use ($namespace) {
+            $classes = $this->cache($namespace, function () use ($namespace) {
                 return ClassTree::getClassesInNamespace($namespace);
             });
 
@@ -146,7 +140,7 @@ class Pouch implements ContainerInterface
                 }
 
                 $this->bind($class, function () use ($newContent) {
-                    return new Resolvable($newContent);
+                    return new Resolvable($newContent, $this);
                 });
             }
         }

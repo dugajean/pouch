@@ -35,4 +35,9 @@ class Foo
     {
         return $dateTime->getContent()->getTimestamp();
     }
+
+    public function fancyFooExample(\Pouch\FancyFoo $foo)
+    {
+        return $foo->getContent();
+    }
 }

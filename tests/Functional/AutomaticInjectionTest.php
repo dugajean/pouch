@@ -39,7 +39,7 @@ class AutomaticInjectionTest extends TestCase
         $this->assertEquals($fooObject->testConstructor(), $fooResolvable->testConstructor());
     }
 
-    public function test_pouch_container_dependency_injection()
+    public function test_pouch_container_value_injecting()
     {
         pouch()->bind('FancyDateTime', function ($pouch) {
             return new \DateTime;
@@ -50,5 +50,26 @@ class AutomaticInjectionTest extends TestCase
         $fooResolvable = pouch()->resolve(Foo::class);
 
         $this->assertEquals(time(), $fooResolvable->pouchDependency());
+    }
+
+    public function test_container_injecting_from_new_pouch_instance()
+    {
+        $expected = 'Foo which is fancy!';
+
+        $pouch = new Pouch;
+        $pouch->bind('FancyFoo', function ($pouch) use ($expected) {
+            return $expected;
+        });
+
+        $pouch->registerNamespaces('Pouch\Tests\Data');
+
+        $fooResolvable = $pouch->resolve(Foo::class);
+
+        $this->assertEquals($expected, $fooResolvable->fancyFooExample());
+    }
+
+    public function test_container_injecting_with_complex_namespace()
+    {
+        $this->markTestIncomplete('TODO');
     }
 }
