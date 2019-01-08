@@ -12,7 +12,7 @@ trait Cacheable
      *
      * @var string
      */
-    public static $cacheKey = 'pouchCacheStore';
+    public static $cacheStoreKey = 'pouchCacheStore';
 
     /**
      * Store cache instance as a singleton.
@@ -23,7 +23,7 @@ trait Cacheable
      */
     protected static function initCache(CacheInterface $cacheStore = null)
     {
-        Pouch::singleton(self::$cacheKey, function () use ($cacheStore) {
+        Pouch::singleton(self::$cacheStoreKey, function () use ($cacheStore) {
             return $cacheStore ?? new Apcu();
         });
     }
@@ -42,21 +42,20 @@ trait Cacheable
     protected function cache($key, \Closure $value)
     {
         $cacheValue = $value();
-        $cacheStore = Pouch::singleton(self::$cacheKey);
+        $cacheStore = Pouch::singleton(self::$cacheStoreKey);
 
         if ($cacheStore instanceof Apcu && !Apcu::enabled()) {
             return $cacheValue;
         }
 
-        $key = Pouch::CACHE_KEY.'_'.$key;
+        $key = self::$cacheStoreKey.'_'.$key;
 
         if ($cacheStore->has($key)) {
-            $item = $cacheStore->get($key, $cacheValue);
+            $cacheValue = $cacheStore->get($key, $cacheValue);
         } else {
-            $item = $cacheValue;
-            $cacheStore->set($key, $item);
+            $cacheStore->set($key, $cacheValue);
         }
 
-        return $item;
+        return $cacheValue;
     }
 }
