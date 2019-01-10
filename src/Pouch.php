@@ -28,6 +28,13 @@ class Pouch implements ContainerInterface
     protected $replaceables = [];
 
     /**
+     * Whether a bind will be a factory.
+     *
+     * @var bool
+     */
+    protected $isFactory = false;
+
+    /**
      * Bootstrap pouch.
      *
      * @param string              $rootDir    Path to the app's root (Where composer.json is).
@@ -73,14 +80,22 @@ class Pouch implements ContainerInterface
      * 
      * @param  string|array  $keyOrData Can be a string for the key when binding a single thing, but can also
      *                                  be an array with $key => $callable format if providing multiple things to bind.
-     * @param  Callable|null $data      The data to be bound. Must be provided if $key is a string.
+     * @param  Callable|null $data       The data to be bound. Must be provided if $key is a string.
      * 
      * @return $this
      */
     public function bind($keyOrData, Callable $data = null)
     {
         $bind = function ($key, Callable $value) {
-            $this->replaceables[(string)$key] = $value($this);
+            if ($this->isFactory) {
+                $this->replaceables[(string)$key] = new Factory(function ($callable) {
+                    return $callable($this);
+                }, $value);
+
+                $this->factory(false);
+            } else {
+                $this->replaceables[(string)$key] = $value($this);
+            }
         };
 
         if (is_array($keyOrData)) {
@@ -163,7 +178,9 @@ class Pouch implements ContainerInterface
             throw new NotFoundException("The {$key} key could not be found in the container");
         }
 
-        return $this->replaceables[(string)$key];
+        $content = $this->replaceables[(string)$key];
+        
+        return $content instanceof Factory ? $content() : $content;
     }
 
     /**
@@ -217,6 +234,39 @@ class Pouch implements ContainerInterface
         if ($this->has($key)) {
             unset($this->replaceables[$key]);
         }
+
+        return $this;
+    }
+
+    /**
+     * Extend a previously set key with new logic.
+     *
+     * @param string   $key
+     * @param Callable $newData
+     *
+     * @return $this
+     *
+     * @throws \Pouch\Exceptions\NotFoundException
+     */
+    public function extend($key, Callable $callback)
+    {
+        $oldData = $this->resolve($key);
+
+        $this->bind($key, function ($pouch) use ($oldData, $callback) {
+            return $callback($oldData, $pouch);
+        });
+
+        return $this;
+    }
+
+    /**
+     * Set or unset whether the key's content should be new every time.
+     *
+     * @return $this
+     */
+    public function factory($isFactory = true)
+    {
+        $this->isFactory = $isFactory;
 
         return $this;
     }

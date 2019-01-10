@@ -151,4 +151,66 @@ class PouchTest extends TestCase
         $this->assertFalse(pouch()->has('bar'));
         $this->assertFalse($pouch->has('foo'));
     }
+
+    public function test_extending_an_exiting_key()
+    {
+        pouch()->bind('foo', function () {
+            return 'Foo';
+        });
+
+        pouch()->extend('foo', function ($oldFoo, $pouch) {
+            return $oldFoo . 'Bar';
+        });
+
+        $this->assertEquals('FooBar', pouch()->resolve('foo'));
+    }
+
+    public function test_container_factory_with_simple_type()
+    {
+        $min = 50;
+        $max = 500000000;
+
+        pouch()->factory()->bind('rand', function () use ($min, $max) {
+            return mt_rand($min, $max);
+        });
+
+        $rand1 = pouch()->resolve('rand');
+        $rand2 = pouch()->resolve('rand');
+
+        $this->assertEquals('integer', gettype($rand1));
+        $this->assertGreaterThanOrEqual($min, $rand1);
+        $this->assertLessThanOrEqual($max, $rand1);
+
+        $this->assertEquals('integer', gettype($rand2));
+        $this->assertGreaterThanOrEqual($min, $rand2);
+        $this->assertLessThanOrEqual($max, $rand2);
+
+        $this->assertNotEquals($rand1, $rand2);
+    }
+
+    public function test_container_factory_with_objects()
+    {
+        // Factory
+        pouch()->factory()->bind('fooObject', function () {
+            return new \SplObjectStorage;
+        });
+
+        // Non-factory
+        pouch()->bind('barObject', function () {
+            return new \SplObjectStorage;
+        });
+
+        $fooObject1 = pouch()->resolve('fooObject');
+        $fooObject2 = pouch()->resolve('fooObject');
+        $barObject1 = pouch()->resolve('barObject');
+        $barObject2 = pouch()->resolve('barObject');
+
+        // Instances should be different on strict check
+        $this->assertFalse($fooObject1 === $fooObject2);
+        $this->assertTrue($fooObject1 == $fooObject2);
+
+        // Instances should be the same on strict check
+        $this->assertTrue($barObject1 === $barObject2);
+        $this->assertTrue($barObject1 == $barObject2);
+    }
 }
