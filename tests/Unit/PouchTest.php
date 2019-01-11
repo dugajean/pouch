@@ -213,4 +213,39 @@ class PouchTest extends TestCase
         $this->assertTrue($barObject1 === $barObject2);
         $this->assertTrue($barObject1 == $barObject2);
     }
+
+    public function test_accessing_container_param_from_factory_callback()
+    {
+        $expected = 'FooBar';
+
+        pouch()->bind('foo', function () {
+            return 'Foo';
+        });
+
+        pouch()->factory()->bind('bar', function () {
+            return 'Bar';
+        });
+
+        pouch()->factory()->bind('foobar', function ($pouch) {
+            return $pouch->resolve('foo').$pouch->resolve('bar');
+        });
+
+        $this->assertEquals($expected, pouch()->resolve('foobar'));
+    }
+
+    public function test_binding_multiple_values_using_factories()
+    {
+        pouch()->bind([
+            'fooObject' => pouch()->factory(function () {
+                return new \SplObjectStorage;
+            })
+        ]);
+
+        $fooObject1 = pouch()->resolve('fooObject');
+        $fooObject2 = pouch()->resolve('fooObject');
+
+        // Instances should be different on strict check
+        $this->assertFalse($fooObject1 === $fooObject2);
+        $this->assertTrue($fooObject1 == $fooObject2);
+    }
 }

@@ -70,6 +70,16 @@ class AutomaticInjectionTest extends TestCase
 
     public function test_container_injecting_with_complex_namespace()
     {
-        $this->markTestIncomplete('TODO');
+        $expected = 'Foo which is fancy too!';
+
+        pouch()->bind('FancyFoo\\TheFoo\\BarBaz', function () use ($expected) {
+            return $expected;
+        });
+
+        pouch()->registerNamespaces('Pouch\Tests\Data');
+
+        $fooResolvable = pouch()->resolve(Foo::class);
+
+        $this->assertEquals($expected, $fooResolvable->fancyFooExampleLong());
     }
 }

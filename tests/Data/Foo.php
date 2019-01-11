@@ -40,4 +40,9 @@ class Foo
     {
         return $foo->getContent();
     }
+
+    public function fancyFooExampleLong(\Pouch\FancyFoo\TheFoo\BarBaz $foo)
+    {
+        return $foo->getContent();
+    }
 }

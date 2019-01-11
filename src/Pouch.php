@@ -8,6 +8,7 @@ use Psr\SimpleCache\CacheInterface;
 use Psr\Container\ContainerInterface;
 use Pouch\Exceptions\PouchException;
 use Pouch\Exceptions\NotFoundException;
+use Pouch\Exceptions\InvalidArgumentException;
 
 class Pouch implements ContainerInterface
 {
@@ -56,7 +57,7 @@ class Pouch implements ContainerInterface
      * Insert or return a singleton instance from our container.
      *
      * @param  string   $key
-     * @param  Callable $data
+     * @param  callable $data
      *
      * @return mixed
      *
@@ -80,30 +81,32 @@ class Pouch implements ContainerInterface
      * 
      * @param  string|array  $keyOrData Can be a string for the key when binding a single thing, but can also
      *                                  be an array with $key => $callable format if providing multiple things to bind.
-     * @param  Callable|null $data       The data to be bound. Must be provided if $key is a string.
+     * @param  callable|null $data      The data to be bound. Must be provided if $key is a string.
      * 
      * @return $this
      */
-    public function bind($keyOrData, Callable $data = null)
+    public function bind($keyOrData, $data = null)
     {
-        $bind = function ($key, Callable $value) {
-            if ($this->isFactory) {
-                $this->replaceables[(string)$key] = new Factory(function ($callable) {
-                    return $callable($this);
-                }, $value);
-
-                $this->factory(false);
-            } else {
-                $this->replaceables[(string)$key] = $value($this);
-            }
-        };
-
         if (is_array($keyOrData)) {
             foreach ($keyOrData as $key => $callable) {
-                $bind($key, $callable);
+                $this->bind($key, $callable);
             }
         } else {
-            $bind($keyOrData, $data);
+            $this->validateCallable($data);
+
+            $key = (string)$keyOrData;
+
+            if ($data instanceof Factory) {
+                $this->replaceables[$key] = $data;
+            } elseif ($this->isFactory) {
+                $this->replaceables[$key] = new Factory(function ($callable) {
+                    return $callable($this);
+                }, $data);
+            } else {
+                $this->replaceables[$key] = $data($this);
+            }
+
+            $this->factory(false);
         }
 
         return $this;
@@ -113,11 +116,11 @@ class Pouch implements ContainerInterface
      * Alias for bind.
      *
      * @param string|array  $keyOrData
-     * @param Callable|null $data
+     * @param callable|null $data
      *
      * @return $this
      */
-    public function register($keyOrData, Callable $data = null)
+    public function register($keyOrData, $data = null)
     {
         return $this->bind($keyOrData, $data);
     }
@@ -147,10 +150,7 @@ class Pouch implements ContainerInterface
                 $newContent = $class;
 
                 if (in_array($class, array_keys($overriders))) {
-                    if (!is_callable($overriders[$class])) {
-                        throw new PouchException('Overrider value must be a function.');
-                    }
-
+                    $this->validateCallable($overriders[$class]);
                     $newContent = $overriders[$class]($this);
                 }
 
@@ -242,14 +242,16 @@ class Pouch implements ContainerInterface
      * Extend a previously set key with new logic.
      *
      * @param string   $key
-     * @param Callable $newData
+     * @param callable $newData
      *
      * @return $this
      *
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    public function extend($key, Callable $callback)
+    public function extend($key, $callback)
     {
+        $this->validateCallable($callback);
+
         $oldData = $this->resolve($key);
 
         $this->bind($key, function ($pouch) use ($oldData, $callback) {
@@ -260,15 +262,37 @@ class Pouch implements ContainerInterface
     }
 
     /**
-     * Set or unset whether the key's content should be new every time.
+     * Set factory for upcoming bind or create a factory callable.
      *
-     * @return $this
+     * @param bool|callable $isFactoryOrCallable
+     *
+     * @return $this|\Pouch\Factory
      */
-    public function factory($isFactory = true)
+    public function factory($isFactoryOrCallable = true)
     {
-        $this->isFactory = $isFactory;
+        if (is_callable($isFactoryOrCallable)) {
+            return new Factory(function ($callable) {
+                return $callable($this);
+            }, $isFactoryOrCallable);
+        }
+
+        $this->isFactory = $isFactoryOrCallable;
 
         return $this;
+    }
+
+    /**
+     * Throws an exception if the callable argument is not a callable.
+     *
+     * @param $callable
+     *
+     * @throws \Pouch\Exceptions\InvalidArgumentException
+     */
+    protected function validateCallable($callable)
+    {
+        if (!method_exists($callable, '__invoke')) {
+            throw new InvalidArgumentException('The provided argument must be a callable');
+        }
     }
 
     /**
@@ -311,21 +335,6 @@ class Pouch implements ContainerInterface
     }
 
     /**
-     * String representation of a pouch instance.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        $containers = [
-            'singletons' => self::$singletons,
-            'replaceables' => $this->replaceables,
-        ];
-
-        return json_encode($containers);
-    }
-
-    /**
      * Bind a new key or fetch an existing one if no argument is provided..
      * If an argument is provided: Only the first one will be considered and it must be a callable.
      *
@@ -341,5 +350,20 @@ class Pouch implements ContainerInterface
         }
 
         return $this->bind($key, $data[0]);
+    }
+
+    /**
+     * String representation of a pouch instance.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        $containers = [
+            'singletons' => self::$singletons,
+            'replaceables' => $this->replaceables,
+        ];
+
+        return json_encode($containers);
     }
 }

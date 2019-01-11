@@ -21,12 +21,12 @@ final class Factory
     /**
      * Factory constructor.
      *
-     * @param callable $callable
+     * @param \Closure $callable
      * @param array    ...$args
      *
      * @return void
      */
-    public function __construct(Callable $callable, ...$args)
+    public function __construct(\Closure $callable, ...$args)
     {
         $this->callable = $callable;
         $this->args = $args;
