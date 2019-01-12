@@ -162,7 +162,7 @@ class Pouch implements ContainerInterface
     }
 
     /**
-     * Resolve specific key from our replaceables.
+     * Resolve specific key from the replaceables array.
      * 
      * @param string $key
      * 
@@ -179,6 +179,24 @@ class Pouch implements ContainerInterface
         $content = $this->replaceables[(string)$key];
         
         return $content instanceof Factory ? $content() : $content;
+    }
+
+    /**
+     * Resolve a key without invoking it if it happens to be a factory.
+     *
+     * @param string $key
+     *
+     * @return mixed
+     *
+     * @throws \Pouch\Exceptions\NotFoundException
+     */
+    public function raw($key)
+    {
+        if (!array_key_exists($key, $this->replaceables)) {
+            throw new NotFoundException("The {$key} key could not be found in the container");
+        }
+
+        return $this->replaceables[(string)$key];
     }
 
     /**
@@ -250,10 +268,11 @@ class Pouch implements ContainerInterface
     {
         $this->validateCallable($callback);
 
-        $oldData = $this->resolve($key);
+        $oldData = $this->raw($key);
 
         $this->bind($key, function ($pouch) use ($oldData, $callback) {
-            return $callback($oldData, $pouch);
+            $data = $callback($oldData, $pouch);
+            return $oldData instanceof Factory ? Factory::make($data, $pouch) : $data;
         });
 
         return $this;

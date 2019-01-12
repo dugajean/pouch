@@ -248,4 +248,9 @@ class PouchTest extends TestCase
         $this->assertFalse($fooObject1 === $fooObject2);
         $this->assertTrue($fooObject1 == $fooObject2);
     }
+
+    public function test_extending_content_when_dealing_with_factory()
+    {
+        $this->markTestIncomplete('TODO');
+    }
 }
