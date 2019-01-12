@@ -41,4 +41,19 @@ final class Factory
     {
         return ($this->callable)(...$this->args);
     }
+
+    /**
+     * Create a new factory instance.
+     *
+     * @param callable $callable
+     * @param mixed    $newThis
+     *
+     * @return \Pouch\Factory
+     */
+    public static function make(Callable $callable, $newThis)
+    {
+        return new Factory((function ($callable) {
+            return $callable($this);
+        })->bindTo($newThis), $callable);
+    }
 }

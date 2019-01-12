@@ -1,6 +1,7 @@
 <?php
 
 use Pouch\Pouch;
+use Pouch\Factory;
 use Pouch\Cache\Apcu;
 
 /**

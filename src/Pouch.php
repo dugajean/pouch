@@ -99,9 +99,7 @@ class Pouch implements ContainerInterface
             if ($data instanceof Factory) {
                 $this->replaceables[$key] = $data;
             } elseif ($this->isFactory) {
-                $this->replaceables[$key] = new Factory(function ($callable) {
-                    return $callable($this);
-                }, $data);
+                $this->replaceables[$key] = Factory::make($data, $this);
             } else {
                 $this->replaceables[$key] = $data($this);
             }
@@ -271,9 +269,7 @@ class Pouch implements ContainerInterface
     public function factory($isFactoryOrCallable = true)
     {
         if (is_callable($isFactoryOrCallable)) {
-            return new Factory(function ($callable) {
-                return $callable($this);
-            }, $isFactoryOrCallable);
+            return Factory::make($isFactoryOrCallable, $this);
         }
 
         $this->isFactory = $isFactoryOrCallable;
