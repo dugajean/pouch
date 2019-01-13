@@ -3,6 +3,7 @@
 namespace Pouch\Tests\Unit;
 
 use Pouch\Pouch;
+use Pouch\Factory;
 use Pouch\Tests\TestCase;
 use Pouch\Exceptions\PouchException;
 use Pouch\Exceptions\NotFoundException;
@@ -251,6 +252,15 @@ class PouchTest extends TestCase
 
     public function test_extending_content_when_dealing_with_factory()
     {
-        $this->markTestIncomplete('TODO');
+        pouch()->factory()->bind('foo', function () {
+            return 'Foo';
+        });
+
+        pouch()->extend('foo', function ($oldFoo, $pouch) {
+            return $oldFoo . 'Bar';
+        });
+
+        $this->assertEquals('FooBar', pouch()->resolve('foo'));
+        $this->assertTrue(pouch()->raw('foo') instanceof Factory);
     }
 }

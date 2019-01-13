@@ -271,8 +271,12 @@ class Pouch implements ContainerInterface
         $oldData = $this->raw($key);
 
         $this->bind($key, function ($pouch) use ($oldData, $callback) {
-            $data = $callback($oldData, $pouch);
-            return $oldData instanceof Factory ? Factory::make($data, $pouch) : $data;
+            $isFactory = $oldData instanceof Factory;
+
+            $data = $isFactory ? $oldData() : $oldData;
+            $func = $callback($data, $pouch);
+
+            return $isFactory ? new Factory(function () use ($func) { return $func; }) : $func;
         });
 
         return $this;
