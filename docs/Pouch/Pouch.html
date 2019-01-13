@@ -130,6 +130,14 @@
                 <td class="last">Store all the data that can be replaced.</td>
                 <td></td>
             </tr>
+                    <tr>
+                <td class="type" id="property_isFactory">
+                                        protected                                        bool
+                </td>
+                <td>$isFactory</td>
+                <td class="last">Whether a bind will be a factory.</td>
+                <td></td>
+            </tr>
             </table>
 
     
@@ -181,7 +189,7 @@
                     $this
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_bind">bind</a>(string|array $keyOrData, callable $data = null)
+                    <a href="#method_bind">bind</a>(string|array $keyOrData, callable|null $data = null)
         
                                             <p>Bind a new element to the replaceables.</p>                </div>
                 <div class="col-md-2"></div>
@@ -191,7 +199,7 @@
                     $this
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_register">register</a>(string|array $keyOrData, callable $data = null)
+                    <a href="#method_register">register</a>(string|array $keyOrData, callable|null $data = null)
         
                                             <p>Alias for bind.</p>                </div>
                 <div class="col-md-2"></div>
@@ -213,7 +221,17 @@
                 <div class="col-md-8 type">
                     <a href="#method_resolve">resolve</a>(string $key)
         
-                                            <p>Resolve specific key from our replaceables.</p>                </div>
+                                            <p>Resolve specific key from the replaceables array.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    mixed
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_raw">raw</a>(string $key)
+        
+                                            <p>Resolve a key without invoking it if it happens to be a factory.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
@@ -258,6 +276,36 @@
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
+                    $this
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_extend">extend</a>($key, $callback)
+        
+                                            <p>Extend a previously set key with new logic.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    $this|<a href="../Pouch/Factory.html"><abbr title="Pouch\Factory">Factory</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_factory">factory</a>(bool|callable $isFactoryOrCallable = true)
+        
+                                            <p>Set factory for upcoming bind or create a factory callable.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_validateCallable">validateCallable</a>($callable)
+        
+                                            <p>Throws an exception if the callable argument is not a callable.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
                     mixed
                 </div>
                 <div class="col-md-8 type">
@@ -288,22 +336,22 @@
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
-                    string
-                </div>
-                <div class="col-md-8 type">
-                    <a href="#method___toString">__toString</a>()
-        
-                                            <p>String representation of a pouch instance.</p>                </div>
-                <div class="col-md-2"></div>
-            </div>
-                    <div class="row">
-                <div class="col-md-2 type">
                     $this
                 </div>
                 <div class="col-md-8 type">
                     <a href="#method___call">__call</a>(string $key, array $data)
         
                                             <p>Bind a new key or fetch an existing one if no argument is provided.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method___toString">__toString</a>()
+        
+                                            <p>String representation of a pouch instance.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
             </div>
@@ -412,7 +460,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_bootstrap">
-        <div class="location">at         line 39</div>
+        <div class="location">at         line 47</div>
         <code>        static            void
     <strong>bootstrap</strong>(string $rootDir, <abbr title="Psr\SimpleCache\CacheInterface">CacheInterface</abbr> $cacheStore = null)
         </code>
@@ -458,7 +506,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_singleton">
-        <div class="location">at         line 58</div>
+        <div class="location">at         line 66</div>
         <code>        static            mixed
     <strong>singleton</strong>(string $key, callable $data = null)
         </code>
@@ -512,9 +560,9 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_bind">
-        <div class="location">at         line 80</div>
+        <div class="location">at         line 88</div>
         <code>                    $this
-    <strong>bind</strong>(string|array $keyOrData, callable $data = null)
+    <strong>bind</strong>(string|array $keyOrData, callable|null $data = null)
         </code>
     </h3>
     <div class="details">
@@ -534,7 +582,7 @@
                                  be an array with $key => $callable format if providing multiple things to bind.</td>
             </tr>
                     <tr>
-                <td>callable</td>
+                <td>callable|null</td>
                 <td>$data</td>
                 <td>The data to be bound. Must be provided if $key is a string.</td>
             </tr>
@@ -558,9 +606,9 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_register">
-        <div class="location">at         line 105</div>
+        <div class="location">at         line 121</div>
         <code>                    $this
-    <strong>register</strong>(string|array $keyOrData, callable $data = null)
+    <strong>register</strong>(string|array $keyOrData, callable|null $data = null)
         </code>
     </h3>
     <div class="details">
@@ -579,7 +627,7 @@
                 <td></td>
             </tr>
                     <tr>
-                <td>callable</td>
+                <td>callable|null</td>
                 <td>$data</td>
                 <td></td>
             </tr>
@@ -603,7 +651,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_registerNamespaces">
-        <div class="location">at         line 124</div>
+        <div class="location">at         line 140</div>
         <code>                    $this
     <strong>registerNamespaces</strong>(string|string[] $namespaces, array $overriders = [])
         </code>
@@ -661,7 +709,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_resolve">
-        <div class="location">at         line 160</div>
+        <div class="location">at         line 173</div>
         <code>                    mixed
     <strong>resolve</strong>(string $key)
         </code>
@@ -671,7 +719,56 @@
     
 
                     <div class="method-description">
-                                    <p>Resolve specific key from our replaceables.</p>                                                </div>
+                                    <p>Resolve specific key from the replaceables array.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$key</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>mixed</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../Pouch/Exceptions/NotFoundException.html"><abbr title="Pouch\Exceptions\NotFoundException">NotFoundException</abbr></a></td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_raw">
+        <div class="location">at         line 193</div>
+        <code>                    mixed
+    <strong>raw</strong>(string $key)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Resolve a key without invoking it if it happens to be a factory.</p>                                                </div>
                 <div class="tags">
                             <h4>Parameters</h4>
 
@@ -710,7 +807,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_get">
-        <div class="location">at         line 179</div>
+        <div class="location">at         line 212</div>
         <code>                    mixed
     <strong>get</strong>(string $key)
         </code>
@@ -763,7 +860,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_contains">
-        <div class="location">at         line 191</div>
+        <div class="location">at         line 224</div>
         <code>                    bool
     <strong>contains</strong>(string $key)
         </code>
@@ -803,7 +900,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_has">
-        <div class="location">at         line 203</div>
+        <div class="location">at         line 236</div>
         <code>                    bool
     <strong>has</strong>(string $key)
         </code>
@@ -843,7 +940,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_remove">
-        <div class="location">at         line 215</div>
+        <div class="location">at         line 248</div>
         <code>                    $this
     <strong>remove</strong>($key)
         </code>
@@ -882,8 +979,142 @@
 
             </div>
                     <div class="method-item">
+                    <h3 id="method_extend">
+        <div class="location">at         line 267</div>
+        <code>                    $this
+    <strong>extend</strong>($key, $callback)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Extend a previously set key with new logic.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td></td>
+                <td>$key</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td></td>
+                <td>$callback</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>$this</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../Pouch/Exceptions/NotFoundException.html"><abbr title="Pouch\Exceptions\NotFoundException">NotFoundException</abbr></a></td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_factory">
+        <div class="location">at         line 292</div>
+        <code>                    $this|<a href="../Pouch/Factory.html"><abbr title="Pouch\Factory">Factory</abbr></a>
+    <strong>factory</strong>(bool|callable $isFactoryOrCallable = true)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Set factory for upcoming bind or create a factory callable.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>bool|callable</td>
+                <td>$isFactoryOrCallable</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>$this|<a href="../Pouch/Factory.html"><abbr title="Pouch\Factory">Factory</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_validateCallable">
+        <div class="location">at         line 310</div>
+        <code>            protected        
+    <strong>validateCallable</strong>($callable)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Throws an exception if the callable argument is not a callable.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td></td>
+                <td>$callable</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+            
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../Pouch/Exceptions/InvalidArgumentException.html"><abbr title="Pouch\Exceptions\InvalidArgumentException">InvalidArgumentException</abbr></a></td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
                     <h3 id="method___get">
-        <div class="location">at         line 234</div>
+        <div class="location">at         line 327</div>
         <code>                    mixed
     <strong>__get</strong>(string $key)
         </code>
@@ -936,7 +1167,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method___isset">
-        <div class="location">at         line 246</div>
+        <div class="location">at         line 339</div>
         <code>                    bool
     <strong>__isset</strong>(string $key)
         </code>
@@ -976,7 +1207,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method___unset">
-        <div class="location">at         line 258</div>
+        <div class="location">at         line 351</div>
         <code>                    void
     <strong>__unset</strong>(string $key)
         </code>
@@ -1015,38 +1246,8 @@
 
             </div>
                     <div class="method-item">
-                    <h3 id="method___toString">
-        <div class="location">at         line 268</div>
-        <code>                    string
-    <strong>__toString</strong>()
-        </code>
-    </h3>
-    <div class="details">
-            
-    
-
-                    <div class="method-description">
-                                    <p>String representation of a pouch instance.</p>                                                </div>
-                <div class="tags">
-            
-                            <h4>Return Value</h4>
-
-                    <table class="table table-condensed">
-        <tr>
-            <td>string</td>
-            <td></td>
-        </tr>
-    </table>
-
-            
-            
-                    </div>
-    </div>
-
-            </div>
-                    <div class="method-item">
                     <h3 id="method___call">
-        <div class="location">at         line 287</div>
+        <div class="location">at         line 365</div>
         <code>                    $this
     <strong>__call</strong>(string $key, array $data)
         </code>
@@ -1080,6 +1281,36 @@ If an argument is provided: Only the first one will be considered and it must be
                     <table class="table table-condensed">
         <tr>
             <td>$this</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method___toString">
+        <div class="location">at         line 379</div>
+        <code>                    string
+    <strong>__toString</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>String representation of a pouch instance.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
             <td></td>
         </tr>
     </table>
