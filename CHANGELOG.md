@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 0.5.0 - 2019-01-13
+
+### Added
+
+- Container content extension: if at some later point in the application you need to change upon the previous content of a key, you can now do so by using the `extend` method.
+- Declaration of a bind as a factory: This allows the creation of different instances of an object on consecutive resolves of a key (default behavior always pulls the same instance).
+
+### Changed
+
+- Removed `__callStatic` which was meant to add the option to call all Pouch methods statically for syntactic sugar or personal preference. Now it's either the `pouch()` helper or a completely new Pouch instance.
+- Cache handling moved to a `Cacheable` trait which `Pouch` now uses.
+- Can now fully work with new instances of Pouch instead of relying on the `pouch()` helper.
+
+### Fixed
+
+- Resolvables now accept an argument which holds a container, allowing for a swap to a different instance other than the global `pouch()` one.
+
 ## 0.4.0 - 2019-01-04
 
 ### Added 
