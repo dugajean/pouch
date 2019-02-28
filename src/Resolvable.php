@@ -119,7 +119,11 @@ class Resolvable
     }
 
     /**
-     * Resolve the dependency for all parameters.
+     * Resolve the dependencies for all parameters.
+     *
+     * When resolving internal pouch keys, it will register an anonymous class and handle the autowiring
+     * for the first occurrence. But, when the same internal key is used twice in different classes, then
+     * this method will also take care of properly re-instantiating the anonymous class.
      *
      * @param \ReflectionParameter[] $param
      * @param array                  $args
@@ -143,13 +147,20 @@ class Resolvable
 
             if (is_object($class)) {
                 $className = $class->name;
-
                 if ($this->pouch->has($className)) {
                     $content = $this->pouch->resolve($className);
                     $content = $content instanceof $selfName ? $content->getObject() : $content;
                     $args[$pos] = $content;
                 } elseif (!isset($args[$pos])) {
-                    $args[$pos] = new $className;
+                    if ($class->isAnonymous()) {
+                        $aliasClass = $this->pouch->get("anon-{$className}");
+                        $aliasContent = $this->pouch->get($aliasClass);
+
+                        $className = "\\Pouch\\$aliasClass";
+                        $className = new $className($aliasClass, $aliasContent->getContent());
+                    }
+
+                    $args[$pos] = $this->make($className)->getObject();
                 } elseif (isset($args[$pos]) && !$args[$pos] instanceof $className) {
                     throw new ResolvableException(
                         'Invalid argument provided. Expected an instance of '.$className.', '.$this->getType($args[$pos]).' provided'
@@ -208,7 +219,8 @@ class Resolvable
              *
              * @return void
              */
-            public function __construct($name, $content) {
+            public function __construct($name, $content)
+            {
                 $this->name = $name;
                 $this->content = $content;
             }
@@ -218,15 +230,31 @@ class Resolvable
              *
              * @return mixed
              */
-            public function getContent() {
+            public function getContent()
+            {
                 return $this->content;
+            }
+
+            /**
+             * Adapter to comply to ReflectionClass.
+             *
+             * @return bool
+             */
+            public function isAnonymous()
+            {
+                return true;
             }
         };
 
-        class_alias(get_class($anonymousClass), "\\Pouch\\$className");
+        $originalClassName = get_class($anonymousClass);
+        class_alias($originalClassName, "\\Pouch\\$className");
 
         $this->pouch->bind($className, function () use ($anonymousClass) {
             return $anonymousClass;
+        });
+
+        $this->pouch->bind("anon-{$originalClassName}", function () use ($className) {
+            return $className;
         });
 
         return $anonymousClass;
