@@ -82,4 +82,19 @@ class AutomaticInjectionTest extends TestCase
 
         $this->assertEquals($expected, $fooResolvable->fancyFooExampleLong());
     }
+
+    public function test_reusing_pouch_container_value_injecting()
+    {
+        pouch()->bind('FancyDateTime', function ($pouch) {
+            return new \DateTime;
+        });
+
+        pouch()->registerNamespaces('Pouch\Tests\Data');
+
+        $fooResolvable = pouch()->resolve(Foo::class);
+        $barResolvable = pouch()->resolve(Bar::class);
+
+        $this->assertEquals(time(), $fooResolvable->pouchDependency());
+        $this->assertEquals(time(), $barResolvable->pouchDependency());
+    }
 }
