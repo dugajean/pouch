@@ -178,7 +178,17 @@
                 <div class="col-md-8 type">
                     <a href="#method_resolveDependencies">resolveDependencies</a>($params, array $args = [])
         
-                                            <p>Resolve the dependency for all parameters.</p>                </div>
+                                            <p>Resolve the dependencies for all parameters.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    array
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_resolveInternalDependencies">resolveInternalDependencies</a>(string $anonymousClass)
+        
+                                            <p>Returns params (dependencies) for internal anonymous classes.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
@@ -186,10 +196,20 @@
                     mixed
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_createClassDependency">createClassDependency</a>(string $rawClassName)
+                    <a href="#method_createClassDependency">createClassDependency</a>(string $rawClassName, bool $nullable)
         
                                             <p>Creates missing class if it can be found in the container. Auto-injecting classes from within
 the container require them to be prefixed with \Pouch\Key.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    string
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getName">getName</a>()
+        
+                                            <p>Name getter.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
@@ -202,6 +222,16 @@ the container require them to be prefixed with \Pouch\Key.</p>                </
                                             <p>From createClassDependency's inner class</p>                </div>
                 <div class="col-md-2"></div>
             </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    bool
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_isAnonymous">isAnonymous</a>()
+        
+                                            <p>Adapter to comply to ReflectionClass.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
             </div>
 
 
@@ -210,7 +240,7 @@ the container require them to be prefixed with \Pouch\Key.</p>                </
             <div id="method-details">
                     <div class="method-item">
                     <h3 id="method___construct">
-        <div class="location">at         line 211</div>
+        <div class="location">at         line 253</div>
         <code>                    void
     <strong>__construct</strong>(string $name, mixed $content)
         </code>
@@ -255,7 +285,7 @@ the container require them to be prefixed with \Pouch\Key.</p>                </
             </div>
                     <div class="method-item">
                     <h3 id="method_make">
-        <div class="location">at         line 48</div>
+        <div class="location">at         line 49</div>
         <code>                    $this
     <strong>make</strong>(mixed $object)
         </code>
@@ -304,7 +334,7 @@ the container require them to be prefixed with \Pouch\Key.</p>                </
             </div>
                     <div class="method-item">
                     <h3 id="method_getObject">
-        <div class="location">at         line 78</div>
+        <div class="location">at         line 79</div>
         <code>                    mixed
     <strong>getObject</strong>()
         </code>
@@ -334,7 +364,7 @@ the container require them to be prefixed with \Pouch\Key.</p>                </
             </div>
                     <div class="method-item">
                     <h3 id="method_getType">
-        <div class="location">at         line 90</div>
+        <div class="location">at         line 91</div>
         <code>                    string
     <strong>getType</strong>(mixed $element = null)
         </code>
@@ -374,7 +404,7 @@ the container require them to be prefixed with \Pouch\Key.</p>                </
             </div>
                     <div class="method-item">
                     <h3 id="method___call">
-        <div class="location">at         line 107</div>
+        <div class="location">at         line 108</div>
         <code>                    mixed
     <strong>__call</strong>(string $method, array $args)
         </code>
@@ -428,7 +458,7 @@ the container require them to be prefixed with \Pouch\Key.</p>                </
             </div>
                     <div class="method-item">
                     <h3 id="method_resolveDependencies">
-        <div class="location">at         line 131</div>
+        <div class="location">at         line 136</div>
         <code>            protected        array
     <strong>resolveDependencies</strong>($params, array $args = [])
         </code>
@@ -438,7 +468,9 @@ the container require them to be prefixed with \Pouch\Key.</p>                </
     
 
                     <div class="method-description">
-                                    <p>Resolve the dependency for all parameters.</p>                                                </div>
+                                    <p>Resolve the dependencies for all parameters.</p>                    <p>When resolving internal pouch keys, it will register an anonymous class and handle the autowiring
+for the first occurrence. But, when the same internal key is used twice in different classes, then
+this method will also take care of properly re-instantiating the anonymous class.</p>                            </div>
                 <div class="tags">
                             <h4>Parameters</h4>
 
@@ -481,10 +513,63 @@ the container require them to be prefixed with \Pouch\Key.</p>                </
 
             </div>
                     <div class="method-item">
+                    <h3 id="method_resolveInternalDependencies">
+        <div class="location">at         line 184</div>
+        <code>                    array
+    <strong>resolveInternalDependencies</strong>(string $anonymousClass)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Returns params (dependencies) for internal anonymous classes.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$anonymousClass</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>array</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../Pouch/Exceptions/NotFoundException.html"><abbr title="Pouch\Exceptions\NotFoundException">NotFoundException</abbr></a></td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a href="../Pouch/Exceptions/PouchException.html"><abbr title="Pouch\Exceptions\PouchException">PouchException</abbr></a></td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
                     <h3 id="method_createClassDependency">
-        <div class="location">at         line 174</div>
+        <div class="location">at         line 211</div>
         <code>            protected        mixed
-    <strong>createClassDependency</strong>(string $rawClassName)
+    <strong>createClassDependency</strong>(string $rawClassName, bool $nullable)
         </code>
     </h3>
     <div class="details">
@@ -501,6 +586,11 @@ the container require them to be prefixed with \Pouch\Key.</p>                  
                     <tr>
                 <td>string</td>
                 <td>$rawClassName</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>bool</td>
+                <td>$nullable</td>
                 <td></td>
             </tr>
             </table>
@@ -531,8 +621,38 @@ the container require them to be prefixed with \Pouch\Key.</p>                  
 
             </div>
                     <div class="method-item">
+                    <h3 id="method_getName">
+        <div class="location">at         line 264</div>
+        <code>                    string
+    <strong>getName</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Name getter.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>string</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
                     <h3 id="method_getContent">
-        <div class="location">at         line 221</div>
+        <div class="location">at         line 274</div>
         <code>                    mixed
     <strong>getContent</strong>()
         </code>
@@ -550,6 +670,36 @@ the container require them to be prefixed with \Pouch\Key.</p>                  
                     <table class="table table-condensed">
         <tr>
             <td>mixed</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_isAnonymous">
+        <div class="location">at         line 284</div>
+        <code>                    bool
+    <strong>isAnonymous</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Adapter to comply to ReflectionClass.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>bool</td>
             <td></td>
         </tr>
     </table>

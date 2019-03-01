@@ -172,6 +172,15 @@ class Resolvable
         return $args;
     }
 
+    /**
+     * Returns params (dependencies) for internal anonymous classes.
+     *
+     * @param string $anonymousClass
+     *
+     * @return array
+     * @throws \Pouch\Exceptions\NotFoundException
+     * @throws \Pouch\Exceptions\PouchException
+     */
     public function resolveInternalDependencies($anonymousClass)
     {
         if (!$this->pouch->has("anon-{$anonymousClass}")) {
