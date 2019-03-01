@@ -6,6 +6,8 @@ use Pouch\Pouch;
 use Pouch\Tests\TestCase;
 use Pouch\Tests\Data\Bar;
 use Pouch\Tests\Data\Foo;
+use Pouch\Tests\Data\FooBar;
+use Pouch\Tests\Data\FooBaz;
 use Pouch\Tests\Data\Sub\Baz;
 
 class AutomaticInjectionTest extends TestCase
@@ -81,20 +83,5 @@ class AutomaticInjectionTest extends TestCase
         $fooResolvable = pouch()->resolve(Foo::class);
 
         $this->assertEquals($expected, $fooResolvable->fancyFooExampleLong());
-    }
-
-    public function test_reusing_pouch_container_value_injecting()
-    {
-        pouch()->bind('FancyDateTime', function ($pouch) {
-            return new \DateTime;
-        });
-
-        pouch()->registerNamespaces('Pouch\Tests\Data');
-
-        $fooResolvable = pouch()->resolve(Foo::class);
-        $barResolvable = pouch()->resolve(Bar::class);
-
-        $this->assertEquals(time(), $fooResolvable->pouchDependency());
-        $this->assertEquals(time(), $barResolvable->pouchDependency());
     }
 }

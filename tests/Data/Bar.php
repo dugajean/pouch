@@ -8,9 +8,4 @@ class Bar
     {
         return 'BarFunc1';
     }
-
-    public function pouchDependency(\Pouch\FancyDateTime $dateTime)
-    {
-        return $dateTime->getContent()->getTimestamp();
-    }
 }

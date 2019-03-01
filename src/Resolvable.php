@@ -2,6 +2,7 @@
 
 namespace Pouch;
 
+use Pouch\Exceptions\NotFoundException;
 use Pouch\Exceptions\ResolvableException;
 
 class Resolvable
@@ -142,34 +143,49 @@ class Resolvable
             try {
                 $class = $param->getClass();
             } catch (\ReflectionException $e) {
-                $class = $this->createClassDependency($e->getMessage());
+                $class = $this->createClassDependency($e->getMessage(), $param->allowsNull());
             }
 
-            if (is_object($class)) {
-                $className = $class->name;
-                if ($this->pouch->has($className)) {
-                    $content = $this->pouch->resolve($className);
-                    $content = $content instanceof $selfName ? $content->getObject() : $content;
-                    $args[$pos] = $content;
-                } elseif (!isset($args[$pos])) {
-                    if ($class->isAnonymous()) {
-                        $aliasClass = $this->pouch->get("anon-{$className}");
-                        $aliasContent = $this->pouch->get($aliasClass);
+            if (!is_object($class)) {
+                continue;
+            }
 
-                        $className = "\\Pouch\\$aliasClass";
-                        $className = new $className($aliasClass, $aliasContent->getContent());
-                    }
-
-                    $args[$pos] = $this->make($className)->getObject();
-                } elseif (isset($args[$pos]) && !$args[$pos] instanceof $className) {
-                    throw new ResolvableException(
-                        'Invalid argument provided. Expected an instance of '.$className.', '.$this->getType($args[$pos]).' provided'
-                    );
+            $className = $class->getName();
+            if ($this->pouch->has($className)) {
+                $content = $this->pouch->resolve($className);
+                $content = $content instanceof $selfName ? $content->getObject() : $content;
+                $args[$pos] = $content;
+            } elseif (!isset($args[$pos])) {
+                if ($class->isAnonymous()) {
+                    $aliasData = $this->resolveInternalDependencies($className);
+                    $args[$pos] = new $aliasData['aliasQualified']($aliasData['alias'], $aliasData['content']);
+                } else {
+                    $args[$pos] = (new self($className, $this->pouch))->getObject();
                 }
+            } elseif (isset($args[$pos]) && !$args[$pos] instanceof $className) {
+                throw new ResolvableException(
+                    'Invalid argument provided. Expected an instance of '.$className.', '.$this->getType($args[$pos]).' provided'
+                );
             }
         }
 
         return $args;
+    }
+
+    public function resolveInternalDependencies($anonymousClass)
+    {
+        if (!$this->pouch->has("anon-{$anonymousClass}")) {
+            throw new NotFoundException("Anonymous class anon-{$anonymousClass} can't be found");
+        }
+
+        $aliasClass = $this->pouch->get("anon-{$anonymousClass}");
+        $aliasContent = $this->pouch->get($aliasClass);
+
+        return [
+            'alias' => $aliasClass,
+            'content' => $aliasContent->getContent(),
+            'aliasQualified' => "\\Pouch\\$aliasClass",
+        ];
     }
 
     /**
@@ -177,12 +193,13 @@ class Resolvable
      * the container require them to be prefixed with \Pouch\Key.
      *
      * @param string $rawClassName
+     * @param bool   $nullable
      *
      * @return mixed
      *
      * @throws \Pouch\Exceptions\ResolvableException
      */
-    protected function createClassDependency($rawClassName)
+    protected function createClassDependency($rawClassName, $nullable)
     {
         $className = explode(' ', $rawClassName)[1];
 
@@ -190,11 +207,16 @@ class Resolvable
             $className = str_replace('Pouch\\', '', $className);
         }
 
-        if (!$this->pouch->has($className)) {
+        if (!$this->pouch->has($className) && $nullable === false) {
             throw new ResolvableException("Cannot inject class {$className} as it does not appear to exist");
         }
 
-        $content = $this->pouch->resolve($className);
+        try {
+            $content = $this->pouch->resolve($className);
+        } catch (NotFoundException $e) {
+            $content = null;
+        }
+
         $anonymousClass = new class ($className, $content)
         {
             /**
@@ -223,6 +245,16 @@ class Resolvable
             {
                 $this->name = $name;
                 $this->content = $content;
+            }
+
+            /**
+             * Name getter.
+             *
+             * @return string
+             */
+            public function getName()
+            {
+                return $this->name;
             }
 
             /**
