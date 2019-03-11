@@ -246,6 +246,6 @@ class PouchTest extends TestCase
 
         $this->assertTrue(is_callable(pouch()->raw('foo')));
         $this->assertEquals('Foo', pouch()->resolve('foo'));
-        $this->assertTrue(is_string(gettype(pouch()->raw('foo'))));
+        $this->assertTrue(is_string(pouch()->raw('foo')));
     }
 }
