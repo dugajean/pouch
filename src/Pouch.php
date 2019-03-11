@@ -96,12 +96,10 @@ class Pouch implements ContainerInterface
 
             $key = (string)$keyOrData;
 
-            if ($data instanceof Factory) {
-                $this->replaceables[$key] = $data;
-            } elseif ($this->isFactory) {
+            if ($this->isFactory) {
                 $this->replaceables[$key] = Factory::make($data, $this);
             } else {
-                $this->replaceables[$key] = $data($this);
+                $this->replaceables[$key] = $data;
             }
 
             $this->factory(false);
@@ -177,8 +175,12 @@ class Pouch implements ContainerInterface
         }
 
         $content = $this->replaceables[(string)$key];
-        
-        return $content instanceof Factory ? $content() : $content;
+
+        if ($content instanceof Factory) {
+            return $content();
+        } else {
+            return $this->replaceables[(string)$key] = is_callable($content) ? $content($this) : $content;
+        }
     }
 
     /**
@@ -250,34 +252,6 @@ class Pouch implements ContainerInterface
         if ($this->has($key)) {
             unset($this->replaceables[$key]);
         }
-
-        return $this;
-    }
-
-    /**
-     * Extend a previously set key with new logic.
-     *
-     * @param string   $key
-     * @param callable $newData
-     *
-     * @return $this
-     *
-     * @throws \Pouch\Exceptions\NotFoundException
-     */
-    public function extend($key, $callback)
-    {
-        $this->validateCallable($callback);
-
-        $oldData = $this->raw($key);
-
-        $this->bind($key, function ($pouch) use ($oldData, $callback) {
-            $isFactory = $oldData instanceof Factory;
-
-            $data = $isFactory ? $oldData() : $oldData;
-            $func = $callback($data, $pouch);
-
-            return $isFactory ? new Factory(function () use ($func) { return $func; }) : $func;
-        });
 
         return $this;
     }

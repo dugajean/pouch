@@ -153,19 +153,6 @@ class PouchTest extends TestCase
         $this->assertFalse($pouch->has('foo'));
     }
 
-    public function test_extending_an_exiting_key()
-    {
-        pouch()->bind('foo', function () {
-            return 'Foo';
-        });
-
-        pouch()->extend('foo', function ($oldFoo, $pouch) {
-            return $oldFoo . 'Bar';
-        });
-
-        $this->assertEquals('FooBar', pouch()->resolve('foo'));
-    }
-
     public function test_container_factory_with_simple_type()
     {
         $min = 50;
@@ -210,7 +197,7 @@ class PouchTest extends TestCase
         $this->assertFalse($fooObject1 === $fooObject2);
         $this->assertTrue($fooObject1 == $fooObject2);
 
-        // Instances should be the same on strict check
+        // Instances should be the same on strict check\
         $this->assertTrue($barObject1 === $barObject2);
         $this->assertTrue($barObject1 == $barObject2);
     }
@@ -232,6 +219,7 @@ class PouchTest extends TestCase
         });
 
         $this->assertEquals($expected, pouch()->resolve('foobar'));
+        $this->assertInstanceOf(Factory::class, pouch()->raw('foobar'));
     }
 
     public function test_binding_multiple_values_using_factories()
@@ -250,17 +238,14 @@ class PouchTest extends TestCase
         $this->assertTrue($fooObject1 == $fooObject2);
     }
 
-    public function test_extending_content_when_dealing_with_factory()
+    public function test_lazy_loading_functionality()
     {
-        pouch()->factory()->bind('foo', function () {
+        pouch()->bind('foo', function () {
             return 'Foo';
         });
 
-        pouch()->extend('foo', function ($oldFoo, $pouch) {
-            return $oldFoo . 'Bar';
-        });
-
-        $this->assertEquals('FooBar', pouch()->resolve('foo'));
-        $this->assertTrue(pouch()->raw('foo') instanceof Factory);
+        $this->assertTrue(is_callable(pouch()->raw('foo')));
+        $this->assertEquals('Foo', pouch()->resolve('foo'));
+        $this->assertTrue(is_string(gettype(pouch()->raw('foo'))));
     }
 }
