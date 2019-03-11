@@ -21,6 +21,15 @@ class AutomaticInjectionTest extends TestCase
         $this->assertTrue(pouch()->has(Baz::class));
     }
 
+    public function test_registering_fully_qualified_classname()
+    {
+        pouch()->registerNamespaces(Foo::class);
+
+        $this->assertTrue(pouch()->has(Foo::class));
+        $this->assertTrue(pouch()->has(Bar::class));
+        $this->assertTrue(pouch()->has(Baz::class));
+    }
+
     public function test_automatic_injection_in_foo_class()
     {
         pouch()->registerNamespaces('Pouch\Tests\Data');

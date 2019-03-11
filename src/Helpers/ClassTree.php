@@ -123,13 +123,19 @@ final class ClassTree
         $composerNamespaces = self::getDefinedNamespaces();
         $namespaceFragments = explode('\\', $namespace);
 
+        if (class_exists($namespace)) {
+            array_pop($namespaceFragments);
+        }
+
         $undefinedNamespaceFragments = [];
 
         while ($namespaceFragments) {
             $possibleNamespace = implode('\\', $namespaceFragments).'\\';
 
             if (array_key_exists($possibleNamespace, $composerNamespaces)) {
-                return realpath(self::$root.$composerNamespaces[$possibleNamespace].implode('/', $undefinedNamespaceFragments));
+                return realpath(
+                    self::$root.$composerNamespaces[$possibleNamespace].implode('/', $undefinedNamespaceFragments)
+                );
             }
 
             array_unshift($undefinedNamespaceFragments, array_pop($namespaceFragments));
