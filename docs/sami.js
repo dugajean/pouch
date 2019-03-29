@@ -20,7 +20,9 @@ window.projectVersion = 'master';
                     
             {"type": "Namespace", "link": "Pouch.html", "name": "Pouch", "doc": "Namespace Pouch"},{"type": "Namespace", "link": "Pouch/Cache.html", "name": "Pouch\\Cache", "doc": "Namespace Pouch\\Cache"},{"type": "Namespace", "link": "Pouch/Exceptions.html", "name": "Pouch\\Exceptions", "doc": "Namespace Pouch\\Exceptions"},{"type": "Namespace", "link": "Pouch/Helpers.html", "name": "Pouch\\Helpers", "doc": "Namespace Pouch\\Helpers"},
             {"type": "Interface", "fromName": "Pouch\\Helpers", "fromLink": "Pouch/Helpers.html", "link": "Pouch/Helpers/InternalContainer.html", "name": "Pouch\\Helpers\\InternalContainer", "doc": "&quot;&quot;"},
-                    
+                                                        {"type": "Method", "fromName": "Pouch\\Helpers\\InternalContainer", "fromLink": "Pouch/Helpers/InternalContainer.html", "link": "Pouch/Helpers/InternalContainer.html#method_getName", "name": "Pouch\\Helpers\\InternalContainer::getName", "doc": "&quot;Returns the class name of the container.&quot;"},
+                    {"type": "Method", "fromName": "Pouch\\Helpers\\InternalContainer", "fromLink": "Pouch/Helpers/InternalContainer.html", "link": "Pouch/Helpers/InternalContainer.html#method_getContent", "name": "Pouch\\Helpers\\InternalContainer::getContent", "doc": "&quot;Returns the contents of the container.&quot;"},
+            
             
             {"type": "Class", "fromName": "Pouch\\Cache", "fromLink": "Pouch/Cache.html", "link": "Pouch/Cache/Apcu.html", "name": "Pouch\\Cache\\Apcu", "doc": "&quot;&quot;"},
                                                         {"type": "Method", "fromName": "Pouch\\Cache\\Apcu", "fromLink": "Pouch/Cache/Apcu.html", "link": "Pouch/Cache/Apcu.html#method_get", "name": "Pouch\\Cache\\Apcu::get", "doc": "&quot;Fetches a value from the cache.&quot;"},
@@ -56,7 +58,9 @@ window.projectVersion = 'master';
                     {"type": "Method", "fromName": "Pouch\\Helpers\\ClassTree", "fromLink": "Pouch/Helpers/ClassTree.html", "link": "Pouch/Helpers/ClassTree.html#method_getClassesInNamespace", "name": "Pouch\\Helpers\\ClassTree::getClassesInNamespace", "doc": "&quot;Get all sub-namespaces recursively for a namespace.&quot;"},
             
             {"type": "Class", "fromName": "Pouch\\Helpers", "fromLink": "Pouch/Helpers.html", "link": "Pouch/Helpers/InternalContainer.html", "name": "Pouch\\Helpers\\InternalContainer", "doc": "&quot;&quot;"},
-                    
+                                                        {"type": "Method", "fromName": "Pouch\\Helpers\\InternalContainer", "fromLink": "Pouch/Helpers/InternalContainer.html", "link": "Pouch/Helpers/InternalContainer.html#method_getName", "name": "Pouch\\Helpers\\InternalContainer::getName", "doc": "&quot;Returns the class name of the container.&quot;"},
+                    {"type": "Method", "fromName": "Pouch\\Helpers\\InternalContainer", "fromLink": "Pouch/Helpers/InternalContainer.html", "link": "Pouch/Helpers/InternalContainer.html#method_getContent", "name": "Pouch\\Helpers\\InternalContainer::getContent", "doc": "&quot;Returns the contents of the container.&quot;"},
+            
             {"type": "Class", "fromName": "Pouch", "fromLink": "Pouch.html", "link": "Pouch/Pouch.html", "name": "Pouch\\Pouch", "doc": "&quot;&quot;"},
                                                         {"type": "Method", "fromName": "Pouch\\Pouch", "fromLink": "Pouch/Pouch.html", "link": "Pouch/Pouch.html#method_bootstrap", "name": "Pouch\\Pouch::bootstrap", "doc": "&quot;Bootstrap pouch.&quot;"},
                     {"type": "Method", "fromName": "Pouch\\Pouch", "fromLink": "Pouch/Pouch.html", "link": "Pouch/Pouch.html#method_singleton", "name": "Pouch\\Pouch::singleton", "doc": "&quot;Insert or return a singleton instance from our container.&quot;"},

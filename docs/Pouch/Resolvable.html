@@ -176,7 +176,7 @@
                     array
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_resolveDependencies">resolveDependencies</a>($params, array $args = [])
+                    <a href="#method_resolveDependencies">resolveDependencies</a>(<a target="_blank" href="http://php.net/ReflectionParameter">ReflectionParameter</a>[] $params, array $args = [])
         
                                             <p>Resolve the dependencies for all parameters.</p>                </div>
                 <div class="col-md-2"></div>
@@ -240,7 +240,7 @@ the container require them to be prefixed with \Pouch\Key.</p>                </
             <div id="method-details">
                     <div class="method-item">
                     <h3 id="method___construct">
-        <div class="location">at         line 254</div>
+        <div class="location">at         line 262</div>
         <code>                    void
     <strong>__construct</strong>(string $name, mixed $content)
         </code>
@@ -285,7 +285,7 @@ the container require them to be prefixed with \Pouch\Key.</p>                </
             </div>
                     <div class="method-item">
                     <h3 id="method_make">
-        <div class="location">at         line 50</div>
+        <div class="location">at         line 54</div>
         <code>                    $this
     <strong>make</strong>(mixed $object)
         </code>
@@ -325,6 +325,10 @@ the container require them to be prefixed with \Pouch\Key.</p>                </
                 <td><a href="../Pouch/Exceptions/ResolvableException.html"><abbr title="Pouch\Exceptions\ResolvableException">ResolvableException</abbr></a></td>
                 <td></td>
             </tr>
+                    <tr>
+                <td><a target="_blank" href="http://php.net/ReflectionException">ReflectionException</a></td>
+                <td></td>
+            </tr>
             </table>
 
             
@@ -334,7 +338,7 @@ the container require them to be prefixed with \Pouch\Key.</p>                </
             </div>
                     <div class="method-item">
                     <h3 id="method_getObject">
-        <div class="location">at         line 80</div>
+        <div class="location">at         line 84</div>
         <code>                    mixed
     <strong>getObject</strong>()
         </code>
@@ -364,7 +368,7 @@ the container require them to be prefixed with \Pouch\Key.</p>                </
             </div>
                     <div class="method-item">
                     <h3 id="method_getType">
-        <div class="location">at         line 92</div>
+        <div class="location">at         line 96</div>
         <code>                    string
     <strong>getType</strong>(mixed $element = null)
         </code>
@@ -404,7 +408,7 @@ the container require them to be prefixed with \Pouch\Key.</p>                </
             </div>
                     <div class="method-item">
                     <h3 id="method___call">
-        <div class="location">at         line 109</div>
+        <div class="location">at         line 113</div>
         <code>                    mixed
     <strong>__call</strong>(string $method, array $args)
         </code>
@@ -458,9 +462,9 @@ the container require them to be prefixed with \Pouch\Key.</p>                </
             </div>
                     <div class="method-item">
                     <h3 id="method_resolveDependencies">
-        <div class="location">at         line 137</div>
+        <div class="location">at         line 144</div>
         <code>            protected        array
-    <strong>resolveDependencies</strong>($params, array $args = [])
+    <strong>resolveDependencies</strong>(<a target="_blank" href="http://php.net/ReflectionParameter">ReflectionParameter</a>[] $params, array $args = [])
         </code>
     </h3>
     <div class="details">
@@ -476,7 +480,7 @@ this method will also take care of properly re-instantiating the anonymous class
 
                     <table class="table table-condensed">
                     <tr>
-                <td></td>
+                <td><a target="_blank" href="http://php.net/ReflectionParameter">ReflectionParameter</a>[]</td>
                 <td>$params</td>
                 <td></td>
             </tr>
@@ -502,7 +506,19 @@ this method will also take care of properly re-instantiating the anonymous class
 
                     <table class="table table-condensed">
                     <tr>
+                <td><a href="../Pouch/Exceptions/NotFoundException.html"><abbr title="Pouch\Exceptions\NotFoundException">NotFoundException</abbr></a></td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a href="../Pouch/Exceptions/PouchException.html"><abbr title="Pouch\Exceptions\PouchException">PouchException</abbr></a></td>
+                <td></td>
+            </tr>
+                    <tr>
                 <td><a href="../Pouch/Exceptions/ResolvableException.html"><abbr title="Pouch\Exceptions\ResolvableException">ResolvableException</abbr></a></td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a target="_blank" href="http://php.net/ReflectionException">ReflectionException</a></td>
                 <td></td>
             </tr>
             </table>
@@ -514,7 +530,7 @@ this method will also take care of properly re-instantiating the anonymous class
             </div>
                     <div class="method-item">
                     <h3 id="method_resolveInternalDependencies">
-        <div class="location">at         line 185</div>
+        <div class="location">at         line 192</div>
         <code>                    array
     <strong>resolveInternalDependencies</strong>(string $anonymousClass)
         </code>
@@ -567,7 +583,7 @@ this method will also take care of properly re-instantiating the anonymous class
             </div>
                     <div class="method-item">
                     <h3 id="method_createClassDependency">
-        <div class="location">at         line 212</div>
+        <div class="location">at         line 220</div>
         <code>            protected        mixed
     <strong>createClassDependency</strong>(string $rawClassName, bool $nullable)
         </code>
@@ -613,6 +629,10 @@ the container require them to be prefixed with \Pouch\Key.</p>                  
                 <td><a href="../Pouch/Exceptions/ResolvableException.html"><abbr title="Pouch\Exceptions\ResolvableException">ResolvableException</abbr></a></td>
                 <td></td>
             </tr>
+                    <tr>
+                <td><a href="../Pouch/Exceptions/PouchException.html"><abbr title="Pouch\Exceptions\PouchException">PouchException</abbr></a></td>
+                <td></td>
+            </tr>
             </table>
 
             
@@ -622,7 +642,7 @@ the container require them to be prefixed with \Pouch\Key.</p>                  
             </div>
                     <div class="method-item">
                     <h3 id="method_getName">
-        <div class="location">at         line 265</div>
+        <div class="location">at         line 273</div>
         <code>                    string
     <strong>getName</strong>()
         </code>
@@ -652,7 +672,7 @@ the container require them to be prefixed with \Pouch\Key.</p>                  
             </div>
                     <div class="method-item">
                     <h3 id="method_getContent">
-        <div class="location">at         line 275</div>
+        <div class="location">at         line 283</div>
         <code>                    mixed
     <strong>getContent</strong>()
         </code>
@@ -682,7 +702,7 @@ the container require them to be prefixed with \Pouch\Key.</p>                  
             </div>
                     <div class="method-item">
                     <h3 id="method_isAnonymous">
-        <div class="location">at         line 285</div>
+        <div class="location">at         line 293</div>
         <code>                    bool
     <strong>isAnonymous</strong>()
         </code>
