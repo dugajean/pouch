@@ -2,6 +2,7 @@
 
 namespace Pouch;
 
+use Pouch\Helpers\InternalContainer;
 use Pouch\Exceptions\NotFoundException;
 use Pouch\Exceptions\ResolvableException;
 
@@ -226,7 +227,7 @@ class Resolvable
             $content = null;
         }
 
-        $anonymousClass = new class ($className, $content)
+        $anonymousClass = new class ($className, $content) implements InternalContainer
         {
             /**
              * From createClassDependency's inner class

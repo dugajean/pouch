@@ -4,6 +4,7 @@ namespace Pouch;
 
 use Pouch\Cache\Cacheable;
 use Pouch\Helpers\ClassTree;
+use Pouch\Helpers\InternalContainer;
 use Psr\SimpleCache\CacheInterface;
 use Psr\Container\ContainerInterface;
 use Pouch\Exceptions\PouchException;
@@ -163,14 +164,13 @@ class Pouch implements ContainerInterface
      * Resolve specific key from the replaceables array.
      *
      * @param string $key
-     * @param array  $withArgs   Optional arguments which will be used for instantiating factories.
      *
      * @return mixed
      *
      * @throws \Pouch\Exceptions\PouchException
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    public function get($key, $getContent = false)
+    public function get($key)
     {
         if (!array_key_exists($key, $this->replaceables)) {
             throw new NotFoundException("The {$key} key could not be found in the container");
@@ -182,10 +182,6 @@ class Pouch implements ContainerInterface
             $content = $content();
         } else {
             $content = $this->replaceables[(string)$key] = is_callable($content) ? $content($this) : $content;
-        }
-
-        if ($getContent && method_exists($content, 'getContent')) {
-            $content = $content->getContent();
         }
 
         return $content;
@@ -202,7 +198,13 @@ class Pouch implements ContainerInterface
      */
     public function resolve($key)
     {
-        return $this->get($key, true);
+        $content = $this->get($key);
+
+        if ($content instanceof InternalContainer) {
+            $content = $content->getContent();
+        }
+
+        return $content;
     }
 
     /**

@@ -219,9 +219,19 @@
                     mixed
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_resolve">resolve</a>(string $key)
+                    <a href="#method_get">get</a>(string $key)
         
                                             <p>Resolve specific key from the replaceables array.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    mixed
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_resolve">resolve</a>(string $key)
+        
+                                            <p>Fetches from container with getContent.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
@@ -232,16 +242,6 @@
                     <a href="#method_raw">raw</a>(string $key)
         
                                             <p>Resolve a key without invoking it if it happens to be a factory.</p>                </div>
-                <div class="col-md-2"></div>
-            </div>
-                    <div class="row">
-                <div class="col-md-2 type">
-                    mixed
-                </div>
-                <div class="col-md-8 type">
-                    <a href="#method_get">get</a>(string $key)
-        
-                                            <p>Alias for resolve.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
@@ -450,7 +450,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_bootstrap">
-        <div class="location">at         line 47</div>
+        <div class="location">at         line 48</div>
         <code>        static            void
     <strong>bootstrap</strong>(string $rootDir, <abbr title="Psr\SimpleCache\CacheInterface">CacheInterface</abbr> $cacheStore = null)
         </code>
@@ -496,7 +496,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_singleton">
-        <div class="location">at         line 66</div>
+        <div class="location">at         line 67</div>
         <code>        static            mixed
     <strong>singleton</strong>(string $key, callable $data = null)
         </code>
@@ -550,7 +550,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_bind">
-        <div class="location">at         line 88</div>
+        <div class="location">at         line 89</div>
         <code>                    $this
     <strong>bind</strong>(string|array $keyOrData, callable|null $data = null)
         </code>
@@ -596,7 +596,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_register">
-        <div class="location">at         line 119</div>
+        <div class="location">at         line 120</div>
         <code>                    $this
     <strong>register</strong>(string|array $keyOrData, callable|null $data = null)
         </code>
@@ -641,7 +641,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_registerNamespaces">
-        <div class="location">at         line 138</div>
+        <div class="location">at         line 139</div>
         <code>                    $this
     <strong>registerNamespaces</strong>(string|string[] $namespaces, array $overriders = [])
         </code>
@@ -698,8 +698,61 @@
 
             </div>
                     <div class="method-item">
+                    <h3 id="method_get">
+        <div class="location">at         line 173</div>
+        <code>                    mixed
+    <strong>get</strong>(string $key)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Resolve specific key from the replaceables array.</p>                                                </div>
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>string</td>
+                <td>$key</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>mixed</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+                            <h4>Exceptions</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../Pouch/Exceptions/PouchException.html"><abbr title="Pouch\Exceptions\PouchException">PouchException</abbr></a></td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a href="../Pouch/Exceptions/NotFoundException.html"><abbr title="Pouch\Exceptions\NotFoundException">NotFoundException</abbr></a></td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
                     <h3 id="method_resolve">
-        <div class="location">at         line 171</div>
+        <div class="location">at         line 199</div>
         <code>                    mixed
     <strong>resolve</strong>(string $key)
         </code>
@@ -709,7 +762,7 @@
     
 
                     <div class="method-description">
-                                    <p>Resolve specific key from the replaceables array.</p>                                                </div>
+                                    <p>Fetches from container with getContent.</p>                                                </div>
                 <div class="tags">
                             <h4>Parameters</h4>
 
@@ -748,7 +801,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_raw">
-        <div class="location">at         line 195</div>
+        <div class="location">at         line 219</div>
         <code>                    mixed
     <strong>raw</strong>(string $key)
         </code>
@@ -796,61 +849,8 @@
 
             </div>
                     <div class="method-item">
-                    <h3 id="method_get">
-        <div class="location">at         line 214</div>
-        <code>                    mixed
-    <strong>get</strong>(string $key)
-        </code>
-    </h3>
-    <div class="details">
-            
-    
-
-                    <div class="method-description">
-                                    <p>Alias for resolve.</p>                                                </div>
-                <div class="tags">
-                            <h4>Parameters</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td>string</td>
-                <td>$key</td>
-                <td></td>
-            </tr>
-            </table>
-
-            
-                            <h4>Return Value</h4>
-
-                    <table class="table table-condensed">
-        <tr>
-            <td>mixed</td>
-            <td></td>
-        </tr>
-    </table>
-
-            
-                            <h4>Exceptions</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td><a href="../Pouch/Exceptions/PouchException.html"><abbr title="Pouch\Exceptions\PouchException">PouchException</abbr></a></td>
-                <td></td>
-            </tr>
-                    <tr>
-                <td><a href="../Pouch/Exceptions/NotFoundException.html"><abbr title="Pouch\Exceptions\NotFoundException">NotFoundException</abbr></a></td>
-                <td></td>
-            </tr>
-            </table>
-
-            
-                    </div>
-    </div>
-
-            </div>
-                    <div class="method-item">
                     <h3 id="method_contains">
-        <div class="location">at         line 226</div>
+        <div class="location">at         line 235</div>
         <code>                    bool
     <strong>contains</strong>(string $key)
         </code>
@@ -890,7 +890,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_has">
-        <div class="location">at         line 238</div>
+        <div class="location">at         line 247</div>
         <code>                    bool
     <strong>has</strong>(string $key)
         </code>
@@ -930,7 +930,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_remove">
-        <div class="location">at         line 250</div>
+        <div class="location">at         line 259</div>
         <code>                    $this
     <strong>remove</strong>($key)
         </code>
@@ -970,7 +970,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_factory">
-        <div class="location">at         line 266</div>
+        <div class="location">at         line 275</div>
         <code>                    $this|<a href="../Pouch/Factory.html"><abbr title="Pouch\Factory">Factory</abbr></a>
     <strong>factory</strong>(bool|callable $isFactoryOrCallable = true)
         </code>
@@ -1010,7 +1010,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_validateCallable">
-        <div class="location">at         line 284</div>
+        <div class="location">at         line 293</div>
         <code>            protected        
     <strong>validateCallable</strong>($callable)
         </code>
@@ -1050,7 +1050,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method___get">
-        <div class="location">at         line 301</div>
+        <div class="location">at         line 310</div>
         <code>                    mixed
     <strong>__get</strong>(string $key)
         </code>
@@ -1103,7 +1103,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method___isset">
-        <div class="location">at         line 313</div>
+        <div class="location">at         line 322</div>
         <code>                    bool
     <strong>__isset</strong>(string $key)
         </code>
@@ -1143,7 +1143,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method___unset">
-        <div class="location">at         line 325</div>
+        <div class="location">at         line 334</div>
         <code>                    void
     <strong>__unset</strong>(string $key)
         </code>
@@ -1183,7 +1183,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method___call">
-        <div class="location">at         line 339</div>
+        <div class="location">at         line 348</div>
         <code>                    $this
     <strong>__call</strong>(string $key, array $data)
         </code>
@@ -1229,7 +1229,7 @@ If an argument is provided: Only the first one will be considered and it must be
             </div>
                     <div class="method-item">
                     <h3 id="method___toString">
-        <div class="location">at         line 353</div>
+        <div class="location">at         line 362</div>
         <code>                    string
     <strong>__toString</strong>()
         </code>
