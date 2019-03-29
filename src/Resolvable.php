@@ -24,10 +24,13 @@ class Resolvable
 
     /**
      * Inject the decorated object.
-     * 
-     * @param mixed $object
      *
-     * @return void
+     * @param mixed             $object
+     *
+     * @param \Pouch\Pouch|null $pouch
+     *
+     * @throws \Pouch\Exceptions\ResolvableException
+     * @throws \ReflectionException
      */
     public function __construct($object = null, Pouch $pouch = null)
     {
@@ -46,6 +49,7 @@ class Resolvable
      * @return $this
      *
      * @throws \Pouch\Exceptions\ResolvableException
+     * @throws \ReflectionException
      */
     public function make($object)
     {
@@ -127,12 +131,15 @@ class Resolvable
      * for the first occurrence. But, when the same internal key is used twice in different classes, then
      * this method will also take care of properly re-instantiating the anonymous class.
      *
-     * @param \ReflectionParameter[] $param
+     * @param \ReflectionParameter[] $params
      * @param array                  $args
      *
      * @return array
      *
+     * @throws \Pouch\Exceptions\NotFoundException
+     * @throws \Pouch\Exceptions\PouchException
      * @throws \Pouch\Exceptions\ResolvableException
+     * @throws \ReflectionException
      */
     protected function resolveDependencies($params, array $args = [])
     {
@@ -208,6 +215,7 @@ class Resolvable
      * @return mixed
      *
      * @throws \Pouch\Exceptions\ResolvableException
+     * @throws \Pouch\Exceptions\PouchException
      */
     protected function createClassDependency($rawClassName, $nullable)
     {

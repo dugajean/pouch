@@ -50,10 +50,12 @@ final class ClassTree
      * @param $namespace string
      *
      * @return array
+     *
+     * @throws \Pouch\Exceptions\NotFoundException
      */
     public static function getClassesInNamespace($namespace)
     {
-        $path = self::getNamespaceDirectory($namespace);
+        $path  = self::getNamespaceDirectory($namespace);
         $fqcns = [];
 
         if ($path === null) {

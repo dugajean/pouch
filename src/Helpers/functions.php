@@ -1,17 +1,20 @@
 <?php
 
 use Pouch\Pouch;
-use Pouch\Factory;
-use Pouch\Cache\Apcu;
 
-/**
- * Return pouch singleton instance.
- *
- * @return \Pouch\Pouch
- */
-function pouch()
-{
-    return Pouch::singleton('pouch', function () { return new Pouch; });
+if (!function_exists('pouch')) {
+    /**
+     * Return pouch singleton instance.
+     *
+     * @return \Pouch\Pouch
+     * @throws \Pouch\Exceptions\NotFoundException
+     */
+    function pouch()
+    {
+        return Pouch::singleton('pouch', function () {
+            return new Pouch;
+        });
+    }
 }
 
 if (!function_exists('resolve')) {
@@ -21,9 +24,10 @@ if (!function_exists('resolve')) {
      * @param string $key
      *
      * @return mixed
+     * @throws \Pouch\Exceptions\NotFoundException
      */
     function resolve($key)
     {
-        return pouch()->resolve($key);
+        return pouch()->get($key);
     }
 }

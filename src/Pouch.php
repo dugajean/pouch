@@ -7,7 +7,6 @@ use Pouch\Helpers\ClassTree;
 use Pouch\Helpers\InternalContainer;
 use Psr\SimpleCache\CacheInterface;
 use Psr\Container\ContainerInterface;
-use Pouch\Exceptions\PouchException;
 use Pouch\Exceptions\NotFoundException;
 use Pouch\Exceptions\InvalidArgumentException;
 
@@ -44,6 +43,8 @@ class Pouch implements ContainerInterface
      *                                        Pouch's performance by caching some heavy-ish tasks.
      *
      * @return void
+     *
+     * @throws \Pouch\Exceptions\NotFoundException
      */
     public static function bootstrap($rootDir, CacheInterface $cacheStore = null)
     {
@@ -79,12 +80,14 @@ class Pouch implements ContainerInterface
 
     /**
      * Bind a new element to the replaceables.
-     * 
+     *
      * @param  string|array  $keyOrData Can be a string for the key when binding a single thing, but can also
      *                                  be an array with $key => $callable format if providing multiple things to bind.
      * @param  callable|null $data      The data to be bound. Must be provided if $key is a string.
-     * 
+     *
      * @return $this
+     *
+     * @throws \Pouch\Exceptions\InvalidArgumentException
      */
     public function bind($keyOrData, $data = null)
     {
@@ -116,6 +119,8 @@ class Pouch implements ContainerInterface
      * @param callable|null $data
      *
      * @return $this
+     *
+     * @throws \Pouch\Exceptions\InvalidArgumentException
      */
     public function register($keyOrData, $data = null)
     {
@@ -134,7 +139,8 @@ class Pouch implements ContainerInterface
      *
      * @return $this
      *
-     * @throws \Pouch\Exceptions\ResolvableException
+     * @throws \Pouch\Exceptions\InvalidArgumentException
+     * @throws \Pouch\Exceptions\NotFoundException
      */
     public function registerNamespaces($namespaces, array $overriders = [])
     {
@@ -167,7 +173,6 @@ class Pouch implements ContainerInterface
      *
      * @return mixed
      *
-     * @throws \Pouch\Exceptions\PouchException
      * @throws \Pouch\Exceptions\NotFoundException
      */
     public function get($key)
@@ -305,7 +310,6 @@ class Pouch implements ContainerInterface
      * @return mixed
      *
      * @throws \Pouch\Exceptions\NotFoundException
-     * @throws \Pouch\Exceptions\PouchException
      */
     public function __get($key)
     {
@@ -344,6 +348,9 @@ class Pouch implements ContainerInterface
      * @param array  $data
      *
      * @return $this
+     *
+     * @throws \Pouch\Exceptions\InvalidArgumentException
+     * @throws \Pouch\Exceptions\NotFoundException
      */
     public function __call($key, array $data)
     {
