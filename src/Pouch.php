@@ -161,6 +161,38 @@ class Pouch implements ContainerInterface
 
     /**
      * Resolve specific key from the replaceables array.
+     *
+     * @param string $key
+     * @param array  $withArgs   Optional arguments which will be used for instantiating factories.
+     *
+     * @return mixed
+     *
+     * @throws \Pouch\Exceptions\PouchException
+     * @throws \Pouch\Exceptions\NotFoundException
+     */
+    public function get($key, $getContent = false)
+    {
+        if (!array_key_exists($key, $this->replaceables)) {
+            throw new NotFoundException("The {$key} key could not be found in the container");
+        }
+
+        $content = $this->replaceables[(string)$key];
+
+        if ($content instanceof Factory) {
+            $content = $content();
+        } else {
+            $content = $this->replaceables[(string)$key] = is_callable($content) ? $content($this) : $content;
+        }
+
+        if ($getContent && method_exists($content, 'getContent')) {
+            $content = $content->getContent();
+        }
+
+        return $content;
+    }
+
+    /**
+     * Fetches from container with getContent.
      * 
      * @param string $key
      * 
@@ -170,17 +202,7 @@ class Pouch implements ContainerInterface
      */
     public function resolve($key)
     {
-        if (!array_key_exists($key, $this->replaceables)) {
-            throw new NotFoundException("The {$key} key could not be found in the container");
-        }
-
-        $content = $this->replaceables[(string)$key];
-
-        if ($content instanceof Factory) {
-            return $content();
-        } else {
-            return $this->replaceables[(string)$key] = is_callable($content) ? $content($this) : $content;
-        }
+        return $this->get($key, true);
     }
 
     /**
@@ -199,21 +221,6 @@ class Pouch implements ContainerInterface
         }
 
         return $this->replaceables[(string)$key];
-    }
-
-    /**
-     * Alias for resolve.
-     *
-     * @param  string $key
-     *
-     * @return mixed
-     *
-     * @throws \Pouch\Exceptions\PouchException
-     * @throws \Pouch\Exceptions\NotFoundException
-     */
-    public function get($key)
-    {
-        return $this->resolve($key);
     }
 
     /**

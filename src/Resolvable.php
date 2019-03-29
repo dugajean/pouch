@@ -152,7 +152,7 @@ class Resolvable
 
             $className = $class->getName();
             if ($this->pouch->has($className)) {
-                $content = $this->pouch->resolve($className);
+                $content = $this->pouch->get($className);
                 $content = $content instanceof $selfName ? $content->getObject() : $content;
                 $args[$pos] = $content;
             } elseif (!isset($args[$pos])) {
@@ -221,7 +221,7 @@ class Resolvable
         }
 
         try {
-            $content = $this->pouch->resolve($className);
+            $content = $this->pouch->get($className);
         } catch (NotFoundException $e) {
             $content = null;
         }

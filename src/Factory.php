@@ -16,7 +16,7 @@ final class Factory
      *
      * @var array
      */
-    private $args;
+    private $args = [];
 
     /**
      * Factory constructor.
@@ -52,8 +52,9 @@ final class Factory
      */
     public static function make(Callable $callable, $newThis)
     {
-        return new Factory((function ($callable) {
-            return $callable($this);
-        })->bindTo($newThis), $callable);
+        return new Factory(
+            (function ($callable) { return $callable($this); })->bindTo($newThis),
+            $callable
+        );
     }
 }
