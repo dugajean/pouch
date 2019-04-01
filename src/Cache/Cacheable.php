@@ -24,7 +24,7 @@ trait Cacheable
     protected static function initCache(CacheInterface $cacheStore = null)
     {
         Pouch::singleton(self::$cacheStoreKey, function () use ($cacheStore) {
-            return $cacheStore ?? new Apcu();
+            return $cacheStore ?? new ApcuCache();
         });
     }
 
@@ -44,11 +44,11 @@ trait Cacheable
         $cacheValue = $value();
         $cacheStore = Pouch::singleton(self::$cacheStoreKey);
 
-        if ($cacheStore instanceof Apcu && !Apcu::enabled()) {
+        if ($cacheStore instanceof ApcuCache && !ApcuCache::enabled()) {
             return $cacheValue;
         }
 
-        $key = self::$cacheStoreKey.'_'.$key;
+        $key = md5(self::$cacheStoreKey.'_'.$key);
 
         if ($cacheStore->has($key)) {
             $cacheValue = $cacheStore->get($key, $cacheValue);

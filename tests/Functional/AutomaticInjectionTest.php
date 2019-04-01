@@ -93,4 +93,19 @@ class AutomaticInjectionTest extends TestCase
 
         $this->assertEquals($expected, $fooResolvable->fancyFooExampleLong());
     }
+
+    public function test_resolving_param_by_name_without_type_hint()
+    {
+        $expected = 'Foo text!';
+
+        pouch()->bind('foo', function () use ($expected) {
+            return $expected;
+        }, true);
+
+        pouch()->registerNamespaces('Pouch\Tests\Data');
+
+        $fooResolvable = pouch()->resolve(Foo::class);
+
+        $this->assertEquals($expected, $fooResolvable->namedParamNoTypeHint());
+    }
 }

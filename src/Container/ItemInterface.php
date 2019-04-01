@@ -1,8 +1,8 @@
 <?php
 
-namespace Pouch\Helpers;
+namespace Pouch\Container;
 
-interface InternalContainer
+interface ItemInterface
 {
     /**
      * Returns the class name of the container.

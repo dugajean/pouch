@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection ALL */
 
 use Pouch\Pouch;
 
@@ -7,7 +7,6 @@ if (!function_exists('pouch')) {
      * Return pouch singleton instance.
      *
      * @return \Pouch\Pouch
-     * @throws \Pouch\Exceptions\NotFoundException
      */
     function pouch()
     {

@@ -2,7 +2,7 @@
 
 namespace Pouch;
 
-use Pouch\Helpers\InternalContainer;
+use Pouch\Container\ItemInterface;
 use Pouch\Exceptions\NotFoundException;
 use Pouch\Exceptions\ResolvableException;
 
@@ -31,6 +31,8 @@ class Resolvable
      *
      * @throws \Pouch\Exceptions\ResolvableException
      * @throws \ReflectionException
+     * @throws \Pouch\Exceptions\NotFoundException
+     * @throws \Pouch\Exceptions\InvalidArgumentException
      */
     public function __construct($object = null, Pouch $pouch = null)
     {
@@ -48,8 +50,10 @@ class Resolvable
      *
      * @return $this
      *
+     * @throws \Pouch\Exceptions\NotFoundException
      * @throws \Pouch\Exceptions\ResolvableException
      * @throws \ReflectionException
+     * @throws \Pouch\Exceptions\InvalidArgumentException
      */
     public function make($object)
     {
@@ -102,13 +106,16 @@ class Resolvable
 
     /**
      * Magic __call method to handle the automatic resolution of parameters.
-     * 
+     *
      * @param string $method
-     * @param array $args
+     * @param array  $args
      *
      * @return mixed
      *
+     * @throws \Pouch\Exceptions\NotFoundException
      * @throws \Pouch\Exceptions\ResolvableException
+     * @throws \ReflectionException
+     * @throws \Pouch\Exceptions\InvalidArgumentException
      */
     public function __call($method, array $args)
     {
@@ -137,9 +144,9 @@ class Resolvable
      * @return array
      *
      * @throws \Pouch\Exceptions\NotFoundException
-     * @throws \Pouch\Exceptions\PouchException
      * @throws \Pouch\Exceptions\ResolvableException
      * @throws \ReflectionException
+     * @throws \Pouch\Exceptions\InvalidArgumentException
      */
     protected function resolveDependencies($params, array $args = [])
     {
@@ -147,6 +154,14 @@ class Resolvable
 
         foreach ((array)$params as $param) {
             $pos = $param->getPosition();
+            $name = $param->getName();
+
+            // Before we get into any typehint resolving, we should check whether
+            // an item was bound with the resolvedByName flag.
+            if ($this->pouch->has($name) && $this->pouch->resolvableByName($name)) {
+                $args[$pos] = $this->pouch->get($name);
+                continue;
+            }
 
             try {
                 $class = $param->getClass();
@@ -187,7 +202,6 @@ class Resolvable
      *
      * @return array
      * @throws \Pouch\Exceptions\NotFoundException
-     * @throws \Pouch\Exceptions\PouchException
      */
     public function resolveInternalDependencies($anonymousClass)
     {
@@ -215,7 +229,7 @@ class Resolvable
      * @return mixed
      *
      * @throws \Pouch\Exceptions\ResolvableException
-     * @throws \Pouch\Exceptions\PouchException
+     * @throws \Pouch\Exceptions\InvalidArgumentException
      */
     protected function createClassDependency($rawClassName, $nullable)
     {
@@ -235,7 +249,7 @@ class Resolvable
             $content = null;
         }
 
-        $anonymousClass = new class ($className, $content) implements InternalContainer
+        $anonymousClass = new class ($className, $content) implements ItemInterface
         {
             /**
              * From createClassDependency's inner class

@@ -219,7 +219,6 @@ class PouchTest extends TestCase
         });
 
         $this->assertEquals($expected, pouch()->resolve('foobar'));
-        $this->assertInstanceOf(Factory::class, pouch()->raw('foobar'));
     }
 
     public function test_binding_multiple_values_using_factories()
@@ -246,6 +245,5 @@ class PouchTest extends TestCase
 
         $this->assertTrue(is_callable(pouch()->raw('foo')));
         $this->assertEquals('Foo', pouch()->resolve('foo'));
-        $this->assertTrue(is_string(pouch()->raw('foo')));
     }
 }

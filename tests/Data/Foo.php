@@ -45,4 +45,9 @@ class Foo
     {
         return $foo->getContent();
     }
+
+    public function namedParamNoTypeHint($foo)
+    {
+        return $foo;
+    }
 }
