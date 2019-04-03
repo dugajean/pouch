@@ -1,5 +1,6 @@
 vendor/
 dummies/
+cache/
 index.php
 composer.lock
 sami.phar
