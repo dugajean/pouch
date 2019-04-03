@@ -158,7 +158,7 @@ class Resolvable
 
             // Before we get into any typehint resolving, we should check whether
             // an item was bound with the resolvedByName flag.
-            if ($this->pouch->has($name) && $this->pouch->resolvableByName($name)) {
+            if ($this->pouch->has($name) && $this->pouch->item($name)->isResolvedByName()) {
                 $args[$pos] = $this->pouch->get($name);
                 continue;
             }

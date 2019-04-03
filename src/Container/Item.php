@@ -102,9 +102,21 @@ final class Item implements ItemInterface
      *
      * @return bool
      */
-    public function getResolvedByName()
+    public function isResolvedByName()
     {
         return $this->resolvedByName;
+    }
+
+    /**
+     * @param bool $resolvableByName
+     *
+     * @return $this
+     */
+    public function setResolvedByName($resolvableByName)
+    {
+        $this->resolvedByName = $resolvableByName;
+
+        return $this;
     }
 
     /**

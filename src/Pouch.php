@@ -86,25 +86,27 @@ class Pouch implements ContainerInterface
      *                                       be an array with $key => $callable format if providing multiple things to bind.
      * @param  callable|Item|null $data      The data to be bound. Must be provided if $key is a string.
      *
-     * @param bool                $resolveByName
+     * @param bool                $named     Whether this item should be retrievable by only its name and without a typehint.
+     *                                       If set to true, you will be able to fetch the value of this item (eg. foo)
+     *                                       by simply adding $foo as a constructor/method parameter, with no typehint.
      *
      * @return $this
      *
      * @throws \Pouch\Exceptions\InvalidArgumentException
      */
-    public function bind($keyOrData, $data = null, $resolveByName = false)
+    public function bind($keyOrData, $data = null, $named = false)
     {
         if (is_array($keyOrData)) {
             foreach ($keyOrData as $key => $callable) {
-                $this->bind($key, $callable, $resolveByName);
+                $this->bind($key, $callable, $named);
             }
         } else {
             $key = (string)$keyOrData;
 
             if ($data instanceof ItemInterface) {
-                $this->replaceables[$key] = $data->setName($key);
+                $this->replaceables[$key] = $data->setName($key)->setResolvedByName($named);
             } else {
-                $this->replaceables[$key] = new Item((string)$keyOrData, $data, $this, $this->isFactory, $resolveByName);
+                $this->replaceables[$key] = new Item((string)$keyOrData, $data, $this, $this->isFactory, $named);
             }
 
             $this->factory(false);
@@ -183,7 +185,7 @@ class Pouch implements ContainerInterface
             throw new NotFoundException("The {$key} key could not be found in the container");
         }
 
-        return $this->replaceables[(string)$key]->getContent();
+        return $this->replaceables[$key]->getContent();
     }
 
     /**
@@ -215,7 +217,25 @@ class Pouch implements ContainerInterface
             throw new NotFoundException("The {$key} key could not be found in the container");
         }
 
-        return $this->replaceables[(string)$key]->getRaw();
+        return $this->replaceables[$key]->getRaw();
+    }
+
+    /**
+     * Returns the item instance for the key.
+     *
+     * @param string $key
+     *
+     * @return \Pouch\Container\Item
+     *
+     * @throws \Pouch\Exceptions\NotFoundException
+     */
+    public function item($key)
+    {
+        if (!array_key_exists($key, $this->replaceables)) {
+            throw new NotFoundException("The {$key} key could not be found in the container");
+        }
+
+        return $this->replaceables[$key];
     }
 
     /**
@@ -259,16 +279,6 @@ class Pouch implements ContainerInterface
     }
 
     /**
-     * @param string $key
-     *
-     * @return bool
-     */
-    public function resolvableByName($key)
-    {
-        return $this->replaceables[(string)$key]->getResolvedByName();
-    }
-
-    /**
      * Set factory for upcoming bind or create a factory callable.
      *
      * @param bool|callable $isFactoryOrCallable
@@ -284,20 +294,6 @@ class Pouch implements ContainerInterface
         $this->isFactory = (bool)$isFactoryOrCallable;
 
         return $this;
-    }
-
-    /**
-     * Throws an exception if the callable argument is not a callable.
-     *
-     * @param mixed $data
-     *
-     * @throws \Pouch\Exceptions\InvalidArgumentException
-     */
-    protected function validateData($data)
-    {
-        if (!method_exists($data, '__invoke') && !$data instanceof Item) {
-            throw new InvalidArgumentException('The provided argument must be a callable or an instance of Item');
-        }
     }
 
     /**
@@ -372,5 +368,19 @@ class Pouch implements ContainerInterface
         ];
 
         return json_encode($containers);
+    }
+
+    /**
+     * Throws an exception if the callable argument is not a callable.
+     *
+     * @param mixed $data
+     *
+     * @throws \Pouch\Exceptions\InvalidArgumentException
+     */
+    protected function validateData($data)
+    {
+        if (!method_exists($data, '__invoke') && !$data instanceof Item) {
+            throw new InvalidArgumentException('The provided argument must be a callable or an instance of Item');
+        }
     }
 }

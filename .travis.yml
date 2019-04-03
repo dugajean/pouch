@@ -21,6 +21,7 @@ cache:
 branches:
   only:
     - master
+    - 2.0
 
 before_install:
   - phpenv config-rm xdebug.ini || true
