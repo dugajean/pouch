@@ -153,7 +153,7 @@ class Resolvable
         $selfName = self::class;
 
         foreach ((array)$params as $param) {
-            $pos = $param->getPosition();
+            $pos  = $param->getPosition();
             $name = $param->getName();
 
             // Before we get into any typehint resolving, we should check whether
