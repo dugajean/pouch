@@ -4,9 +4,10 @@ declare(strict_types = 1);
 
 namespace Pouch;
 
+use Closure;
 use Pouch\Container\Item;
-use Pouch\Cache\Cacheable;
 use Pouch\Helpers\ClassTree;
+use Pouch\Helpers\CacheTrait;
 use Pouch\Helpers\FactoryTrait;
 use Pouch\Container\ItemInterface;
 use Psr\SimpleCache\CacheInterface;
@@ -16,7 +17,7 @@ use Pouch\Exceptions\InvalidArgumentException;
 
 class Pouch implements ContainerInterface
 {
-    use Cacheable, FactoryTrait;
+    use CacheTrait, FactoryTrait;
 
     /**
      * Store all singletons.
@@ -56,13 +57,13 @@ class Pouch implements ContainerInterface
      * Insert or return a singleton instance from our container.
      *
      * @param string   $key
-     * @param \Closure $data
+     * @param Closure $data
      *
      * @return mixed
      *
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    public static function singleton(string $key, \Closure $data = null)
+    public static function singleton(string $key, Closure $data = null)
     {
         if (array_key_exists($key, self::$singletons)) {
             return self::$singletons[$key];
@@ -363,7 +364,7 @@ class Pouch implements ContainerInterface
      */
     protected function validateData($data)
     {
-        if (!method_exists($data, '__invoke') && !$data instanceof Item) {
+        if (!$data instanceof Closure && !$data instanceof Item) {
             throw new InvalidArgumentException('The provided argument must be a callable or an instance of Item');
         }
     }

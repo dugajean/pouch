@@ -2,12 +2,12 @@
 
 declare(strict_types = 1);
 
-namespace Pouch\Cache;
+namespace Pouch\Helpers;
 
 use Pouch\Pouch;
 use Psr\SimpleCache\CacheInterface;
 
-trait Cacheable
+trait CacheTrait
 {
     /**
      * Key of the singleton holding the cache handler.

@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Pouch\Container;
 
+use Closure;
 use Psr\Container\ContainerInterface;
 
 final class Item implements ItemInterface
@@ -23,7 +24,7 @@ final class Item implements ItemInterface
     /**
      * Will always hold the callable instead of the raw result.
      *
-     * @var Callable
+     * @var Closure
      */
     private $raw;
 
@@ -58,14 +59,14 @@ final class Item implements ItemInterface
      * Item constructor.
      *
      * @param string|null        $name
-     * @param \Closure           $content
+     * @param Closure            $content
      * @param ContainerInterface $container
      * @param bool               $factory
      * @param bool               $resolvedByName
      */
     public function __construct(
         ?string $name,
-        \Closure $content,
+        Closure $content,
         ContainerInterface $container,
         bool $factory = false,
         bool $resolvedByName = false
@@ -103,9 +104,11 @@ final class Item implements ItemInterface
     }
 
     /**
-     * @return \Closure
+     * Returns the raw closure, non-executed.
+     *
+     * @return Closure
      */
-    public function getRaw(): \Closure
+    public function getRaw(): Closure
     {
         return $this->raw;
     }
