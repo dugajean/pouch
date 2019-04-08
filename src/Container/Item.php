@@ -135,10 +135,14 @@ final class Item implements ItemInterface
      * Set the arguments to instantiate the factory with.
      *
      * @param mixed ...$args
+     *
+     * @return \Pouch\Container\Item
      */
     public function setFactoryArgs(...$args)
     {
         $this->factoryArgs = $args;
+
+        return $this;
     }
 
     /**
