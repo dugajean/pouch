@@ -92,7 +92,7 @@ class Pouch implements ContainerInterface
      * @throws \Pouch\Exceptions\InvalidArgumentException
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    public function bind($keyOrData, $data = null, bool $named = false)
+    public function bind($keyOrData, $data = null, bool $named = false): self
     {
         if (is_array($keyOrData)) {
             foreach ($keyOrData as $key => $callable) {
@@ -125,7 +125,7 @@ class Pouch implements ContainerInterface
      * @throws \Pouch\Exceptions\InvalidArgumentException
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    public function register($keyOrData, $data = null, bool $resolveByName = false)
+    public function register($keyOrData, $data = null, bool $resolveByName = false): self
     {
         return $this->bind($keyOrData, $data, $resolveByName);
     }
@@ -214,7 +214,7 @@ class Pouch implements ContainerInterface
      *
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    public function raw(string $key)
+    public function raw(string $key): Closure
     {
         if (!array_key_exists($key, $this->replaceables)) {
             throw new NotFoundException("The {$key} key could not be found in the container");
@@ -232,7 +232,7 @@ class Pouch implements ContainerInterface
      *
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    public function item(string $key)
+    public function item(string $key): Item
     {
         if (!array_key_exists($key, $this->replaceables)) {
             throw new NotFoundException("The {$key} key could not be found in the container");
@@ -248,7 +248,7 @@ class Pouch implements ContainerInterface
      *
      * @return bool
      */
-    public function contains(string $key)
+    public function contains(string $key): bool
     {
         return array_key_exists($key, $this->replaceables);
     }
@@ -272,7 +272,7 @@ class Pouch implements ContainerInterface
      *
      * @return $this
      */
-    public function remove(string $key)
+    public function remove(string $key): self
     {
         if ($this->has($key)) {
             unset($this->replaceables[$key]);
@@ -302,7 +302,7 @@ class Pouch implements ContainerInterface
      *
      * @return bool
      */
-    public function __isset(string $key)
+    public function __isset(string $key): bool
     {
         return $this->has($key);
     }
@@ -312,9 +312,9 @@ class Pouch implements ContainerInterface
      *
      * @param string $key
      *
-     * @return void
+     * @return $this
      */
-    public function __unset(string $key)
+    public function __unset(string $key): self
     {
         $this->remove($key);
     }
@@ -345,7 +345,7 @@ class Pouch implements ContainerInterface
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         $containers = [
             'singletons' => self::$singletons,
@@ -362,7 +362,7 @@ class Pouch implements ContainerInterface
      *
      * @throws \Pouch\Exceptions\InvalidArgumentException
      */
-    protected function validateData($data)
+    protected function validateData($data): void
     {
         if (!$data instanceof Closure && !$data instanceof Item) {
             throw new InvalidArgumentException('The provided argument must be a closure or an instance of Item');
