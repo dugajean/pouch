@@ -230,6 +230,7 @@ class Resolvable
      *
      * @throws \Pouch\Exceptions\ResolvableException
      * @throws \Pouch\Exceptions\InvalidArgumentException
+     * @throws \Pouch\Exceptions\NotFoundException
      */
     protected function createClassDependency($rawClassName, $nullable)
     {

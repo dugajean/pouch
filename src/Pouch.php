@@ -39,9 +39,9 @@ class Pouch implements ContainerInterface
     /**
      * Bootstrap pouch.
      *
-     * @param string              $rootDir    Path to the app's root (Where composer.json is).
-     * @param CacheInterface|null $cacheStore PSR-16 compatible cache store instance. Will be used to speed up
-     *                                        Pouch's performance by caching some heavy-ish tasks.
+     * @param string              $rootDir     Path to the app's root (Where composer.json is).
+     * @param CacheInterface|null $cacheStore  PSR-16 compatible cache store instance. Will be used to speed up
+     *                                         Pouch's performance by caching some heavy-ish tasks.
      *
      * @return void
      *
@@ -59,8 +59,8 @@ class Pouch implements ContainerInterface
     /**
      * Insert or return a singleton instance from our container.
      *
-     * @param  string   $key
-     * @param  callable $data
+     * @param string   $key
+     * @param callable $data
      *
      * @return mixed
      *
@@ -93,6 +93,7 @@ class Pouch implements ContainerInterface
      * @return $this
      *
      * @throws \Pouch\Exceptions\InvalidArgumentException
+     * @throws \Pouch\Exceptions\NotFoundException
      */
     public function bind($keyOrData, $data = null, $named = false)
     {
@@ -125,6 +126,7 @@ class Pouch implements ContainerInterface
      * @return $this
      *
      * @throws \Pouch\Exceptions\InvalidArgumentException
+     * @throws \Pouch\Exceptions\NotFoundException
      */
     public function register($keyOrData, $data = null, $resolveByName = false)
     {

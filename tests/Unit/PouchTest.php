@@ -3,9 +3,7 @@
 namespace Pouch\Tests\Unit;
 
 use Pouch\Pouch;
-use Pouch\Factory;
 use Pouch\Tests\TestCase;
-use Pouch\Exceptions\PouchException;
 use Pouch\Exceptions\NotFoundException;
 use Psr\Container\ContainerInterface;
 
@@ -245,5 +243,18 @@ class PouchTest extends TestCase
 
         $this->assertTrue(is_callable(pouch()->raw('foo')));
         $this->assertEquals('Foo', pouch()->resolve('foo'));
+    }
+
+    public function test_factory_with_custom_args()
+    {
+        $expected = ['foo', 'bar', 'baz'];
+
+        pouch()->factory()->bind('foo', function ($pouch, $args) {
+            return $args;
+        });
+
+        pouch()->item('foo')->setFactoryArgs(...$expected);
+
+        $this->assertEquals($expected, pouch()->get('foo'));
     }
 }

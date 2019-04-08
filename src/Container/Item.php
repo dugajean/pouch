@@ -31,6 +31,13 @@ final class Item implements ItemInterface
     private $factory;
 
     /**
+     * List of optional args for the factory instantiation.
+     *
+     * @var array|null
+     */
+    private $factoryArgs;
+
+    /**
      * @var bool
      */
     private $resolvedByName;
@@ -39,6 +46,11 @@ final class Item implements ItemInterface
      * @var ContainerInterface
      */
     private $container;
+
+    /**
+     * @var  bool
+     */
+    private $initialized = false;
 
     /**
      * Item constructor.
@@ -120,6 +132,16 @@ final class Item implements ItemInterface
     }
 
     /**
+     * Set the arguments to instantiate the factory with.
+     *
+     * @param mixed ...$args
+     */
+    public function setFactoryArgs(...$args)
+    {
+        $this->factoryArgs = $args;
+    }
+
+    /**
      * Returns the contents of the container.
      *
      * @return mixed
@@ -127,10 +149,11 @@ final class Item implements ItemInterface
     public function getContent()
     {
         if ($this->factory) {
-            return ($this->raw)($this->container);
+            return ($this->raw)($this->container, $this->factoryArgs);
         }
 
-        if (is_callable($this->content)) {
+        if (is_callable($this->content) && !$this->initialized) {
+            $this->initialized = true;
             return $this->content = ($this->content)($this->container);
         }
 
