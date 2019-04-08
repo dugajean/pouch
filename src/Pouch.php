@@ -365,7 +365,7 @@ class Pouch implements ContainerInterface
     protected function validateData($data)
     {
         if (!$data instanceof Closure && !$data instanceof Item) {
-            throw new InvalidArgumentException('The provided argument must be a callable or an instance of Item');
+            throw new InvalidArgumentException('The provided argument must be a closure or an instance of Item');
         }
     }
 }
