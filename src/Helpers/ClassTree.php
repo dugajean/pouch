@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Pouch\Helpers;
 
 use Pouch\Exceptions\NotFoundException;
@@ -25,7 +27,7 @@ final class ClassTree
      *
      * @param $dir string
      */
-    public static function setRoot($dir)
+    public static function setRoot(string $dir)
     {
         self::$root = $dir;
 
@@ -39,7 +41,7 @@ final class ClassTree
      *
      * @param bool $load
      */
-    public static function loadDev($load = false)
+    public static function loadDev(bool $load = false)
     {
         self::$includeDev = $load;
     }
@@ -53,7 +55,7 @@ final class ClassTree
      *
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    public static function getClassesInNamespace($namespace)
+    public static function getClassesInNamespace(string $namespace): array
     {
         $path  = self::getNamespaceDirectory($namespace);
         $fqcns = [];
@@ -96,7 +98,7 @@ final class ClassTree
      *
      * @return array
      */
-    private static function getDefinedNamespaces()
+    private static function getDefinedNamespaces(): array
     {
         $composerJsonPath = self::$root.'composer.json';
         $composerConfig = json_decode(file_get_contents($composerJsonPath));
@@ -120,7 +122,7 @@ final class ClassTree
      *
      * @return string
      */
-    private static function getNamespaceDirectory($namespace)
+    private static function getNamespaceDirectory(string $namespace): ?string
     {
         $composerNamespaces = self::getDefinedNamespaces();
         $namespaceFragments = explode('\\', $namespace);

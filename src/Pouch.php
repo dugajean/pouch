@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Pouch;
 
 use Pouch\Container\Item;
 use Pouch\Cache\Cacheable;
 use Pouch\Helpers\ClassTree;
+use Pouch\Helpers\FactoryTrait;
 use Pouch\Container\ItemInterface;
 use Psr\SimpleCache\CacheInterface;
 use Psr\Container\ContainerInterface;
@@ -13,7 +16,7 @@ use Pouch\Exceptions\InvalidArgumentException;
 
 class Pouch implements ContainerInterface
 {
-    use Cacheable;
+    use Cacheable, FactoryTrait;
 
     /**
      * Store all singletons.
@@ -30,13 +33,6 @@ class Pouch implements ContainerInterface
     protected $replaceables = [];
 
     /**
-     * Whether a bind will be a factory.
-     *
-     * @var bool
-     */
-    protected $isFactory = false;
-
-    /**
      * Bootstrap pouch.
      *
      * @param string              $rootDir     Path to the app's root (Where composer.json is).
@@ -47,7 +43,7 @@ class Pouch implements ContainerInterface
      *
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    public static function bootstrap($rootDir, CacheInterface $cacheStore = null)
+    public static function bootstrap(string $rootDir, CacheInterface $cacheStore = null): void
     {
         ClassTree::setRoot($rootDir);
         
@@ -60,13 +56,13 @@ class Pouch implements ContainerInterface
      * Insert or return a singleton instance from our container.
      *
      * @param string   $key
-     * @param callable $data
+     * @param \Closure $data
      *
      * @return mixed
      *
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    public static function singleton($key, Callable $data = null)
+    public static function singleton(string $key, \Closure $data = null)
     {
         if (array_key_exists($key, self::$singletons)) {
             return self::$singletons[$key];
@@ -95,7 +91,7 @@ class Pouch implements ContainerInterface
      * @throws \Pouch\Exceptions\InvalidArgumentException
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    public function bind($keyOrData, $data = null, $named = false)
+    public function bind($keyOrData, $data = null, bool $named = false)
     {
         if (is_array($keyOrData)) {
             foreach ($keyOrData as $key => $callable) {
@@ -128,7 +124,7 @@ class Pouch implements ContainerInterface
      * @throws \Pouch\Exceptions\InvalidArgumentException
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    public function register($keyOrData, $data = null, $resolveByName = false)
+    public function register($keyOrData, $data = null, bool $resolveByName = false)
     {
         return $this->bind($keyOrData, $data, $resolveByName);
     }
@@ -187,6 +183,10 @@ class Pouch implements ContainerInterface
             throw new NotFoundException("The {$key} key could not be found in the container");
         }
 
+        if ($this->factoryArgs) {
+            $this->item($key)->setFactoryArgs(...$this->factoryArgs);
+        }
+
         return $this->replaceables[$key]->getContent();
     }
 
@@ -199,7 +199,7 @@ class Pouch implements ContainerInterface
      *
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    public function resolve($key)
+    public function resolve(string $key)
     {
         return $this->get($key);
     }
@@ -213,7 +213,7 @@ class Pouch implements ContainerInterface
      *
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    public function raw($key)
+    public function raw(string $key)
     {
         if (!array_key_exists($key, $this->replaceables)) {
             throw new NotFoundException("The {$key} key could not be found in the container");
@@ -231,7 +231,7 @@ class Pouch implements ContainerInterface
      *
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    public function item($key)
+    public function item(string $key)
     {
         if (!array_key_exists($key, $this->replaceables)) {
             throw new NotFoundException("The {$key} key could not be found in the container");
@@ -247,7 +247,7 @@ class Pouch implements ContainerInterface
      *
      * @return bool
      */
-    public function contains($key)
+    public function contains(string $key)
     {
         return array_key_exists($key, $this->replaceables);
     }
@@ -271,29 +271,11 @@ class Pouch implements ContainerInterface
      *
      * @return $this
      */
-    public function remove($key)
+    public function remove(string $key)
     {
         if ($this->has($key)) {
             unset($this->replaceables[$key]);
         }
-
-        return $this;
-    }
-
-    /**
-     * Set factory for upcoming bind or create a factory callable.
-     *
-     * @param bool|callable $isFactoryOrCallable
-     *
-     * @return $this|Item
-     */
-    public function factory($isFactoryOrCallable = true)
-    {
-        if (is_callable($isFactoryOrCallable)) {
-            return new Item(null, $isFactoryOrCallable, $this, true);
-        }
-
-        $this->isFactory = (bool)$isFactoryOrCallable;
 
         return $this;
     }
@@ -307,7 +289,7 @@ class Pouch implements ContainerInterface
      *
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    public function __get($key)
+    public function __get(string $key)
     {
         return $this->resolve($key);
     }
@@ -319,7 +301,7 @@ class Pouch implements ContainerInterface
      *
      * @return bool
      */
-    public function __isset($key)
+    public function __isset(string $key)
     {
         return $this->has($key);
     }
@@ -331,7 +313,7 @@ class Pouch implements ContainerInterface
      *
      * @return void
      */
-    public function __unset($key)
+    public function __unset(string $key)
     {
         $this->remove($key);
     }
@@ -348,7 +330,7 @@ class Pouch implements ContainerInterface
      * @throws \Pouch\Exceptions\InvalidArgumentException
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    public function __call($key, array $data)
+    public function __call(string $key, array $data)
     {
         if (!$data) {
             return $this->resolve($key);

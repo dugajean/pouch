@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Pouch\Cache;
 
 use Pouch\Pouch;
@@ -39,7 +41,7 @@ trait Cacheable
      * @throws \Pouch\Exceptions\NotFoundException
      * @throws \Pouch\Exceptions\InvalidArgumentException
      */
-    protected function cache($key, \Closure $value)
+    protected function cache(string $key, \Closure $value)
     {
         $cacheValue = $value();
         $cacheStore = Pouch::singleton(self::$cacheStoreKey);

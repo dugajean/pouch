@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Pouch\Container;
 
 interface ItemInterface
@@ -9,7 +11,7 @@ interface ItemInterface
      *
      * @return string
      */
-    public function getName();
+    public function getName(): string;
 
     /**
      * Returns the contents of the container.

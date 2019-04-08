@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Pouch;
 
 use Pouch\Container\ItemInterface;
@@ -55,7 +57,7 @@ class Resolvable
      * @throws \ReflectionException
      * @throws \Pouch\Exceptions\InvalidArgumentException
      */
-    public function make($object)
+    public function make($object): self
     {
         $expMsg = 'Invalid type provided. Must be either an object or a string with a valid class name';
 
@@ -97,7 +99,7 @@ class Resolvable
      *
      * @return string
      */
-    public function getType($element = null)
+    public function getType($element = null): string
     {
         $element = $element !== null ? $element : $this->getObject();
 
@@ -117,7 +119,7 @@ class Resolvable
      * @throws \ReflectionException
      * @throws \Pouch\Exceptions\InvalidArgumentException
      */
-    public function __call($method, array $args)
+    public function __call(string $method, array $args)
     {
         try {
             $params = (new \ReflectionMethod(get_class($this->object), $method))->getParameters();
@@ -148,7 +150,7 @@ class Resolvable
      * @throws \ReflectionException
      * @throws \Pouch\Exceptions\InvalidArgumentException
      */
-    protected function resolveDependencies($params, array $args = [])
+    protected function resolveDependencies(array $params, array $args = [])
     {
         $selfName = self::class;
 
@@ -203,7 +205,7 @@ class Resolvable
      * @return array
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    public function resolveInternalDependencies($anonymousClass)
+    public function resolveInternalDependencies(string $anonymousClass): array
     {
         if (!$this->pouch->has("anon-{$anonymousClass}")) {
             throw new NotFoundException("Anonymous class anon-{$anonymousClass} can't be found");
@@ -232,7 +234,7 @@ class Resolvable
      * @throws \Pouch\Exceptions\InvalidArgumentException
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    protected function createClassDependency($rawClassName, $nullable)
+    protected function createClassDependency(string $rawClassName, bool $nullable): ItemInterface
     {
         $className = explode(' ', $rawClassName)[1];
 
@@ -274,7 +276,7 @@ class Resolvable
              *
              * @return void
              */
-            public function __construct($name, $content)
+            public function __construct(string $name, $content)
             {
                 $this->name = $name;
                 $this->content = $content;
@@ -285,7 +287,7 @@ class Resolvable
              *
              * @return string
              */
-            public function getName()
+            public function getName(): string
             {
                 return $this->name;
             }
@@ -305,7 +307,7 @@ class Resolvable
              *
              * @return bool
              */
-            public function isAnonymous()
+            public function isAnonymous(): bool
             {
                 return true;
             }

@@ -1,5 +1,7 @@
 <?php /** @noinspection ALL */
 
+declare(strict_types = 1);
+
 use Pouch\Pouch;
 
 if (!function_exists('pouch')) {
@@ -8,7 +10,7 @@ if (!function_exists('pouch')) {
      *
      * @return \Pouch\Pouch
      */
-    function pouch()
+    function pouch(): Pouch
     {
         return Pouch::singleton('pouch', function () {
             return new Pouch;

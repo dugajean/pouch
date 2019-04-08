@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Pouch\Container;
 
 use Psr\Container\ContainerInterface;
@@ -56,17 +58,17 @@ final class Item implements ItemInterface
      * Item constructor.
      *
      * @param string|null        $name
-     * @param Callable           $content
+     * @param \Closure           $content
      * @param ContainerInterface $container
      * @param bool               $factory
      * @param bool               $resolvedByName
      */
     public function __construct(
-        $name,
-        Callable $content,
+        ?string $name,
+        \Closure $content,
         ContainerInterface $container,
-        $factory = false,
-        $resolvedByName = false
+        bool $factory = false,
+        bool $resolvedByName = false
     )
     {
         $this->name = $name;
@@ -81,7 +83,7 @@ final class Item implements ItemInterface
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -93,7 +95,7 @@ final class Item implements ItemInterface
      *
      * @return $this
      */
-    public function setName($name)
+    public function setName(string $name): self
     {
         $this->name = $name;
 
@@ -101,9 +103,9 @@ final class Item implements ItemInterface
     }
 
     /**
-     * @return Callable
+     * @return \Closure
      */
-    public function getRaw()
+    public function getRaw(): \Closure
     {
         return $this->raw;
     }
@@ -114,7 +116,7 @@ final class Item implements ItemInterface
      *
      * @return bool
      */
-    public function isResolvedByName()
+    public function isResolvedByName(): bool
     {
         return $this->resolvedByName;
     }
@@ -124,7 +126,7 @@ final class Item implements ItemInterface
      *
      * @return $this
      */
-    public function setResolvedByName($resolvableByName)
+    public function setResolvedByName(bool $resolvableByName): self
     {
         $this->resolvedByName = $resolvableByName;
 
@@ -138,7 +140,7 @@ final class Item implements ItemInterface
      *
      * @return \Pouch\Container\Item
      */
-    public function setFactoryArgs(...$args)
+    public function setFactoryArgs(...$args): self
     {
         $this->factoryArgs = $args;
 

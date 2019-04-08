@@ -253,8 +253,6 @@ class PouchTest extends TestCase
             return $args;
         });
 
-        pouch()->item('foo')->setFactoryArgs(...$expected);
-
-        $this->assertEquals($expected, pouch()->get('foo'));
+        $this->assertEquals($expected, pouch()->withArgs(...$expected)->get('foo'));
     }
 }
