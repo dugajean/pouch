@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Pouch\Helpers;
 
 use Pouch\Pouch;
+use Pouch\Cache\ApcuCache;
 use Psr\SimpleCache\CacheInterface;
 
 trait CacheTrait
