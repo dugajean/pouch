@@ -50,7 +50,7 @@ class Pouch implements ContainerInterface
         
         self::initCache($cacheStore);
 
-        require __DIR__.'/../src/Helpers/functions.php';
+        require_once __DIR__.'/../src/Helpers/functions.php';
     }
 
     /**
