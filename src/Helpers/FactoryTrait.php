@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace Pouch\Helpers;
 
+use Closure;
 use Pouch\Container\Item;
 
 trait FactoryTrait
@@ -23,6 +24,25 @@ trait FactoryTrait
     protected $factoryArgs;
 
     /**
+     * Set factory for upcoming bind or create a factory callable.
+     *
+     * @param bool|Closure $isFactoryOrCallable
+     *
+     * @return $this|Item
+     */
+    public function factory($isFactoryOrCallable = true)
+    {
+        if ($isFactoryOrCallable instanceof Closure) {
+            /** @var \Pouch\Pouch $this */
+            return new Item(null, $isFactoryOrCallable, $this, true);
+        }
+
+        $this->isFactory = (bool)$isFactoryOrCallable;
+
+        return $this;
+    }
+
+    /**
      * Set the args to construct the factory with.
      *
      * @param mixed ...$args
@@ -32,24 +52,6 @@ trait FactoryTrait
     public function withArgs(...$args): self
     {
         $this->factoryArgs = $args;
-
-        return $this;
-    }
-
-    /**
-     * Set factory for upcoming bind or create a factory callable.
-     *
-     * @param bool|callable $isFactoryOrCallable
-     *
-     * @return $this|Item
-     */
-    public function factory($isFactoryOrCallable = true)
-    {
-        if (is_callable($isFactoryOrCallable)) {
-            return new Item(null, $isFactoryOrCallable, $this, true);
-        }
-
-        $this->isFactory = (bool)$isFactoryOrCallable;
 
         return $this;
     }

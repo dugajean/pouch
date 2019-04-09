@@ -37,7 +37,7 @@ trait CacheTrait
     /**
      * Helper to retrieve data from cache store.
      *
-     * @param string   $key
+     * @param string  $key
      * @param Closure $value
      *
      * @return mixed

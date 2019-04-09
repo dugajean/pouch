@@ -131,6 +131,23 @@ class Pouch implements ContainerInterface
     }
 
     /**
+     * Alias for bind.
+     *
+     * @param string|array  $keyOrData
+     * @param callable|null $data
+     * @param bool          $resolveByName
+     *
+     * @return $this
+     *
+     * @throws \Pouch\Exceptions\InvalidArgumentException
+     * @throws \Pouch\Exceptions\NotFoundException
+     */
+    public function set($keyOrData, $data = null, bool $resolveByName = false): self
+    {
+        return $this->bind($keyOrData, $data, $resolveByName);
+    }
+
+    /**
      * Register one or more namespaces for automatic resolution.
      *
      * @param string|string[] $namespaces List of namespaces to be made resolvable.
@@ -145,7 +162,7 @@ class Pouch implements ContainerInterface
      * @throws \Pouch\Exceptions\InvalidArgumentException
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    public function registerNamespaces($namespaces, array $overriders = [])
+    public function registerNamespaces($namespaces, array $overriders = []): self
     {
         foreach ((array)$namespaces as $namespace) {
             $classes = $this->cache($namespace, function () use ($namespace) {
@@ -312,9 +329,9 @@ class Pouch implements ContainerInterface
      *
      * @param string $key
      *
-     * @return $this
+     * @return void
      */
-    public function __unset(string $key): self
+    public function __unset(string $key)
     {
         $this->remove($key);
     }
