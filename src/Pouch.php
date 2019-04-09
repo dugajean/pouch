@@ -99,8 +99,9 @@ class Pouch implements ContainerInterface
                 $this->bind($key, $callable, $named);
             }
         } else {
-            $key = (string)$keyOrData;
+            $this->validateData($data);
 
+            $key = (string)$keyOrData;
             if ($data instanceof ItemInterface) {
                 $this->replaceables[$key] = $data->setName($key)->setResolvedByName($named);
             } else {
