@@ -176,11 +176,11 @@ class ApcuCache implements CacheInterface
     /**
      * Determines whether the cache key is valid or not.
      *
-     * @param $key
+     * @param string $key
      *
      * @throws \Pouch\Exceptions\InvalidArgumentException
      */
-    private function checkReservedCharacters($key)
+    private function checkReservedCharacters(string $key)
     {
         if (!is_string($key)) {
             $type = gettype($key);
@@ -200,7 +200,7 @@ class ApcuCache implements CacheInterface
      *
      * @return bool
      */
-    public static function enabled()
+    public static function enabled(): bool
     {
         return extension_loaded('apcu') && ini_get('apc.enabled');
     }

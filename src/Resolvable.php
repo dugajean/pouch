@@ -28,7 +28,6 @@ class Resolvable
      * Inject the decorated object.
      *
      * @param mixed             $object
-     *
      * @param \Pouch\Pouch|null $pouch
      *
      * @throws \Pouch\Exceptions\ResolvableException
@@ -203,6 +202,7 @@ class Resolvable
      * @param string $anonymousClass
      *
      * @return array
+     *
      * @throws \Pouch\Exceptions\NotFoundException
      */
     public function resolveInternalDependencies(string $anonymousClass): array
