@@ -25,9 +25,10 @@ if (!function_exists('resolve')) {
      * @param string $key
      *
      * @return mixed
+     *
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    function resolve($key)
+    function resolve(string $key)
     {
         return pouch()->get($key);
     }

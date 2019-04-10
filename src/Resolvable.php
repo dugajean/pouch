@@ -293,7 +293,7 @@ class Resolvable
             }
 
             /**
-             * From createClassDependency's inner class
+             * From  createClassDependency's inner class
              *
              * @return mixed
              */

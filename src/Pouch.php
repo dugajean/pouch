@@ -36,9 +36,9 @@ class Pouch implements ContainerInterface
     /**
      * Bootstrap pouch.
      *
-     * @param string              $rootDir     Path to the app's root (Where composer.json is).
-     * @param CacheInterface|null $cacheStore  PSR-16 compatible cache store instance. Will be used to speed up
-     *                                         Pouch's performance by caching some heavy-ish tasks.
+     * @param string              $rootDir    Path to the app's root (Where composer.json is).
+     * @param CacheInterface|null $cacheStore PSR-16 compatible cache store instance. Will be used to speed up
+     *                                        Pouch's performance by caching some heavy-ish tasks.
      *
      * @return void
      *
@@ -50,7 +50,7 @@ class Pouch implements ContainerInterface
         
         self::initCache($cacheStore);
 
-        require_once __DIR__.'/../src/Helpers/functions.php';
+        require_once __DIR__.'/../helpers.php';
     }
 
     /**
@@ -100,8 +100,8 @@ class Pouch implements ContainerInterface
             }
         } else {
             $this->validateData($data);
-
             $key = (string)$keyOrData;
+
             if ($data instanceof ItemInterface) {
                 $this->replaceables[$key] = $data->setName($key)->setResolvedByName($named);
             } else {
@@ -332,7 +332,7 @@ class Pouch implements ContainerInterface
      *
      * @return void
      */
-    public function __unset(string $key)
+    public function __unset(string $key): void
     {
         $this->remove($key);
     }
@@ -344,7 +344,7 @@ class Pouch implements ContainerInterface
      * @param string $key
      * @param array  $data
      *
-     * @return $this
+     * @return mixed
      *
      * @throws \Pouch\Exceptions\InvalidArgumentException
      * @throws \Pouch\Exceptions\NotFoundException

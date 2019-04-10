@@ -5,12 +5,11 @@
 [![Total Downloads](https://poser.pugx.org/dugajean/pouch/downloads)](https://packagist.org/packages/dugajean/pouch) 
 [![License](https://poser.pugx.org/dugajean/pouch/license)](https://packagist.org/packages/dugajean/pouch) 
 
-Tiny IoC Container with automatic resolution for your PHP project.
+Tiny IoC container with awesome autowiring & more - for your PHP project.
 
 ## Requirements
 
-- PHP 7+
-- `ext-json`
+- PHP 7.1+
 - [PSR-4 standard with Composer](https://getcomposer.org/doc/04-schema.md#psr-4)
 
 ## Install
@@ -63,7 +62,7 @@ class Baz
 
 Constructor object arguments will also be automatically injected.
 
-You can always manually bind data to the container using `pouch()->bind($key, $dataClosure)` and also resolve anything from the container using `pouch()->resolve($key)`.
+You can always manually bind data to the container using `pouch()->bind($key, $dataClosure)` and also resolve anything from the container using `pouch()->get($key)`.
 
 **Read the [wiki](https://github.com/dugajean/pouch/wiki) and the [API docs](https://dugajean.github.io/pouch/) for further information.**
 
