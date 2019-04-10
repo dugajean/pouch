@@ -105,7 +105,7 @@ class Pouch implements ContainerInterface
             if ($data instanceof ItemInterface) {
                 $this->replaceables[$key] = $data->setName($key)->setResolvedByName($named);
             } else {
-                $this->replaceables[$key] = new Item($keyOrData, $data, $this, $this->isFactory, $named);
+                $this->replaceables[$key] = new Item($key, $data, $this, $this->isFactory, $named);
             }
 
             $this->factory(false);
