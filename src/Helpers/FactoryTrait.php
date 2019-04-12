@@ -55,4 +55,24 @@ trait FactoryTrait
 
         return $this;
     }
+
+    /**
+     * Set the arguments during fetch-time.
+     *
+     * @param string $key
+     *
+     * @return $this
+     */
+    protected function setFactoryArgs(string $key): self
+    {
+        if ($this->factoryArgs) {
+            /** @var Item $item */
+            $item = $this->item($key);
+            $item->setFactoryArgs(...$this->factoryArgs);
+
+            $this->factoryArgs = null;
+        }
+
+        return $this;
+    }
 }

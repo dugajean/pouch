@@ -186,9 +186,7 @@ class Pouch implements ContainerInterface
             throw new NotFoundException("The {$key} key could not be found in the container");
         }
 
-        if ($this->factoryArgs) {
-            $this->item($key)->setFactoryArgs(...$this->factoryArgs);
-        }
+        $this->setFactoryArgs($key);
 
         return $this->replaceables[$key]->getContent();
     }
