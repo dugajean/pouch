@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="robots" content="index, follow, all" />
-    <title>Pouch\Helpers\ClassTree | Pouch API</title>
+    <title>Pouch\Container\ItemInterface | Pouch API</title>
 
             <link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.min.css">
@@ -19,7 +19,7 @@
     
     </head>
 
-    <body id="class" data-name="class:Pouch_Helpers_ClassTree" data-root-path="../../">
+    <body id="class" data-name="class:Pouch_Container_ItemInterface" data-root-path="../../">
             <div id="content">
         <div id="left-column">
                 <div id="control-panel">
@@ -65,21 +65,21 @@
 
                         <div class="namespace-breadcrumbs">
             <ol class="breadcrumb">
-                <li><span class="label label-default">class</span></li>
-                        <li><a href="../../Pouch.html">Pouch</a></li><li class="backslash">\</li><li><a href="../../Pouch/Helpers.html">Helpers</a></li><li class="backslash">\</li><li>ClassTree</li>
+                <li><span class="label label-default">interface</span></li>
+                        <li><a href="../../Pouch.html">Pouch</a></li><li class="backslash">\</li><li><a href="../../Pouch/Container.html">Container</a></li><li class="backslash">\</li><li>ItemInterface</li>
             </ol>
         </div>
                 <div id="page-content">
                 
     <div class="page-header">
         <h1>
-            ClassTree
+            ItemInterface
                 
         </h1>
     </div>
 
-    <p>    class
-    <strong>ClassTree</strong>
+    <p>    interface
+    <strong>ItemInterface</strong>
 </p>
 
         
@@ -94,32 +94,22 @@
             <div class="container-fluid underlined">
                     <div class="row">
                 <div class="col-md-2 type">
-                    static&nbsp;
+                    string
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_setRoot">setRoot</a>(string $dir)
+                    <a href="#method_getName">getName</a>()
         
-                                            <p>Set the application's root.</p>                </div>
+                                            <p>Returns the class name of the container.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
-                    static&nbsp;
+                    mixed
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_loadDev">loadDev</a>(bool $load = false)
+                    <a href="#method_getContent">getContent</a>()
         
-                                            <p>Choose whether to include autoload-dev in the results.</p>                </div>
-                <div class="col-md-2"></div>
-            </div>
-                    <div class="row">
-                <div class="col-md-2 type">
-                    static&nbsp;array
-                </div>
-                <div class="col-md-8 type">
-                    <a href="#method_getClassesInNamespace">getClassesInNamespace</a>(string $namespace)
-        
-                                            <p>Get all sub-namespaces recursively for a namespace.</p>                </div>
+                                            <p>Returns the contents of the container.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
             </div>
@@ -129,10 +119,10 @@
 
             <div id="method-details">
                     <div class="method-item">
-                    <h3 id="method_setRoot">
-        <div class="location">at         line 30</div>
-        <code>        static            
-    <strong>setRoot</strong>(string $dir)
+                    <h3 id="method_getName">
+        <div class="location">at         line 14</div>
+        <code>                    string
+    <strong>getName</strong>()
         </code>
     </h3>
     <div class="details">
@@ -140,100 +130,49 @@
     
 
                     <div class="method-description">
-                                    <p>Set the application's root.</p>                                                </div>
+                                    <p>Returns the class name of the container.</p>                                                </div>
                 <div class="tags">
-                            <h4>Parameters</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td>string</td>
-                <td>$dir</td>
-                <td>string</td>
-            </tr>
-            </table>
-
-            
-            
-            
-                    </div>
-    </div>
-
-            </div>
-                    <div class="method-item">
-                    <h3 id="method_loadDev">
-        <div class="location">at         line 44</div>
-        <code>        static            
-    <strong>loadDev</strong>(bool $load = false)
-        </code>
-    </h3>
-    <div class="details">
-            
-    
-
-                    <div class="method-description">
-                                    <p>Choose whether to include autoload-dev in the results.</p>                                                </div>
-                <div class="tags">
-                            <h4>Parameters</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td>bool</td>
-                <td>$load</td>
-                <td></td>
-            </tr>
-            </table>
-
-            
-            
-            
-                    </div>
-    </div>
-
-            </div>
-                    <div class="method-item">
-                    <h3 id="method_getClassesInNamespace">
-        <div class="location">at         line 58</div>
-        <code>        static            array
-    <strong>getClassesInNamespace</strong>(string $namespace)
-        </code>
-    </h3>
-    <div class="details">
-            
-    
-
-                    <div class="method-description">
-                                    <p>Get all sub-namespaces recursively for a namespace.</p>                                                </div>
-                <div class="tags">
-                            <h4>Parameters</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td>string</td>
-                <td>$namespace</td>
-                <td>string</td>
-            </tr>
-            </table>
-
             
                             <h4>Return Value</h4>
 
                     <table class="table table-condensed">
         <tr>
-            <td>array</td>
+            <td>string</td>
             <td></td>
         </tr>
     </table>
 
             
-                            <h4>Exceptions</h4>
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_getContent">
+        <div class="location">at         line 21</div>
+        <code>                    mixed
+    <strong>getContent</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Returns the contents of the container.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
 
                     <table class="table table-condensed">
-                    <tr>
-                <td><a href="../../Pouch/Exceptions/NotFoundException.html"><abbr title="Pouch\Exceptions\NotFoundException">NotFoundException</abbr></a></td>
-                <td></td>
-            </tr>
-            </table>
+        <tr>
+            <td>mixed</td>
+            <td></td>
+        </tr>
+    </table>
 
+            
             
                     </div>
     </div>
