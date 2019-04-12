@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 2.0 - Backwards compatible
+
+### Added
+
+- The concept of items to store information within the container
+- New `alias` method to create a reference to an existing key
+- Ability to autowire parameters only by name and no type-hint
+  - Example: `pouch()->bind('foo', function () { return 'foo' }, true);` and then in your constructor: `public function __construct($foo) {}` would resolve to the string *foo*
+- New `item` method to fetch the `Item` object
+- Factory items can be called with different arguments every time they are needed. More about this in the wiki
+  
+### Changed 
+
+- Complete rehaul of the container storage with the `Item` object
+- Factories have been simplified and merged with the item concept
+- Fetching the raw closure is now way simpler
+- Extracted traits for the factory related methods and alias methods
+- Requires PHP 7.1+ instead of PHP 7.0+
+
+### Removed
+
+- Old Factory class, now included within the item logic
+
 ## 1.2
 
 ### Changed
