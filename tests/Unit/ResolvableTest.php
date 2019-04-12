@@ -9,6 +9,9 @@ use Pouch\Exceptions\ResolvableException;
 
 class ResolvableTest extends TestCase
 {
+    /**
+     * @var Resolvable
+     */
     private $resolvable;
 
     protected function setUp()

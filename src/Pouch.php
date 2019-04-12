@@ -7,6 +7,7 @@ namespace Pouch;
 use Closure;
 use Pouch\Container\Item;
 use Pouch\Helpers\ClassTree;
+use Pouch\Helpers\AliasTrait;
 use Pouch\Helpers\CacheTrait;
 use Pouch\Helpers\FactoryTrait;
 use Pouch\Container\ItemInterface;
@@ -17,7 +18,7 @@ use Pouch\Exceptions\InvalidArgumentException;
 
 class Pouch implements ContainerInterface
 {
-    use CacheTrait, FactoryTrait;
+    use AliasTrait, CacheTrait, FactoryTrait;
 
     /**
      * Store all singletons.
@@ -115,37 +116,20 @@ class Pouch implements ContainerInterface
     }
 
     /**
-     * Alias for bind.
+     * Create an alias key for an existing key.
      *
-     * @param string|array  $keyOrData
-     * @param callable|null $data
-     * @param bool          $resolveByName
+     * @param string $key
+     * @param string $referenceKey
      *
      * @return $this
      *
-     * @throws \Pouch\Exceptions\InvalidArgumentException
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    public function register($keyOrData, $data = null, bool $resolveByName = false): self
+    public function alias(string $key, string $referenceKey): self
     {
-        return $this->bind($keyOrData, $data, $resolveByName);
-    }
+        $this->replaceables[$key] = $this->item($referenceKey);
 
-    /**
-     * Alias for bind.
-     *
-     * @param string|array  $keyOrData
-     * @param callable|null $data
-     * @param bool          $resolveByName
-     *
-     * @return $this
-     *
-     * @throws \Pouch\Exceptions\InvalidArgumentException
-     * @throws \Pouch\Exceptions\NotFoundException
-     */
-    public function set($keyOrData, $data = null, bool $resolveByName = false): self
-    {
-        return $this->bind($keyOrData, $data, $resolveByName);
+        return $this;
     }
 
     /**
@@ -210,20 +194,6 @@ class Pouch implements ContainerInterface
     }
 
     /**
-     * Fetches from container with getContent.
-     * 
-     * @param string $key
-     * 
-     * @return mixed
-     *
-     * @throws \Pouch\Exceptions\NotFoundException
-     */
-    public function resolve(string $key)
-    {
-        return $this->get($key);
-    }
-
-    /**
      * Resolve a key without invoking it if it happens to be a factory.
      *
      * @param string $key
@@ -262,25 +232,13 @@ class Pouch implements ContainerInterface
     /**
      * See if specific key exists in our replaceables.
      *
-     * @param string  $key
-     *
-     * @return bool
-     */
-    public function contains(string $key): bool
-    {
-        return array_key_exists($key, $this->replaceables);
-    }
-
-    /**
-     * Alias for contains.
-     *
      * @param string $key
      *
      * @return bool
      */
     public function has($key)
     {
-        return $this->contains($key);
+        return array_key_exists($key, $this->replaceables);
     }
 
     /**
@@ -297,65 +255,6 @@ class Pouch implements ContainerInterface
         }
 
         return $this;
-    }
-
-    /**
-     * Allow retrieving container values via magic properties.
-     *
-     * @param string $key
-     *
-     * @return mixed
-     *
-     * @throws \Pouch\Exceptions\NotFoundException
-     */
-    public function __get(string $key)
-    {
-        return $this->resolve($key);
-    }
-
-    /**
-     * Allows the use of isset() to determine if something exists in the container.
-     *
-     * @param string $key
-     *
-     * @return bool
-     */
-    public function __isset(string $key): bool
-    {
-        return $this->has($key);
-    }
-
-    /**
-     * Allows the use of unset() to remove key a key from the container.
-     *
-     * @param string $key
-     *
-     * @return void
-     */
-    public function __unset(string $key): void
-    {
-        $this->remove($key);
-    }
-
-    /**
-     * Bind a new key or fetch an existing one if no argument is provided..
-     * If an argument is provided: Only the first one will be considered and it must be a callable.
-     *
-     * @param string $key
-     * @param array  $data
-     *
-     * @return mixed
-     *
-     * @throws \Pouch\Exceptions\InvalidArgumentException
-     * @throws \Pouch\Exceptions\NotFoundException
-     */
-    public function __call(string $key, array $data)
-    {
-        if (!$data) {
-            return $this->resolve($key);
-        }
-
-        return $this->bind($key, $data[0]);
     }
 
     /**

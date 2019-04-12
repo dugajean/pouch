@@ -4,8 +4,9 @@ namespace Pouch\Tests\Unit;
 
 use Pouch\Pouch;
 use Pouch\Tests\TestCase;
-use Pouch\Exceptions\NotFoundException;
+use Pouch\Container\Item;
 use Psr\Container\ContainerInterface;
+use Pouch\Exceptions\NotFoundException;
 
 class PouchTest extends TestCase
 {
@@ -254,5 +255,38 @@ class PouchTest extends TestCase
         });
 
         $this->assertEquals($expected, pouch()->withArgs(...$expected)->get('foo'));
+    }
+
+    public function test_fetching_item_instance()
+    {
+        pouch()->bind('foo', function () {
+            return 'Foo';
+        });
+
+        $this->assertInstanceOf(Item::class, pouch()->item('foo'));
+    }
+
+    public function test_creating_key_alias()
+    {
+        pouch()->bind('foo', function () {
+            return 'Foo';
+        });
+
+        pouch()->alias('foo_alias', 'foo');
+
+        $fooOrig = pouch()->get('foo');
+        $fooAlias = pouch()->get('foo_alias');
+        $fooOrigItem = pouch()->item('foo');
+        $fooAliasItem = pouch()->item('foo_alias');
+
+        $this->assertEquals($fooOrig, $fooAlias);
+        $this->assertTrue($fooOrigItem === $fooAliasItem);
+        $this->assertEquals('foo', $fooAliasItem->getName());
+
+        $fooOrigItem->setName('bar');
+        $this->assertEquals('bar', $fooAliasItem->getName());
+
+        $fooAliasItem->setName('baz');
+        $this->assertEquals('baz', $fooOrigItem->getName());
     }
 }
