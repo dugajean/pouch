@@ -11,7 +11,7 @@ interface ItemInterface
      *
      * @return string
      */
-    public function getName(): string;
+    public function getName(): ?string;
 
     /**
      * Returns the contents of the container.

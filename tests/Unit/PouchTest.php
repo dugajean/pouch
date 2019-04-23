@@ -289,4 +289,29 @@ class PouchTest extends TestCase
         $fooAliasItem->setName('baz');
         $this->assertEquals('baz', $fooOrigItem->getName());
     }
+
+    public function test_mass_bind_named_and_factory_items()
+    {
+        pouch()->bind([
+            'foo' => pouch()->named(function () {
+                return 'foo';
+            }),
+            'bar' => pouch()->named(pouch()->factory(function () {
+                return 'bar';
+            })),
+            'foobar' => pouch()->factory(pouch()->named(function () {
+                return 'foobar';
+            })),
+        ]);
+
+        $this->assertEquals('foo', pouch()->get('foo'));
+        $this->assertEquals('bar', pouch()->get('bar'));
+        $this->assertEquals('foobar', pouch()->get('foobar'));
+
+        $this->assertTrue(pouch()->item('foo')->isResolvedByName());
+        $this->assertTrue(pouch()->item('bar')->isResolvedByName());
+        $this->assertTrue(pouch()->item('bar')->isFactory());
+        $this->assertTrue(pouch()->item('foobar')->isResolvedByName());
+        $this->assertTrue(pouch()->item('foobar')->isFactory());
+    }
 }

@@ -21,6 +21,15 @@ class Pouch implements ContainerInterface
     use AliasTrait, CacheTrait, FactoryTrait;
 
     /**
+     * Whether this item should be retrievable by only its name and without a typehint.
+     * If set to true, you will be able to fetch the value of this item (eg. foo)
+     * by simply adding $foo as a constructor/method parameter, with no typehint.
+     *
+     * @var bool
+     */
+    protected $named = false;
+
+    /**
      * Store all singletons.
      * 
      * @var array
@@ -84,32 +93,29 @@ class Pouch implements ContainerInterface
      *                                       be an array with $key => $callable format if providing multiple things to bind.
      * @param  callable|Item|null $data      The data to be bound. Must be provided if $key is a string.
      *
-     * @param bool                $named     Whether this item should be retrievable by only its name and without a typehint.
-     *                                       If set to true, you will be able to fetch the value of this item (eg. foo)
-     *                                       by simply adding $foo as a constructor/method parameter, with no typehint.
-     *
      * @return $this
      *
      * @throws \Pouch\Exceptions\InvalidArgumentException
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    public function bind($keyOrData, $data = null, bool $named = false): self
+    public function bind($keyOrData, $data = null): self
     {
         if (is_array($keyOrData)) {
             foreach ($keyOrData as $key => $callable) {
-                $this->bind($key, $callable, $named);
+                $this->bind($key, $callable);
             }
         } else {
             $this->validateData($data);
             $key = (string)$keyOrData;
 
             if ($data instanceof ItemInterface) {
-                $this->replaceables[$key] = $data->setName($key)->setResolvedByName($named);
+                $this->replaceables[$key] = $data->setName($key);
             } else {
-                $this->replaceables[$key] = new Item($key, $data, $this, $this->isFactory, $named);
+                $this->replaceables[$key] = new Item($key, $data, $this, $this->isFactory, $this->named);
             }
 
             $this->factory(false);
+            $this->named(false);
         }
 
         return $this;
@@ -225,6 +231,24 @@ class Pouch implements ContainerInterface
         }
 
         return $this->replaceables[$key];
+    }
+
+    /**
+     * @param bool|Closure|Item $isNamedOrCallableOrItem
+     *
+     * @return $this|Item
+     */
+    public function named($isNamedOrCallableOrItem = true)
+    {
+        if ($isNamedOrCallableOrItem instanceof Closure) {
+            return new Item(null, $isNamedOrCallableOrItem, $this, false, true);
+        } elseif ($isNamedOrCallableOrItem instanceof Item) {
+            return $isNamedOrCallableOrItem->setResolvedByName(true);
+        }
+
+        $this->named = (bool)$isNamedOrCallableOrItem;
+
+        return $this;
     }
 
     /**

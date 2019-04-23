@@ -26,18 +26,20 @@ trait FactoryTrait
     /**
      * Set factory for upcoming bind or create a factory callable.
      *
-     * @param bool|Closure $isFactoryOrCallable
+     * @param bool|Closure|Item $isFactoryOrCallableOrItem
      *
      * @return $this|Item
      */
-    public function factory($isFactoryOrCallable = true)
+    public function factory($isFactoryOrCallableOrItem = true)
     {
-        if ($isFactoryOrCallable instanceof Closure) {
+        if ($isFactoryOrCallableOrItem instanceof Closure) {
             /** @var \Pouch\Pouch $this */
-            return new Item(null, $isFactoryOrCallable, $this, true);
+            return new Item(null, $isFactoryOrCallableOrItem, $this, true);
+        } elseif ($isFactoryOrCallableOrItem instanceof Item) {
+            return $isFactoryOrCallableOrItem->setFactory(true);
         }
 
-        $this->isFactory = (bool)$isFactoryOrCallable;
+        $this->isFactory = (bool)$isFactoryOrCallableOrItem;
 
         return $this;
     }

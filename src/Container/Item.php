@@ -84,7 +84,7 @@ final class Item implements ItemInterface
      *
      * @return string
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -137,6 +137,28 @@ final class Item implements ItemInterface
     }
 
     /**
+     * Whether or not this item is a factory.
+     *
+     * @return bool
+     */
+    public function isFactory(): bool
+    {
+        return $this->factory;
+    }
+
+    /**
+     * @param bool $factory
+     *
+     * @return $this
+     */
+    public function setFactory(bool $factory): self
+    {
+        $this->factory = $factory;
+
+        return $this;
+    }
+
+    /**
      * Set the arguments to instantiate the factory with.
      *
      * @param mixed ...$args
@@ -167,5 +189,20 @@ final class Item implements ItemInterface
         }
 
         return $this->content;
+    }
+
+    /**
+     * String representation of an item.
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return json_encode([
+            'name' => $this->name,
+            'factory' => $this->factory,
+            'named' => $this->resolvedByName,
+            'initialized' => $this->initialized,
+        ]);
     }
 }

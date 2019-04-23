@@ -98,9 +98,9 @@ class AutomaticInjectionTest extends TestCase
     {
         $expected = 'Foo text!';
 
-        pouch()->bind('foo', function () use ($expected) {
+        pouch()->named()->bind('foo', function () use ($expected) {
             return $expected;
-        }, true);
+        });
 
         pouch()->registerNamespaces('Pouch\Tests\Data');
 
