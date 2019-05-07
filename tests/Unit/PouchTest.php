@@ -314,4 +314,23 @@ class PouchTest extends TestCase
         $this->assertTrue(pouch()->item('foobar')->isResolvedByName());
         $this->assertTrue(pouch()->item('foobar')->isFactory());
     }
+
+    public function test_if_count_is_correct()
+    {
+        $data = [
+            'foo' => function () {
+                return 'foo';
+            },
+            'bar' => function () {
+                return 'bar';
+            },
+            'foobar' => function () {
+                return 'foobar';
+            },
+        ];
+
+        pouch()->bind($data);
+
+        $this->assertEquals(count($data), count(pouch()));
+    }
 }
