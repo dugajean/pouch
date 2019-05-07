@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pouch;
 
 use Closure;
+use Countable;
 use Pouch\Container\Item;
 use Pouch\Helpers\ClassTree;
 use Pouch\Helpers\AliasTrait;
@@ -16,7 +17,7 @@ use Psr\Container\ContainerInterface;
 use Pouch\Exceptions\NotFoundException;
 use Pouch\Exceptions\InvalidArgumentException;
 
-class Pouch implements ContainerInterface
+class Pouch implements ContainerInterface, Countable
 {
     use AliasTrait, CacheTrait, FactoryTrait;
 
@@ -292,6 +293,16 @@ class Pouch implements ContainerInterface
         ];
 
         return json_encode($containers);
+    }
+
+    /**
+     * Count elements of the container.
+     *
+     * @return int The custom count as an integer.
+     */
+    public function count(): int
+    {
+        return count($this->replaceables);
     }
 
     /**
