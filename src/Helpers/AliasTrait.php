@@ -11,13 +11,12 @@ trait AliasTrait
      *
      * @param string|array  $keyOrData
      * @param callable|null $data
-     * @param bool          $resolveByName
      *
      * @return $this
      */
-    public function register($keyOrData, $data = null, bool $resolveByName = false): self
+    public function register($keyOrData, $data = null): self
     {
-        return $this->bind($keyOrData, $data, $resolveByName);
+        return $this->bind($keyOrData, $data);
     }
 
     /**
@@ -25,13 +24,12 @@ trait AliasTrait
      *
      * @param string|array  $keyOrData
      * @param callable|null $data
-     * @param bool          $resolveByName
      *
      * @return $this
      */
-    public function set($keyOrData, $data = null, bool $resolveByName = false): self
+    public function set($keyOrData, $data = null): self
     {
-        return $this->bind($keyOrData, $data, $resolveByName);
+        return $this->bind($keyOrData, $data);
     }
 
     /**
