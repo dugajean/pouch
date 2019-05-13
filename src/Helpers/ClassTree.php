@@ -64,11 +64,19 @@ final class ClassTree
             throw new NotFoundException('This namespace cannot be found or is not registered in composer.json');
         }
 
+        $realPath = '';
         $allFiles = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
         $phpFiles = new \RegexIterator($allFiles, '/\.php$/');
+
+        $pharPath = \Phar::running();
         foreach ($phpFiles as $phpFile) {
-            $content = file_get_contents($phpFile->getRealPath());
+            $realPath = $pharPath 
+                ? $phpFile->getPath() . '/' . $phpFile->getFilename()
+                : $phpFile->getRealPath();
+
+            $content = file_get_contents($realPath);
             $tokens = token_get_all($content);
+
             $namespace = '';
             for ($index = 0; isset($tokens[$index]); $index++) {
                 if (!isset($tokens[$index][0])) {
@@ -131,15 +139,21 @@ final class ClassTree
             array_pop($namespaceFragments);
         }
 
+        $pharPath = \Phar::running();
         $undefinedNamespaceFragments = [];
 
         while ($namespaceFragments) {
             $possibleNamespace = implode('\\', $namespaceFragments).'\\';
 
             if (array_key_exists($possibleNamespace, $composerNamespaces)) {
-                return realpath(
-                    self::$root.$composerNamespaces[$possibleNamespace].implode('/', $undefinedNamespaceFragments)
-                );
+                if (!$pharPath) {
+                    return realpath(
+                        self::$root . $composerNamespaces[$possibleNamespace] . implode('/', $undefinedNamespaceFragments)
+                    );
+                } else {
+                    $pharRoot = $pharPath . '/';
+                    return $pharRoot . $composerNamespaces[$possibleNamespace] . implode('/', $undefinedNamespaceFragments);
+                }
             }
 
             array_unshift($undefinedNamespaceFragments, array_pop($namespaceFragments));

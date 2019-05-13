@@ -57,6 +57,10 @@ class Pouch implements ContainerInterface, Countable
      */
     public static function bootstrap(string $rootDir, CacheInterface $cacheStore = null): void
     {
+        if (\Phar::running()) {
+            \Phar::interceptFileFuncs();
+        }
+
         ClassTree::setRoot($rootDir);
         
         self::initCache($cacheStore);
@@ -112,6 +116,7 @@ class Pouch implements ContainerInterface, Countable
             if ($data instanceof ItemInterface) {
                 $this->replaceables[$key] = $data->setName($key);
             } else {
+                /** @var Closure $data */
                 $this->replaceables[$key] = new Item($key, $data, $this, $this->isFactory, $this->named);
             }
 
