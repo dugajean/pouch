@@ -137,6 +137,8 @@ final class ClassTree
      * @param string $namespace
      *
      * @return string
+     *
+     * @throws \Pouch\Exceptions\NotFoundException
      */
     private static function getNamespaceDirectory(string $namespace): ?string
     {
