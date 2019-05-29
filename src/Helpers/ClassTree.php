@@ -105,11 +105,19 @@ final class ClassTree
      * Get the namespaces declared in the PSR-4 section of composer.json.
      *
      * @return array
+     *
+     * @throws \Pouch\Exceptions\NotFoundException
      */
     private static function getDefinedNamespaces(): array
     {
-        $composerJsonPath = self::$root.'composer.json';
-        $composerConfig = json_decode(file_get_contents($composerJsonPath));
+        $composerPath = self::$root.'composer.json';
+        $composerContents = file_get_contents($composerPath, true);
+
+        if ($composerContents === false) {
+            throw new NotFoundException("Could not find composer.json at the provided path: {$composerPath}");
+        }
+
+        $composerConfig = json_decode($composerContents);
 
         $psr4 = "psr-4";
         $autoload = (array)$composerConfig->autoload->$psr4;
