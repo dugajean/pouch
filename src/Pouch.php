@@ -127,7 +127,7 @@ class Pouch implements ContainerInterface, Countable
             $this->validateData($data);
             $key = (string)$keyOrData;
 
-            $this->hookManager->runBeforeSet($key);
+            $this->hookManager->runBeforeSet($this, $key);
 
             if ($data instanceof ItemInterface) {
                 $this->replaceables[$key] = $data->setName($key);
@@ -136,7 +136,7 @@ class Pouch implements ContainerInterface, Countable
                 $this->replaceables[$key] = new Item($key, $data, $this, $this->isFactory, $this->named);
             }
 
-            $this->hookManager->runAfterSet($key, $this->replaceables[$key]);
+            $this->hookManager->runAfterSet($this, $key, $this->replaceables[$key]);
 
             $this->factory(false);
             $this->named(false);
@@ -212,17 +212,15 @@ class Pouch implements ContainerInterface, Countable
      */
     public function get($key)
     {
-        if (!array_key_exists($key, $this->replaceables)) {
-            throw new NotFoundException("The {$key} key could not be found in the container");
-        }
-
         $this->setFactoryArgs($key);
 
-        $this->hookManager->runBeforeGet($key);
-        $content = $this->replaceables[$key]->getContent();
-        $this->hookManager->runAfterGet($key, $this->item($key));
+        $this->hookManager->runBeforeGet($this, $key);
 
-        return $content;
+        $item = $this->item($key);
+
+        $this->hookManager->runAfterGet($this, $key, $item);
+
+        return $item->getContent();
     }
 
     /**
@@ -236,11 +234,13 @@ class Pouch implements ContainerInterface, Countable
      */
     public function raw(string $key): Closure
     {
-        if (!array_key_exists($key, $this->replaceables)) {
-            throw new NotFoundException("The {$key} key could not be found in the container");
-        }
+        $this->hookManager->runBeforeGet($this, $key);
 
-        return $this->replaceables[$key]->getRaw();
+        $item = $this->item($key);
+
+        $this->hookManager->runAfterGet($this, $key, $item);
+
+        return $item->getRaw();
     }
 
     /**

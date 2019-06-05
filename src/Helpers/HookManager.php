@@ -6,6 +6,7 @@ namespace Pouch\Helpers;
 
 use Closure;
 use Pouch\Container\Item;
+use Pouch\Pouch;
 
 final class HookManager
 {
@@ -112,45 +113,49 @@ final class HookManager
     }
 
     /**
+     * @param Pouch  $pouch
      * @param string $currentKey
      *
      * @return $this
      */
-    public function runBeforeGet(string $currentKey)
+    public function runBeforeGet(Pouch $pouch, string $currentKey)
     {
-        return $this->runHooks('before', 'get', $currentKey);
+        return $this->runHooks('before', 'get', $pouch, $currentKey);
     }
 
     /**
+     * @param Pouch  $pouch
      * @param string $currentKey
      * @param Item   $item
      *
      * @return $this
      */
-    public function runAfterGet(string $currentKey, Item $item)
+    public function runAfterGet(Pouch $pouch, string $currentKey, Item $item)
     {
-        return $this->runHooks('after', 'get', $currentKey, $item);
+        return $this->runHooks('after', 'get', $pouch, $currentKey, $item);
     }
 
     /**
+     * @param Pouch  $pouch
      * @param string $currentKey
      *
      * @return $this
      */
-    public function runBeforeSet(string $currentKey)
+    public function runBeforeSet(Pouch $pouch, string $currentKey)
     {
-        return $this->runHooks('before', 'set', $currentKey);
+        return $this->runHooks('before', 'set', $pouch, $currentKey);
     }
 
     /**
+     * @param Pouch  $pouch
      * @param string $currentKey
      * @param Item   $item
      *
      * @return $this
      */
-    public function runAfterSet(string $currentKey, Item $item)
+    public function runAfterSet(Pouch $pouch, string $currentKey, Item $item)
     {
-        return $this->runHooks('after', 'set', $currentKey, $item);
+        return $this->runHooks('after', 'set', $pouch, $currentKey, $item);
     }
 
     /**
@@ -180,22 +185,25 @@ final class HookManager
      *
      * @param string    $beforeOrAfter
      * @param string    $getOrSet
+     * @param Pouch     $pouch
      * @param string    $currentKey
      * @param Item|null $item
      *
      * @return $this
      */
-    private function runHooks(string $beforeOrAfter, string $getOrSet, string $currentKey, ?Item $item = null): self
-    {
+    private function runHooks(
+        string $beforeOrAfter,
+        string $getOrSet,
+        Pouch $pouch,
+        string $currentKey,
+        ?Item $item = null
+    ): self {
         foreach ($this->hooks[$beforeOrAfter][$getOrSet] as $hook) {
-            if (
-                array_key_exists('__trigger_keys', $this->hooks[$beforeOrAfter][$getOrSet])
-                && !in_array($currentKey, $this->hooks[$beforeOrAfter][$getOrSet]['__trigger_keys'])
-            ) {
+            if (isset($hook['__trigger_keys']) && !in_array($currentKey, $hook['__trigger_keys'])) {
                 continue;
             }
 
-            $hook($this, $currentKey, $item);
+            $hook($pouch, $currentKey, $item);
         }
 
         return $this;
