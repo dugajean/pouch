@@ -15,16 +15,16 @@ final class Item implements ItemInterface
     private $name;
 
     /**
-     * Holds the actual content of the item, initially a Closure.
+     * Holds the actual content of the item.
      *
      * @var mixed
      */
     private $content;
 
     /**
-     * Will always hold the callable instead of the raw result.
+     * Will always hold the closure instead of the raw result (if applicable).
      *
-     * @var Closure
+     * @var mixed
      */
     private $raw;
 
@@ -59,14 +59,14 @@ final class Item implements ItemInterface
      * Item constructor.
      *
      * @param string|null        $name
-     * @param Closure            $content
+     * @param mixed              $content
      * @param ContainerInterface $container
      * @param bool               $factory
      * @param bool               $resolvedByName
      */
     public function __construct(
         ?string $name,
-        Closure $content,
+        $content,
         ContainerInterface $container,
         bool $factory = false,
         bool $resolvedByName = false
@@ -175,17 +175,24 @@ final class Item implements ItemInterface
     /**
      * Returns the contents of the container.
      *
+     * @param string|null $dottedPath If the item's content is a multidimensional array, dot notation can
+     *                                be used to fetch a certain part of the array.
+     *
      * @return mixed
      */
-    public function getContent()
+    public function getContent(string $dottedPath = '')
     {
         if ($this->factory) {
             return ($this->raw)($this->container, $this->factoryArgs);
         }
 
-        if (is_callable($this->content) && !$this->initialized) {
+        if ($this->content instanceof Closure && !$this->initialized) {
             $this->initialized = true;
             return $this->content = ($this->content)($this->container);
+        }
+
+        if (is_array($this->content) && strpos($dottedPath, '.') !== false) {
+            return $this->getWithDotNotation($dottedPath);
         }
 
         return $this->content;
@@ -204,5 +211,33 @@ final class Item implements ItemInterface
             'named' => $this->resolvedByName,
             'initialized' => $this->initialized,
         ]);
+    }
+
+    /**
+     * Get an item from an array using "dot" notation.
+     *
+     * @param  string $key
+     * @return mixed
+     */
+    private function getWithDotNotation($key)
+    {
+        if (is_null($key)) {
+            return $this->content;
+        }
+
+        if (isset($array[$key])) {
+            return $this->content[$key];
+        }
+
+        $partialContent = $this->content;
+        foreach (explode('.', $key) as $segment) {
+            if (!is_array($partialContent) || !array_key_exists($segment, $partialContent)) {
+                return $this->content;
+            }
+
+            $partialContent = $partialContent[$segment];
+        }
+
+        return $partialContent;
     }
 }

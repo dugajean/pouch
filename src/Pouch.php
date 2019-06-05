@@ -220,7 +220,7 @@ class Pouch implements ContainerInterface, Countable
 
         $this->hookManager->runAfterGet($this, $key, $item);
 
-        return $item->getContent();
+        return $item->getContent($key);
     }
 
     /**
@@ -351,8 +351,10 @@ class Pouch implements ContainerInterface, Countable
      */
     protected function validateData($data): void
     {
-        if (!$data instanceof Closure && !$data instanceof Item) {
-            throw new InvalidArgumentException('The provided argument must be a closure or an instance of Item');
+        $primitives = ['integer', 'float', 'boolean', 'string', 'array'];
+
+        if (!$data instanceof Closure && !$data instanceof Item && !in_array(gettype($data), $primitives)) {
+            throw new InvalidArgumentException('The provided argument must be a Closure, Item or a primitive (incl. array)');
         }
     }
 }
