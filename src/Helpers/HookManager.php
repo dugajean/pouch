@@ -17,21 +17,32 @@ final class HookManager
         'before' => ['get' => [], 'set' => []],
         'after' => ['get' => [], 'set' => []],
     ];
+    /**
+     * @var \Pouch\Pouch
+     */
+    private $pouch;
 
     /**
      * Returns an instance of self.
      *
+     * @param \Pouch\Pouch $pouch
+     *
      * @return self
      */
-    public static function factory(): self
+    public static function factory(Pouch $pouch): self
     {
-        return new self;
+        return new self($pouch);
     }
 
     /**
      * HookManager constructor - Singleton.
+     *
+     * @param \Pouch\Pouch $pouch
      */
-    private function __construct() {}
+    private function __construct(Pouch $pouch)
+    {
+        $this->pouch = $pouch;
+    }
 
     /**
      * @param string[] $whenKeys
@@ -118,49 +129,45 @@ final class HookManager
     }
 
     /**
-     * @param Pouch  $pouch
      * @param string $currentKey
      *
      * @return $this
      */
-    public function runBeforeGet(Pouch $pouch, string $currentKey)
+    public function runBeforeGet(string $currentKey)
     {
-        return $this->runHooks('before', 'get', $pouch, $currentKey);
+        return $this->runHooks('before', 'get', $currentKey);
     }
 
     /**
-     * @param Pouch  $pouch
      * @param string $currentKey
      * @param Item   $item
      *
      * @return $this
      */
-    public function runAfterGet(Pouch $pouch, string $currentKey, Item $item)
+    public function runAfterGet(string $currentKey, Item $item)
     {
-        return $this->runHooks('after', 'get', $pouch, $currentKey, $item);
+        return $this->runHooks('after', 'get', $currentKey, $item);
     }
 
     /**
-     * @param Pouch  $pouch
      * @param string $currentKey
      *
      * @return $this
      */
-    public function runBeforeSet(Pouch $pouch, string $currentKey)
+    public function runBeforeSet(string $currentKey)
     {
-        return $this->runHooks('before', 'set', $pouch, $currentKey);
+        return $this->runHooks('before', 'set', $currentKey);
     }
 
     /**
-     * @param Pouch  $pouch
      * @param string $currentKey
      * @param Item   $item
      *
      * @return $this
      */
-    public function runAfterSet(Pouch $pouch, string $currentKey, Item $item)
+    public function runAfterSet(string $currentKey, Item $item)
     {
-        return $this->runHooks('after', 'set', $pouch, $currentKey, $item);
+        return $this->runHooks('after', 'set', $currentKey, $item);
     }
 
     /**
@@ -190,16 +197,16 @@ final class HookManager
      *
      * @param string    $beforeOrAfter
      * @param string    $getOrSet
-     * @param Pouch     $pouch
      * @param string    $currentKey
      * @param Item|null $item
      *
      * @return $this
+     *
+     * @throws \Pouch\Exceptions\NotFoundException
      */
     private function runHooks(
         string $beforeOrAfter,
         string $getOrSet,
-        Pouch $pouch,
         string $currentKey,
         ?Item $item = null
     ): self {
@@ -212,7 +219,8 @@ final class HookManager
             }
 
             if ($hook instanceof Closure) {
-                $hook($pouch, $currentKey, $item);
+                $hook($currentKey, $item);
+                $this->pouch->hooks();
             }
         }
 

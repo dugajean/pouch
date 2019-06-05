@@ -338,11 +338,11 @@ class PouchTest extends TestCase
     {
         $beforeOutput = 'before:';
         $afterOutput = 'after:';
-        pouch()->getHookManager()->addBeforeEachGet(function ($pouch, $key) use (&$beforeOutput) {
+        pouch()->hooks()->addBeforeEachGet(function ($key) use (&$beforeOutput) {
             $beforeOutput .= $key;
         });
 
-        pouch()->getHookManager()->addBeforeEachGet(function ($pouch, $key) use (&$afterOutput) {
+        pouch()->hooks()->addBeforeEachGet(function ($key) use (&$afterOutput) {
             $afterOutput .= $key;
         });
 
@@ -362,11 +362,11 @@ class PouchTest extends TestCase
     {
         $beforeOutput = 'before:';
         $afterOutput = 'after:';
-        pouch()->getHookManager()->addBeforeEachSet(function ($pouch, $key) use (&$beforeOutput) {
+        pouch()->hooks()->addBeforeEachSet(function ($key) use (&$beforeOutput) {
             $beforeOutput .= $key;
         });
 
-        pouch()->getHookManager()->addBeforeEachSet(function ($pouch, $key) use (&$afterOutput) {
+        pouch()->hooks()->addBeforeEachSet(function ($key) use (&$afterOutput) {
             $afterOutput .= $key;
         });
 
@@ -384,15 +384,15 @@ class PouchTest extends TestCase
         $afterGetOutput = ' after get:';
         $beforeGetOutput = ' before get:';
 
-        pouch()->getHookManager()->addBeforeGet(['foo'], function ($pouch, $key) use (&$beforeGetOutput) {
+        pouch()->hooks()->addBeforeGet(['foo'], function ($key) use (&$beforeGetOutput) {
             $beforeGetOutput .= $key;
         });
 
-        pouch()->getHookManager()->addAfterGet(['bar'], function ($pouch, $key) use (&$afterGetOutput) {
+        pouch()->hooks()->addAfterGet(['bar'], function ($key) use (&$afterGetOutput) {
             $afterGetOutput .= $key;
         });
 
-        pouch()->getHookManager()->addBeforeSet(['bar', 'baz'], function ($pouch, $key) use (&$beforeSetOutput) {
+        pouch()->hooks()->addBeforeSet(['bar', 'baz'], function ($key) use (&$beforeSetOutput) {
             $beforeSetOutput .= $key;
         });
 

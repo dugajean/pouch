@@ -48,14 +48,9 @@ class Pouch implements ContainerInterface, Countable
     protected $replaceables = [];
 
     /**
-     * @var HookManager
-     */
-    private $hookManager;
-
-    /**
      * @var ClassTree
      */
-    private $classTree;
+    private $hooksActive = false;
 
     /**
      * Bootstrap pouch.
@@ -78,15 +73,15 @@ class Pouch implements ContainerInterface, Countable
 
         ClassTree::bootstrap($rootDir, $startPath, false);
 
+        require_once __DIR__ . '/../helpers.php';
+
         Pouch::singleton(self::$cacheStoreKey, function () use ($cacheStore) {
             return $cacheStore ?? ApcuCache::factory();
         });
 
         self::singleton('pouchHookManager', function () {
-            return HookManager::factory();
+            return HookManager::factory(pouch());
         });
-
-        require_once __DIR__ . '/../helpers.php';
     }
 
     /**
@@ -134,7 +129,9 @@ class Pouch implements ContainerInterface, Countable
             $this->validateData($data);
             $key = (string)$keyOrData;
 
-            $this->getHookManager()->runBeforeSet($this, $key);
+            if ($this->hooksActive) {
+                $this->hooks()->runBeforeSet($key);
+            }
 
             if ($data instanceof ItemInterface) {
                 $this->replaceables[$key] = $data->setName($key);
@@ -143,7 +140,9 @@ class Pouch implements ContainerInterface, Countable
                 $this->replaceables[$key] = new Item($key, $data, $this, $this->isFactory, $this->named);
             }
 
-            $this->getHookManager()->runAfterSet($this, $key, $this->replaceables[$key]);
+            if ($this->hooksActive) {
+                $this->hooks()->runAfterSet($key, $this->replaceables[$key]);
+            }
 
             $this->factory(false);
             $this->named(false);
@@ -210,7 +209,9 @@ class Pouch implements ContainerInterface, Countable
     {
         $this->setFactoryArgs($key);
 
-        $this->getHookManager()->runBeforeGet($this, $key);
+        if ($this->hooksActive) {
+            $this->hooks()->runBeforeGet($key);
+        }
 
         $dot = '';
         if (strpos($key, '.') !== false) {
@@ -219,7 +220,9 @@ class Pouch implements ContainerInterface, Countable
 
         $item = $this->item($key);
 
-        $this->getHookManager()->runAfterGet($this, $key, $item);
+        if ($this->hooksActive) {
+            $this->hooks()->runAfterGet($key, $item);
+        }
 
         return $item->getContent($dot);
     }
@@ -235,11 +238,15 @@ class Pouch implements ContainerInterface, Countable
      */
     public function raw(string $key): Closure
     {
-        $this->getHookManager()->runBeforeGet($this, $key);
+        if ($this->hooksActive) {
+            $this->hooks()->runBeforeGet($key);
+        }
 
         $item = $this->item($key);
 
-        $this->getHookManager()->runAfterGet($this, $key, $item);
+        if ($this->hooksActive) {
+            $this->hooks()->runAfterGet($key, $item);
+        }
 
         return $item->getRaw();
     }
@@ -311,10 +318,16 @@ class Pouch implements ContainerInterface, Countable
     /**
      * Returns the hook manager.
      *
+     * @param bool $active
+     *
      * @return \Pouch\Helpers\HookManager
+     *
+     * @throws \Pouch\Exceptions\NotFoundException
      */
-    public function getHookManager(): HookManager
+    public function hooks(bool $active = true): HookManager
     {
+        $this->hooksActive = $active;
+
         return self::singleton('pouchHookManager');
     }
 
