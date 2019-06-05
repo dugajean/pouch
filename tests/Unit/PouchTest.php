@@ -338,11 +338,11 @@ class PouchTest extends TestCase
     {
         $beforeOutput = 'before:';
         $afterOutput = 'after:';
-        pouch()->getHookManager()->addBeforeEachGet(function (Pouch $pouch, string $key) use (&$beforeOutput) {
+        pouch()->getHookManager()->addBeforeEachGet(function ($pouch, $key) use (&$beforeOutput) {
             $beforeOutput .= $key;
         });
 
-        pouch()->getHookManager()->addBeforeEachGet(function (Pouch $pouch, string $key) use (&$afterOutput) {
+        pouch()->getHookManager()->addBeforeEachGet(function ($pouch, $key) use (&$afterOutput) {
             $afterOutput .= $key;
         });
 
@@ -362,11 +362,11 @@ class PouchTest extends TestCase
     {
         $beforeOutput = 'before:';
         $afterOutput = 'after:';
-        pouch()->getHookManager()->addBeforeEachSet(function (Pouch $pouch, string $key) use (&$beforeOutput) {
+        pouch()->getHookManager()->addBeforeEachSet(function ($pouch, $key) use (&$beforeOutput) {
             $beforeOutput .= $key;
         });
 
-        pouch()->getHookManager()->addBeforeEachSet(function (Pouch $pouch, string $key) use (&$afterOutput) {
+        pouch()->getHookManager()->addBeforeEachSet(function ($pouch, $key) use (&$afterOutput) {
             $afterOutput .= $key;
         });
 
@@ -384,15 +384,15 @@ class PouchTest extends TestCase
         $afterGetOutput = ' after get:';
         $beforeGetOutput = ' before get:';
 
-        pouch()->getHookManager()->addBeforeGet(['foo'], function (Pouch $pouch, string $key) use (&$beforeGetOutput) {
+        pouch()->getHookManager()->addBeforeGet(['foo'], function ($pouch, $key) use (&$beforeGetOutput) {
             $beforeGetOutput .= $key;
         });
 
-        pouch()->getHookManager()->addAfterGet(['bar'], function (Pouch $pouch, string $key) use (&$afterGetOutput) {
+        pouch()->getHookManager()->addAfterGet(['bar'], function ($pouch, $key) use (&$afterGetOutput) {
             $afterGetOutput .= $key;
         });
 
-        pouch()->getHookManager()->addBeforeSet(['bar', 'baz'], function (Pouch $pouch, string $key) use (&$beforeSetOutput) {
+        pouch()->getHookManager()->addBeforeSet(['bar', 'baz'], function ($pouch, $key) use (&$beforeSetOutput) {
             $beforeSetOutput .= $key;
         });
 
@@ -428,5 +428,14 @@ class PouchTest extends TestCase
         pouch()->bind('foo', ['Foo' => ['Bar' => 'Cheddar']]);
         
         $this->assertEquals('Cheddar', pouch()->get('foo.Foo.Bar'));
+    }
+
+    public function test_binding_array_with_wrong_dot_notation()
+    {
+        $this->expectException(NotFoundException::class);
+
+        pouch()->bind('foo', ['Foo' => ['Bar' => 'Cheddar']]);
+
+        pouch()->get('foo.Foo.Baz');
     }
 }

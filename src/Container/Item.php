@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pouch\Container;
 
 use Closure;
+use Pouch\Exceptions\NotFoundException;
 use Psr\Container\ContainerInterface;
 
 final class Item implements ItemInterface
@@ -216,8 +217,11 @@ final class Item implements ItemInterface
     /**
      * Get an item from an array using "dot" notation.
      *
-     * @param  string $key
+     * @param string $key
+     *
      * @return mixed
+     *
+     * @throws \Pouch\Exceptions\NotFoundException
      */
     private function getWithDotNotation($key)
     {
@@ -232,7 +236,7 @@ final class Item implements ItemInterface
         $partialContent = $this->content;
         foreach (explode('.', $key) as $segment) {
             if (!is_array($partialContent) || !array_key_exists($segment, $partialContent)) {
-                return $this->content;
+                throw new NotFoundException("The dot notation '{$key}' did not match anything within the array");
             }
 
             $partialContent = $partialContent[$segment];
