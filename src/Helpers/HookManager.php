@@ -6,23 +6,7 @@ namespace Pouch\Helpers;
 
 use Closure;
 use Pouch\Container\Item;
-use Pouch\Exceptions\NotFoundException;
-use Pouch\Exceptions\InvalidArgumentException;
 
-/**
- * @method self addBeforeGet(string $key, Closure $callback)
- * @method self addAfterGet(string $key, Closure $callback)
- * @method self addBeforeSet(string $key, Closure $callback)
- * @method self addAfterSet(string $key, Closure $callback)
- * @method self addBeforeEachGet(Closure $callback)
- * @method self addAfterEachGet(Closure $callback)
- * @method self addBeforeEachSet(Closure $callback)
- * @method self addAfterEachSet(Closure $callback)
- * @method self runBeforeGet(string $currentKey)
- * @method self runAfterGet(string $currentKey, Item $item)
- * @method self runBeforeSet(string $currentKey)
- * @method self runAfterSet(string $currentKey, Item $item)
- */
 final class HookManager
 {
     /**
@@ -44,136 +28,174 @@ final class HookManager
     }
 
     /**
-     * All calls to be routed via this method. See docs on top of class.
+     * @param array   $whenKeys
+     * @param Closure $callback
      *
-     * @param string $name
-     * @param array  $arguments
-     *
-     * @return \Pouch\Helpers\HookManager
-     *
-     * @throws \Pouch\Exceptions\InvalidArgumentException
+     * @return $this
      */
-    public function __call(string $name, array $arguments)
+    public function addBeforeGet(array $whenKeys, Closure $callback): self
     {
-        $addOrRun = substr($name, 0, 3);
-
-        if ($addOrRun === 'add' || $addOrRun === 'run') {
-            $when = $this->determineWhen($addOrRun, $name);
-            $getOrSet = $this->determineGetSet($name);
-
-            if ($addOrRun === 'add') {
-                return $this->handleAdd($when, $getOrSet, $arguments);
-            } else {
-                return $this->handleRun($when, $getOrSet, $arguments);
-            }
-        }
+        return $this->addHook('before', 'get', $callback, $whenKeys);
     }
 
     /**
-     * Determine whether we're dealing with "before" or "after".
+     * @param array   $whenKeys
+     * @param Closure $callback
      *
-     * @param string $addOrRun
-     * @param string $methodName
-     *
-     * @return string
-     *
-     * @throws \Pouch\Exceptions\NotFoundException
+     * @return $this
      */
-    private function determineWhen(string $addOrRun, string $methodName): string
+    public function addAfterGet(array $whenKeys, Closure $callback): self
     {
-        if (preg_match("/{$addOrRun}(.*?)/", $methodName, $match) === 1) {
-            return strtolower($match[1]);
-        }
-
-        $this->throwException($methodName);
+        return $this->addHook('after', 'get', $callback, $whenKeys);
     }
 
     /**
-     * Determine whether we are using "get" or "set".
+     * @param array   $whenKeys
+     * @param Closure $callback
      *
-     * @param string $methodName
-     *
-     * @return string
-     *
-     * @throws \Pouch\Exceptions\NotFoundException
+     * @return $this
      */
-    private function determineGetSet(string $methodName)
+    public function addBeforeSet(array $whenKeys, Closure $callback): self
     {
-        $substring = strtolower(substr($methodName, -3));
-
-        if ($substring === 'get' || $substring === 'set') {
-            return $substring;
-        }
-
-        $this->throwException($methodName);
+        return $this->addHook('before', 'set', $callback, $whenKeys);
     }
 
     /**
-     * Throw an exception if the method isn't found.
+     * @param array   $whenKeys
+     * @param Closure $callback
      *
-     * @param string $methodName
-     *
-     * @throws \Pouch\Exceptions\NotFoundException
+     * @return $this
      */
-    private function throwException(string $methodName): void
+    public function addAfterSet(array $whenKeys, Closure $callback): self
     {
-        throw new NotFoundException("The method '$methodName' cannot be found in the HookManager class");
+        return $this->addHook('after', 'set', $callback, $whenKeys);
     }
 
     /**
-     * Handle the adding/registering part of the hooks.
+     * @param Closure $callback
      *
-     * @param string $when
-     * @param string $getOrSet
-     * @param array  $arguments
-     *
-     * @return \Pouch\Helpers\HookManager
-     *
-     * @throws \Pouch\Exceptions\InvalidArgumentException
+     * @return $this
      */
-    private function handleAdd(string $when, string $getOrSet, array $arguments): self
+    public function addBeforeEachGet(Closure $callback)
     {
-        if (count($arguments) === 0 || !$arguments[0] instanceof Closure) {
-            throw new InvalidArgumentException('When setting a hook the first argument must be a Closure');
-        }
+        return $this->addHook('before', 'get', $callback);
+    }
 
-        $this->hooks[$when][$getOrSet][] = $arguments[0];
+    /**
+     * @param Closure $callback
+     *
+     * @return $this
+     */
+    public function addAfterEachGet(Closure $callback)
+    {
+        return $this->addHook('after', 'get', $callback);
+    }
 
-        if (isset($arguments[1])) {
-            $this->hooks[$when][$getOrSet]['__trigger_keys'] = (array)$arguments[1];
+    /**
+     * @param Closure $callback
+     *
+     * @return $this
+     */
+    public function addBeforeEachSet(Closure $callback)
+    {
+        return $this->addHook('before', 'set', $callback);
+    }
+
+    /**
+     * @param Closure $callback
+     *
+     * @return $this
+     */
+    public function addAfterEachSet(Closure $callback)
+    {
+        return $this->addHook('after', 'set', $callback);
+    }
+
+    /**
+     * @param string $currentKey
+     *
+     * @return $this
+     */
+    public function runBeforeGet(string $currentKey)
+    {
+        return $this->runHooks('before', 'get', $currentKey);
+    }
+
+    /**
+     * @param string $currentKey
+     * @param Item   $item
+     *
+     * @return $this
+     */
+    public function runAfterGet(string $currentKey, Item $item)
+    {
+        return $this->runHooks('after', 'get', $currentKey, $item);
+    }
+
+    /**
+     * @param string $currentKey
+     *
+     * @return $this
+     */
+    public function runBeforeSet(string $currentKey)
+    {
+        return $this->runHooks('before', 'set', $currentKey);
+    }
+
+    /**
+     * @param string $currentKey
+     * @param Item   $item
+     *
+     * @return $this
+     */
+    public function runAfterSet(string $currentKey, Item $item)
+    {
+        return $this->runHooks('after', 'set', $currentKey, $item);
+    }
+
+    /**
+     * Register any hooks to the manager.
+     *
+     * @param string  $beforeOrAfter
+     * @param string  $getOrSet
+     * @param Closure $callback
+     * @param array   $whenKeys Array of keys that can be found in the container.
+     *                          The callback will only be executed if this key is being set or retrieved.
+     *
+     * @return $this
+     */
+    private function addHook(string $beforeOrAfter, string $getOrSet, Closure $callback, array $whenKeys = []): self
+    {
+        $this->hooks[$beforeOrAfter][$getOrSet] = $callback;
+
+        if (count($whenKeys) === 0) {
+            $this->hooks[$beforeOrAfter][$getOrSet]['__trigger_keys'] = $whenKeys;
         }
 
         return $this;
     }
 
     /**
-     * Handle the execution part of the hooks.
+     * Run the chosen hooks.
      *
-     * @param string $when
-     * @param string $getOrSet
-     * @param array  $arguments
+     * @param string    $beforeOrAfter
+     * @param string    $getOrSet
+     * @param string    $currentKey
+     * @param Item|null $item
      *
-     * @return \Pouch\Helpers\HookManager
-     *
-     * @throws \Pouch\Exceptions\InvalidArgumentException
+     * @return $this
      */
-    private function handleRun(string $when, string $getOrSet, array $arguments): self
+    private function runHooks(string $beforeOrAfter, string $getOrSet, string $currentKey, ?Item $item = null): self
     {
-        if (count($arguments) === 0) {
-            throw new InvalidArgumentException;
-        }
-
-        foreach ($this->hooks[$when][$getOrSet] as $hook) {
+        foreach ($this->hooks[$beforeOrAfter][$getOrSet] as $hook) {
             if (
-                array_key_exists('__trigger_keys', $this->hooks[$when][$getOrSet])
-                && !in_array($arguments[1], $this->hooks[$when][$getOrSet]['__trigger_keys'])
+                array_key_exists('__trigger_keys', $this->hooks[$beforeOrAfter][$getOrSet])
+                && !in_array($currentKey, $this->hooks[$beforeOrAfter][$getOrSet]['__trigger_keys'])
             ) {
-                if (!in_array($arguments[1], $this->hooks[$when][$getOrSet]['__trigger_keys'])) {
-                    continue;
-                }
+                continue;
             }
 
-            $hook($this, ...$arguments);
+            $hook($this, $currentKey, $item);
         }
 
         return $this;
