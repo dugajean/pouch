@@ -12,6 +12,7 @@ use Pouch\Helpers\AliasTrait;
 use Pouch\Helpers\CacheTrait;
 use Pouch\Helpers\FactoryTrait;
 use Pouch\Container\ItemInterface;
+use Pouch\Helpers\HookManager;
 use Psr\SimpleCache\CacheInterface;
 use Psr\Container\ContainerInterface;
 use Pouch\Exceptions\NotFoundException;
@@ -45,6 +46,11 @@ class Pouch implements ContainerInterface, Countable
     protected $replaceables = [];
 
     /**
+     * @var HookManager
+     */
+    private $hookManager;
+
+    /**
      * Bootstrap pouch.
      *
      * @param string              $rootDir    Path to the app's root (Where composer.json is).
@@ -62,7 +68,7 @@ class Pouch implements ContainerInterface, Countable
         }
 
         ClassTree::setRoot($rootDir);
-        
+
         self::initCache($cacheStore);
 
         require_once __DIR__.'/../helpers.php';
@@ -92,6 +98,14 @@ class Pouch implements ContainerInterface, Countable
     }
 
     /**
+     * Pouch constructor.
+     */
+    public function __construct()
+    {
+        $this->hookManager = HookManager::factory();
+    }
+
+    /**
      * Bind a new element to the replaceables.
      *
      * @param  string|array       $keyOrData Can be a string for the key when binding a single thing, but can also
@@ -113,12 +127,16 @@ class Pouch implements ContainerInterface, Countable
             $this->validateData($data);
             $key = (string)$keyOrData;
 
+            $this->hookManager->runBeforeSet($key);
+
             if ($data instanceof ItemInterface) {
                 $this->replaceables[$key] = $data->setName($key);
             } else {
                 /** @var Closure $data */
                 $this->replaceables[$key] = new Item($key, $data, $this, $this->isFactory, $this->named);
             }
+
+            $this->hookManager->runAfterSet($key, $this->replaceables[$key]);
 
             $this->factory(false);
             $this->named(false);
@@ -200,7 +218,11 @@ class Pouch implements ContainerInterface, Countable
 
         $this->setFactoryArgs($key);
 
-        return $this->replaceables[$key]->getContent();
+        $this->hookManager->runBeforeGet($key);
+        $content = $this->replaceables[$key]->getContent();
+        $this->hookManager->runAfterGet($key, $this->item($key));
+
+        return $content;
     }
 
     /**
@@ -283,6 +305,16 @@ class Pouch implements ContainerInterface, Countable
         }
 
         return $this;
+    }
+
+    /**
+     * Returns the hook manager.
+     *
+     * @return \Pouch\Helpers\HookManager
+     */
+    public function getHookManager(): HookManager
+    {
+        return $this->hookManager;
     }
 
     /**

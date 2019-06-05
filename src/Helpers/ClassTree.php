@@ -57,14 +57,13 @@ final class ClassTree
      */
     public static function getClassesInNamespace(string $namespace): array
     {
-        $path  = self::getNamespaceDirectory($namespace);
         $fqcns = [];
+        $path  = self::getNamespaceDirectory($namespace);
 
         if ($path === null) {
             throw new NotFoundException('This namespace cannot be found or is not registered in composer.json');
         }
 
-        $realPath = '';
         $allFiles = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
         $phpFiles = new \RegexIterator($allFiles, '/\.php$/');
 
@@ -110,11 +109,10 @@ final class ClassTree
      */
     private static function getDefinedNamespaces(): array
     {
-        $composerPath = self::$root.'composer.json';
-        $composerContents = file_get_contents($composerPath, true);
+        $composerContents = @file_get_contents(self::$root . 'composer.json', true);
 
         if ($composerContents === false) {
-            throw new NotFoundException("Could not find composer.json at the provided path: {$composerPath}");
+            throw new NotFoundException("Could not find composer.json at the provided path: " . self::$root);
         }
 
         $composerConfig = json_decode($composerContents);
