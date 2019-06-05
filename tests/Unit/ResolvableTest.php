@@ -14,7 +14,7 @@ class ResolvableTest extends TestCase
      */
     private $resolvable;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 

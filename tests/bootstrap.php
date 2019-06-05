@@ -1,5 +1,7 @@
 <?php
 
+use Pouch\Exceptions\NotFoundException;
+
 $vendor = __DIR__.'/../vendor/';
 
 if (!file_exists($vendor)) {
@@ -8,5 +10,9 @@ if (!file_exists($vendor)) {
 
 require_once $vendor.'autoload.php';
 
-Pouch\Pouch::bootstrap(__DIR__.'/../');
-Pouch\Helpers\ClassTree::loadDev(true);
+try {
+    Pouch\Pouch::bootstrap(__DIR__ . '/../');
+    Pouch\Helpers\ClassTree::$loadDev = true;
+} catch (NotFoundException $e) {
+    die('Could not bootstrap Pouch properly: ' . $e->getMessage());
+}

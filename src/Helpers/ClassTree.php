@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Pouch\Helpers;
 
+use Phar;
+use Symfony\Component\Finder\Finder;
 use Pouch\Exceptions\NotFoundException;
 
 final class ClassTree
@@ -16,82 +18,86 @@ final class ClassTree
     private static $root;
 
     /**
+     * The path to be scanned.
+     *
+     * @var string|null
+     */
+    public static $startPath;
+
+    /**
      * Include autoload-dev in results.
      *
      * @var bool
      */
-    private static $includeDev = false;
+    public static $loadDev = false;
 
     /**
-     * Set the application's root.
-     *
-     * @param $dir string
+     * @param string      $root
+     * @param string|null $startPath
+     * @param bool        $loadDev
      */
-    public static function setRoot(string $dir)
+    public static function bootstrap(string $root, ?string $startPath, bool $loadDev = false)
     {
-        self::$root = $dir;
+        self::$root = $root;
 
-        if (substr($dir, -strlen('/')) !== '/') {
+        if (substr(self::$root, -strlen('/')) !== '/') {
             self::$root .= '/';
         }
-    }
 
-    /**
-     * Choose whether to include autoload-dev in the results.
-     *
-     * @param bool $load
-     */
-    public static function loadDev(bool $load = false)
-    {
-        self::$includeDev = $load;
+        self::$startPath = $startPath;
+        self::$loadDev = $loadDev;
     }
 
     /**
      * Get all sub-namespaces recursively for a namespace.
      *
-     * @param $namespace string
+     * @param string $baseNamespace
      *
      * @return array
      *
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    public static function getClassesInNamespace(string $namespace): array
+    public static function unfold(string $baseNamespace)
     {
         $fqcns = [];
-        $path  = self::getNamespaceDirectory($namespace);
+        $path = self::scanDirectory($baseNamespace);
 
         if ($path === null) {
             throw new NotFoundException('This namespace cannot be found or is not registered in composer.json');
         }
 
-        $allFiles = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
-        $phpFiles = new \RegexIterator($allFiles, '/\.php$/');
+        $inPhar = Phar::running();
+        $finderPath = (new Finder)->in($path)->files()->name('*.php');
 
-        $pharPath = \Phar::running();
-        foreach ($phpFiles as $phpFile) {
-            $realPath = $pharPath 
+        /** @var Finder $finderPath */
+        foreach ($finderPath as $phpFile) {
+            $realPath = $inPhar
                 ? $phpFile->getPath() . '/' . $phpFile->getFilename()
                 : $phpFile->getRealPath();
 
             $content = file_get_contents($realPath);
-            $tokens = token_get_all($content);
+            $phpToken = token_get_all($content);
 
             $namespace = '';
-            for ($index = 0; isset($tokens[$index]); $index++) {
-                if (!isset($tokens[$index][0])) {
+            for ($index = 0; isset($phpToken[$index]); $index++) {
+                if (!isset($phpToken[$index][0])) {
                     continue;
                 }
 
-                if (T_NAMESPACE === $tokens[$index][0]) {
+                if (T_NAMESPACE === $phpToken[$index][0]) {
                     $index += 2;
-                    while (isset($tokens[$index]) && is_array($tokens[$index])) {
-                        $namespace .= $tokens[$index++][1];
+                    while (isset($phpToken[$index]) && is_array($phpToken[$index])) {
+                        $namespace .= $phpToken[$index++][1];
                     }
                 }
 
-                if (T_CLASS === $tokens[$index][0] && T_WHITESPACE === $tokens[$index + 1][0] && T_STRING === $tokens[$index + 2][0]) {
+                if (
+                    T_CLASS === $phpToken[$index][0]
+                    && T_WHITESPACE === $phpToken[$index + 1][0]
+                    && T_STRING === $phpToken[$index + 2][0]
+                ) {
                     $index += 2;
-                    $fqcns[] = $namespace.'\\'.$tokens[$index][1];
+                    $fqcns[] = $namespace . '\\' . $phpToken[$index][1];
                     break;
                 }
             }
@@ -101,14 +107,71 @@ final class ClassTree
     }
 
     /**
+     * Prepare the paths.
+     *
+     * @param string $baseNamespace
+     *
+     * @return string
+     *
+     * @throws \Pouch\Exceptions\NotFoundException
+     */
+    private static function scanDirectory(string $baseNamespace): ?string
+    {
+        $namespaceMap = self::namespaceMap($baseNamespace);
+        $namespaceParts = explode('\\', $baseNamespace);
+
+        if (class_exists($baseNamespace)) {
+            array_pop($namespaceParts);
+        }
+
+        $pharPath = Phar::running();
+        $undefinedNamespaceParts = [];
+        
+        while ($namespaceParts) {
+            $possibleNamespace = implode('\\', $namespaceParts) . '\\';
+
+            if (array_key_exists($possibleNamespace, $namespaceMap)) {
+                if (!$pharPath) {
+                    return realpath(
+                        self::normalizePath(
+                            self::$root .
+                            $namespaceMap[$possibleNamespace] .
+                            implode('/', $undefinedNamespaceParts
+                        )
+                    )) ?: null;
+                } else {
+                    $pharRoot = $pharPath . '/';
+                    return $pharRoot . $namespaceMap[$possibleNamespace] . implode('/', $undefinedNamespaceParts);
+                }
+            }
+
+            array_unshift($undefinedNamespaceParts, array_pop($namespaceParts));
+        }
+
+        return null;
+    }
+
+    /**
      * Get the namespaces declared in the PSR-4 section of composer.json.
+     *
+     * @param string $baseNamespace
      *
      * @return array
      *
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    private static function getDefinedNamespaces(): array
+    private static function namespaceMap(string $baseNamespace): array
     {
+        if (self::$startPath !== null) {
+            $rawPath = self::normalizePath(self::$startPath);
+            
+            if (file_exists($rawPath)) {
+                return [$baseNamespace . '\\' => $rawPath];
+            }
+
+            throw new NotFoundException('The specified path could not be found: ' . $rawPath);
+        }
+        
         $composerContents = @file_get_contents(self::$root . 'composer.json', true);
 
         if ($composerContents === false) {
@@ -117,10 +180,10 @@ final class ClassTree
 
         $composerConfig = json_decode($composerContents);
 
-        $psr4 = "psr-4";
+        $psr4 = 'psr-4';
         $autoload = (array)$composerConfig->autoload->$psr4;
 
-        if (self::$includeDev) {
+        if (self::$loadDev) {
             $composerKey = 'autoload-dev';
             $autoloadDev = (array)$composerConfig->$composerKey->$psr4;
             $autoload = array_merge($autoload, $autoloadDev);
@@ -130,43 +193,14 @@ final class ClassTree
     }
 
     /**
-     * Prepare the paths.
+     * Normalizes the slashes in a path.
      *
-     * @param string $namespace
+     * @param string $path
      *
      * @return string
-     *
-     * @throws \Pouch\Exceptions\NotFoundException
      */
-    private static function getNamespaceDirectory(string $namespace): ?string
+    private static function normalizePath(string $path): string
     {
-        $composerNamespaces = self::getDefinedNamespaces();
-        $namespaceFragments = explode('\\', $namespace);
-
-        if (class_exists($namespace)) {
-            array_pop($namespaceFragments);
-        }
-
-        $pharPath = \Phar::running();
-        $undefinedNamespaceFragments = [];
-
-        while ($namespaceFragments) {
-            $possibleNamespace = implode('\\', $namespaceFragments).'\\';
-
-            if (array_key_exists($possibleNamespace, $composerNamespaces)) {
-                if (!$pharPath) {
-                    return realpath(
-                        self::$root . $composerNamespaces[$possibleNamespace] . implode('/', $undefinedNamespaceFragments)
-                    );
-                } else {
-                    $pharRoot = $pharPath . '/';
-                    return $pharRoot . $composerNamespaces[$possibleNamespace] . implode('/', $undefinedNamespaceFragments);
-                }
-            }
-
-            array_unshift($undefinedNamespaceFragments, array_pop($namespaceFragments));
-        }
-
-        return null;
+        return str_replace(array('/', '\\'), DIRECTORY_SEPARATOR, $path);
     }
 }

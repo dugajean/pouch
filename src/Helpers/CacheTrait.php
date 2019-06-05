@@ -7,7 +7,6 @@ namespace Pouch\Helpers;
 use Closure;
 use Pouch\Pouch;
 use Pouch\Cache\ApcuCache;
-use Psr\SimpleCache\CacheInterface;
 
 trait CacheTrait
 {
@@ -17,22 +16,6 @@ trait CacheTrait
      * @var string
      */
     public static $cacheStoreKey = 'pouchCacheStore';
-
-    /**
-     * Store cache instance as a singleton.
-     *
-     * @param \Psr\SimpleCache\CacheInterface $cacheStore
-     *
-     * @return void
-     *
-     * @throws \Pouch\Exceptions\NotFoundException
-     */
-    protected static function initCache(CacheInterface $cacheStore = null): void
-    {
-        Pouch::singleton(self::$cacheStoreKey, function () use ($cacheStore) {
-            return $cacheStore ?? new ApcuCache;
-        });
-    }
 
     /**
      * Helper to retrieve data from cache store.

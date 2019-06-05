@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Pouch;
 
+use Phar;
 use Closure;
 use Countable;
 use Pouch\Container\Item;
+use Pouch\Cache\ApcuCache;
 use Pouch\Helpers\ClassTree;
 use Pouch\Helpers\AliasTrait;
 use Pouch\Helpers\CacheTrait;
@@ -51,33 +53,46 @@ class Pouch implements ContainerInterface, Countable
     private $hookManager;
 
     /**
+     * @var ClassTree
+     */
+    private $classTree;
+
+    /**
      * Bootstrap pouch.
      *
      * @param string              $rootDir    Path to the app's root (Where composer.json is).
      * @param CacheInterface|null $cacheStore PSR-16 compatible cache store instance. Will be used to speed up
      *                                        Pouch's performance by caching some heavy-ish tasks.
+     * @param string|null         $startPath
+
      *
      * @return void
      *
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    public static function bootstrap(string $rootDir, CacheInterface $cacheStore = null): void
+    public static function bootstrap(string $rootDir, ?CacheInterface $cacheStore = null, ?string $startPath = null): void
     {
-        if (\Phar::running()) {
-            \Phar::interceptFileFuncs();
+        if (Phar::running()) {
+            Phar::interceptFileFuncs();
         }
 
-        ClassTree::setRoot($rootDir);
+        ClassTree::bootstrap($rootDir, $startPath, false);
 
-        self::initCache($cacheStore);
+        Pouch::singleton(self::$cacheStoreKey, function () use ($cacheStore) {
+            return $cacheStore ?? ApcuCache::factory();
+        });
 
-        require_once __DIR__.'/../helpers.php';
+        self::singleton('pouchHookManager', function () {
+            return HookManager::factory();
+        });
+
+        require_once __DIR__ . '/../helpers.php';
     }
 
     /**
      * Insert or return a singleton instance from our container.
      *
-     * @param string   $key
+     * @param string  $key
      * @param Closure $data
      *
      * @return mixed
@@ -95,14 +110,6 @@ class Pouch implements ContainerInterface, Countable
         }
 
         return self::$singletons[$key] = $data();
-    }
-
-    /**
-     * Pouch constructor.
-     */
-    public function __construct()
-    {
-        $this->hookManager = HookManager::factory();
     }
 
     /**
@@ -127,7 +134,7 @@ class Pouch implements ContainerInterface, Countable
             $this->validateData($data);
             $key = (string)$keyOrData;
 
-            $this->hookManager->runBeforeSet($this, $key);
+            $this->getHookManager()->runBeforeSet($this, $key);
 
             if ($data instanceof ItemInterface) {
                 $this->replaceables[$key] = $data->setName($key);
@@ -136,7 +143,7 @@ class Pouch implements ContainerInterface, Countable
                 $this->replaceables[$key] = new Item($key, $data, $this, $this->isFactory, $this->named);
             }
 
-            $this->hookManager->runAfterSet($this, $key, $this->replaceables[$key]);
+            $this->getHookManager()->runAfterSet($this, $key, $this->replaceables[$key]);
 
             $this->factory(false);
             $this->named(false);
@@ -167,33 +174,22 @@ class Pouch implements ContainerInterface, Countable
      *
      * @param string|string[] $namespaces List of namespaces to be made resolvable.
      *                                    Will go recursively through the namespace.
-     * @param array           $overriders Overriders can be used to hook into the process of fetching
-     *                                    namespace paths and allow you to replace the minimal instantiation
-     *                                    process (which is a simple 'new Class' call to something specific
-     *                                    for those classes (e.g. provide constructor parameters etc.).
-     *
+
      * @return $this
      *
      * @throws \Pouch\Exceptions\InvalidArgumentException
      * @throws \Pouch\Exceptions\NotFoundException
      */
-    public function registerNamespaces($namespaces, array $overriders = []): self
+    public function registerNamespaces($namespaces): self
     {
         foreach ((array)$namespaces as $namespace) {
             $classes = $this->cache($namespace, function () use ($namespace) {
-                return ClassTree::getClassesInNamespace($namespace);
+                return ClassTree::unfold($namespace);
             });
 
             foreach ($classes as $class) {
-                $newContent = $class;
-
-                if (in_array($class, array_keys($overriders))) {
-                    $this->validateData($overriders[$class]);
-                    $newContent = $overriders[$class]($this);
-                }
-
-                $this->bind($class, function () use ($newContent) {
-                    return new Resolvable($newContent, $this);
+                $this->bind($class, function () use ($class) {
+                    return new Resolvable($class, $this);
                 });
             }
         }
@@ -214,13 +210,18 @@ class Pouch implements ContainerInterface, Countable
     {
         $this->setFactoryArgs($key);
 
-        $this->hookManager->runBeforeGet($this, $key);
+        $this->getHookManager()->runBeforeGet($this, $key);
+
+        $dot = '';
+        if (strpos($key, '.') !== false) {
+            [$key, $dot] = explode('.', $key, 2);
+        }
 
         $item = $this->item($key);
 
-        $this->hookManager->runAfterGet($this, $key, $item);
+        $this->getHookManager()->runAfterGet($this, $key, $item);
 
-        return $item->getContent($key);
+        return $item->getContent($dot);
     }
 
     /**
@@ -234,11 +235,11 @@ class Pouch implements ContainerInterface, Countable
      */
     public function raw(string $key): Closure
     {
-        $this->hookManager->runBeforeGet($this, $key);
+        $this->getHookManager()->runBeforeGet($this, $key);
 
         $item = $this->item($key);
 
-        $this->hookManager->runAfterGet($this, $key, $item);
+        $this->getHookManager()->runAfterGet($this, $key, $item);
 
         return $item->getRaw();
     }
@@ -314,7 +315,7 @@ class Pouch implements ContainerInterface, Countable
      */
     public function getHookManager(): HookManager
     {
-        return $this->hookManager;
+        return self::singleton('pouchHookManager');
     }
 
     /**

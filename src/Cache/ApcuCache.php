@@ -9,12 +9,27 @@ use DateInterval;
 use Psr\SimpleCache\CacheInterface;
 use Pouch\Exceptions\InvalidArgumentException;
 
-class ApcuCache implements CacheInterface
+final class ApcuCache implements CacheInterface
 {
     /**
      * Characters that should not be part of the cache key.
      */
     const RESERVED_CHARACTERS = ['{','}','(',')','/','@',':'];
+
+    /**
+     * Returns an instance of self.
+     *
+     * @return self
+     */
+    public static function factory(): self
+    {
+        return new self;
+    }
+
+    /**
+     * ApcuCache constructor - Singleton.
+     */
+    private function __construct() {}
 
     /**
      * Fetches a value from the cache.

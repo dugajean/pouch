@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Pouch\Helpers;
 
 use Closure;
-use Pouch\Container\Item;
 use Pouch\Pouch;
+use Pouch\Container\Item;
 
 final class HookManager
 {
@@ -21,16 +21,21 @@ final class HookManager
     /**
      * Returns an instance of self.
      *
-     * @return \Pouch\Helpers\HookManager
+     * @return self
      */
-    public static function factory()
+    public static function factory(): self
     {
         return new self;
     }
 
     /**
-     * @param array   $whenKeys
-     * @param Closure $callback
+     * HookManager constructor - Singleton.
+     */
+    private function __construct() {}
+
+    /**
+     * @param string[] $whenKeys
+     * @param Closure  $callback
      *
      * @return $this
      */
@@ -40,8 +45,8 @@ final class HookManager
     }
 
     /**
-     * @param array   $whenKeys
-     * @param Closure $callback
+     * @param string[] $whenKeys
+     * @param Closure  $callback
      *
      * @return $this
      */
@@ -51,8 +56,8 @@ final class HookManager
     }
 
     /**
-     * @param array   $whenKeys
-     * @param Closure $callback
+     * @param string[] $whenKeys
+     * @param Closure  $callback
      *
      * @return $this
      */
@@ -62,8 +67,8 @@ final class HookManager
     }
 
     /**
-     * @param array   $whenKeys
-     * @param Closure $callback
+     * @param string[] $whenKeys
+     * @param Closure  $callback
      *
      * @return $this
      */
@@ -171,9 +176,9 @@ final class HookManager
      */
     private function addHook(string $beforeOrAfter, string $getOrSet, Closure $callback, array $whenKeys = []): self
     {
-        $this->hooks[$beforeOrAfter][$getOrSet] = $callback;
+        $this->hooks[$beforeOrAfter][$getOrSet][] = $callback;
 
-        if (count($whenKeys) === 0) {
+        if (count($whenKeys) !== 0) {
             $this->hooks[$beforeOrAfter][$getOrSet]['__trigger_keys'] = $whenKeys;
         }
 
@@ -199,11 +204,16 @@ final class HookManager
         ?Item $item = null
     ): self {
         foreach ($this->hooks[$beforeOrAfter][$getOrSet] as $hook) {
-            if (isset($hook['__trigger_keys']) && !in_array($currentKey, $hook['__trigger_keys'])) {
+            if (
+                array_key_exists('__trigger_keys', $hook)
+                && !in_array($currentKey, $hook['__trigger_keys'])
+            ) {
                 continue;
             }
 
-            $hook($pouch, $currentKey, $item);
+            if ($hook instanceof Closure) {
+                $hook($pouch, $currentKey, $item);
+            }
         }
 
         return $this;

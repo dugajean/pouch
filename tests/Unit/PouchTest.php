@@ -333,4 +333,100 @@ class PouchTest extends TestCase
 
         $this->assertEquals(count($data), count(pouch()));
     }
+
+    public function test_before_after_each_get_hooks()
+    {
+        $beforeOutput = 'before:';
+        $afterOutput = 'after:';
+        pouch()->getHookManager()->addBeforeEachGet(function (Pouch $pouch, string $key) use (&$beforeOutput) {
+            $beforeOutput .= $key;
+        });
+
+        pouch()->getHookManager()->addBeforeEachGet(function (Pouch $pouch, string $key) use (&$afterOutput) {
+            $afterOutput .= $key;
+        });
+
+        pouch()->bind('foo', 'cheese');
+        pouch()->bind('bar', 'cheese');
+        pouch()->bind('baz', 'cheese');
+
+        pouch()->get('foo');
+        pouch()->get('bar');
+        pouch()->get('baz');
+
+        $this->assertEquals('before:foobarbaz', $beforeOutput);
+        $this->assertEquals('after:foobarbaz', $afterOutput);
+    }
+
+    public function test_before_after_each_set_hooks()
+    {
+        $beforeOutput = 'before:';
+        $afterOutput = 'after:';
+        pouch()->getHookManager()->addBeforeEachSet(function (Pouch $pouch, string $key) use (&$beforeOutput) {
+            $beforeOutput .= $key;
+        });
+
+        pouch()->getHookManager()->addBeforeEachSet(function (Pouch $pouch, string $key) use (&$afterOutput) {
+            $afterOutput .= $key;
+        });
+
+        pouch()->bind('foo', 'cheese');
+        pouch()->bind('bar', 'cheese');
+        pouch()->bind('baz', 'cheese');
+
+        $this->assertEquals('before:foobarbaz', $beforeOutput);
+        $this->assertEquals('after:foobarbaz', $afterOutput);
+    }
+
+    public function test_before_after_specific_hook()
+    {
+        $beforeSetOutput = ' before set:';
+        $afterGetOutput = ' after get:';
+        $beforeGetOutput = ' before get:';
+
+        pouch()->getHookManager()->addBeforeGet(['foo'], function (Pouch $pouch, string $key) use (&$beforeGetOutput) {
+            $beforeGetOutput .= $key;
+        });
+
+        pouch()->getHookManager()->addAfterGet(['bar'], function (Pouch $pouch, string $key) use (&$afterGetOutput) {
+            $afterGetOutput .= $key;
+        });
+
+        pouch()->getHookManager()->addBeforeSet(['bar', 'baz'], function (Pouch $pouch, string $key) use (&$beforeSetOutput) {
+            $beforeSetOutput .= $key;
+        });
+
+        pouch()->bind('foo', 'cheese');
+        pouch()->bind('bar', 'cheese');
+        pouch()->bind('baz', 'cheese');
+
+        pouch()->get('foo');
+        pouch()->get('bar');
+        
+        $this->assertEquals(
+            ' before set:foobarbaz after get:foobar before get:foobar',
+            $beforeSetOutput . $afterGetOutput . $beforeGetOutput
+        );
+    }
+
+    public function test_binding_primitive_types()
+    {
+        pouch()->bind('foo', 'Foo');
+
+        $this->assertEquals('Foo', pouch()->get('foo'));
+    }
+
+    public function test_binding_array_without_closure()
+    {
+        pouch()->bind('foo', ['Foo']);
+
+        $this->assertEquals(['Foo'], pouch()->get('foo'));
+    }
+
+    public function test_binding_array_with_dot_notation()
+    {
+        pouch()->bind('foo', ['Foo' => ['Bar' => 'Cheddar']]);
+        
+        $this->assertEquals('Cheddar', pouch()->get('foo.Foo.Bar'));
+    }
 }
