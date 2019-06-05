@@ -137,10 +137,10 @@ final class HookManager
             throw new InvalidArgumentException('When setting a hook the first argument must be a Closure');
         }
 
-        if (isset($arguments[1]) && is_string($arguments[1])) {
-            $this->hooks[$when][$getOrSet][$arguments[1]] = $arguments[0];
-        } else {
-            $this->hooks[$when][$getOrSet][] = $arguments[0];
+        $this->hooks[$when][$getOrSet][] = $arguments[0];
+
+        if (isset($arguments[1])) {
+            $this->hooks[$when][$getOrSet]['__trigger_keys'] = (array)$arguments[1];
         }
 
         return $this;
@@ -163,9 +163,14 @@ final class HookManager
             throw new InvalidArgumentException;
         }
 
-        foreach ($this->hooks[$when][$getOrSet] as $whenHook => $hook) {
-            if (is_string($whenHook) && $arguments[0] !== $whenHook) {
-                continue;
+        foreach ($this->hooks[$when][$getOrSet] as $hook) {
+            if (
+                array_key_exists('__trigger_keys', $this->hooks[$when][$getOrSet])
+                && !in_array($arguments[1], $this->hooks[$when][$getOrSet]['__trigger_keys'])
+            ) {
+                if (!in_array($arguments[1], $this->hooks[$when][$getOrSet]['__trigger_keys'])) {
+                    continue;
+                }
             }
 
             $hook($this, ...$arguments);
