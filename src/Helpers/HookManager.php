@@ -219,8 +219,9 @@ final class HookManager
             }
 
             if ($hook instanceof Closure) {
+                $this->pouch->hooks(false);
                 $hook($currentKey, $item);
-                $this->pouch->hooks();
+                $this->pouch->hooks(true);
             }
         }
 
