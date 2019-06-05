@@ -97,7 +97,7 @@
                     <a href="../../Pouch/Helpers/AliasTrait.html"><abbr title="Pouch\Helpers\AliasTrait">AliasTrait</abbr></a>
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_register">register</a>(string|array $keyOrData, callable|null $data = null, bool $resolveByName = false)
+                    <a href="#method_register">register</a>(string|array $keyOrData, callable|null $data = null)
         
                                             <p>Alias for bind.</p>                </div>
                 <div class="col-md-2"></div>
@@ -107,7 +107,7 @@
                     <a href="../../Pouch/Helpers/AliasTrait.html"><abbr title="Pouch\Helpers\AliasTrait">AliasTrait</abbr></a>
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_set">set</a>(string|array $keyOrData, callable|null $data = null, bool $resolveByName = false)
+                    <a href="#method_set">set</a>(string|array $keyOrData, callable|null $data = null)
         
                                             <p>Alias for bind.</p>                </div>
                 <div class="col-md-2"></div>
@@ -180,9 +180,9 @@
             <div id="method-details">
                     <div class="method-item">
                     <h3 id="method_register">
-        <div class="location">at         line 18</div>
+        <div class="location">at         line 17</div>
         <code>                    <a href="../../Pouch/Helpers/AliasTrait.html"><abbr title="Pouch\Helpers\AliasTrait">AliasTrait</abbr></a>
-    <strong>register</strong>(string|array $keyOrData, callable|null $data = null, bool $resolveByName = false)
+    <strong>register</strong>(string|array $keyOrData, callable|null $data = null)
         </code>
     </h3>
     <div class="details">
@@ -203,11 +203,6 @@
                     <tr>
                 <td>callable|null</td>
                 <td>$data</td>
-                <td></td>
-            </tr>
-                    <tr>
-                <td>bool</td>
-                <td>$resolveByName</td>
                 <td></td>
             </tr>
             </table>
@@ -230,9 +225,9 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_set">
-        <div class="location">at         line 32</div>
+        <div class="location">at         line 30</div>
         <code>                    <a href="../../Pouch/Helpers/AliasTrait.html"><abbr title="Pouch\Helpers\AliasTrait">AliasTrait</abbr></a>
-    <strong>set</strong>(string|array $keyOrData, callable|null $data = null, bool $resolveByName = false)
+    <strong>set</strong>(string|array $keyOrData, callable|null $data = null)
         </code>
     </h3>
     <div class="details">
@@ -255,11 +250,6 @@
                 <td>$data</td>
                 <td></td>
             </tr>
-                    <tr>
-                <td>bool</td>
-                <td>$resolveByName</td>
-                <td></td>
-            </tr>
             </table>
 
             
@@ -280,7 +270,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_resolve">
-        <div class="location">at         line 44</div>
+        <div class="location">at         line 42</div>
         <code>                    mixed
     <strong>resolve</strong>(string $key)
         </code>
@@ -320,7 +310,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_contains">
-        <div class="location">at         line 56</div>
+        <div class="location">at         line 54</div>
         <code>                    bool
     <strong>contains</strong>(string $key)
         </code>
@@ -360,7 +350,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method___get">
-        <div class="location">at         line 68</div>
+        <div class="location">at         line 66</div>
         <code>                    mixed
     <strong>__get</strong>(string $key)
         </code>
@@ -400,7 +390,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method___isset">
-        <div class="location">at         line 80</div>
+        <div class="location">at         line 78</div>
         <code>                    bool
     <strong>__isset</strong>(string $key)
         </code>
@@ -440,7 +430,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method___unset">
-        <div class="location">at         line 92</div>
+        <div class="location">at         line 90</div>
         <code>                    void
     <strong>__unset</strong>(string $key)
         </code>
@@ -480,7 +470,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method___call">
-        <div class="location">at         line 106</div>
+        <div class="location">at         line 104</div>
         <code>                    mixed
     <strong>__call</strong>(string $key, array $data)
         </code>

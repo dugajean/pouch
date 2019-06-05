@@ -80,7 +80,7 @@
 
     <p>    class
     <strong>Pouch</strong>        implements
-        <abbr title="Psr\Container\ContainerInterface">ContainerInterface</abbr>
+        <abbr title="Psr\Container\ContainerInterface">ContainerInterface</abbr>, <a target="_blank" href="http://php.net/Countable">Countable</a>
 </p>
 
         
@@ -149,6 +149,14 @@
                 <td><small>from&nbsp;<a href="../Pouch/Helpers/FactoryTrait.html#property_factoryArgs"><abbr title="Pouch\Helpers\FactoryTrait">FactoryTrait</abbr></a></small></td>
             </tr>
                     <tr>
+                <td class="type" id="property_named">
+                                        protected                                        bool
+                </td>
+                <td>$named</td>
+                <td class="last">Whether this item should be retrievable by only its name and without a typehint.</td>
+                <td></td>
+            </tr>
+                    <tr>
                 <td class="type" id="property_singletons">
                     static                    protected                                        array
                 </td>
@@ -175,7 +183,7 @@
                     <a href="../Pouch/Helpers/AliasTrait.html"><abbr title="Pouch\Helpers\AliasTrait">AliasTrait</abbr></a>
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_register">register</a>(string|array $keyOrData, callable|null $data = null, bool $resolveByName = false)
+                    <a href="#method_register">register</a>(string|array $keyOrData, callable|null $data = null)
         
                                             <p>Alias for bind.</p>                </div>
                 <div class="col-md-2"><small>from&nbsp;<a href="../Pouch/Helpers/AliasTrait.html#method_register"><abbr title="Pouch\Helpers\AliasTrait">AliasTrait</abbr></a></small></div>
@@ -185,7 +193,7 @@
                     <a href="../Pouch/Helpers/AliasTrait.html"><abbr title="Pouch\Helpers\AliasTrait">AliasTrait</abbr></a>
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_set">set</a>(string|array $keyOrData, callable|null $data = null, bool $resolveByName = false)
+                    <a href="#method_set">set</a>(string|array $keyOrData, callable|null $data = null)
         
                                             <p>Alias for bind.</p>                </div>
                 <div class="col-md-2"><small>from&nbsp;<a href="../Pouch/Helpers/AliasTrait.html#method_set"><abbr title="Pouch\Helpers\AliasTrait">AliasTrait</abbr></a></small></div>
@@ -252,16 +260,6 @@
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
-                    static&nbsp;void
-                </div>
-                <div class="col-md-8 type">
-                    <a href="#method_initCache">initCache</a>(<abbr title="Psr\SimpleCache\CacheInterface">CacheInterface</abbr> $cacheStore = null)
-        
-                                            <p>Store cache instance as a singleton.</p>                </div>
-                <div class="col-md-2"><small>from&nbsp;<a href="../Pouch/Helpers/CacheTrait.html#method_initCache"><abbr title="Pouch\Helpers\CacheTrait">CacheTrait</abbr></a></small></div>
-            </div>
-                    <div class="row">
-                <div class="col-md-2 type">
                     mixed
                 </div>
                 <div class="col-md-8 type">
@@ -275,7 +273,7 @@
                     $this|<a href="../Pouch/Container/Item.html"><abbr title="Pouch\Container\Item">Item</abbr></a>
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_factory">factory</a>(bool|<a target="_blank" href="http://php.net/Closure">Closure</a> $isFactoryOrCallable = true)
+                    <a href="#method_factory">factory</a>(bool|<a target="_blank" href="http://php.net/Closure">Closure</a>|<a href="../Pouch/Container/Item.html"><abbr title="Pouch\Container\Item">Item</abbr></a> $isFactoryOrCallableOrItem = true)
         
                                             <p>Set factory for upcoming bind or create a factory callable.</p>                </div>
                 <div class="col-md-2"><small>from&nbsp;<a href="../Pouch/Helpers/FactoryTrait.html#method_factory"><abbr title="Pouch\Helpers\FactoryTrait">FactoryTrait</abbr></a></small></div>
@@ -305,7 +303,7 @@
                     static&nbsp;void
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_bootstrap">bootstrap</a>(string $rootDir, <abbr title="Psr\SimpleCache\CacheInterface">CacheInterface</abbr> $cacheStore = null)
+                    <a href="#method_bootstrap">bootstrap</a>(string $rootDir, <abbr title="Psr\SimpleCache\CacheInterface">CacheInterface</abbr>|null $cacheStore = null, string|null $startPath = null)
         
                                             <p>Bootstrap pouch.</p>                </div>
                 <div class="col-md-2"></div>
@@ -325,7 +323,7 @@
                     <a href="../Pouch/Pouch.html"><abbr title="Pouch\Pouch">Pouch</abbr></a>
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_bind">bind</a>(string|array $keyOrData, callable|<a href="../Pouch/Container/Item.html"><abbr title="Pouch\Container\Item">Item</abbr></a>|null $data = null, bool $named = false)
+                    <a href="#method_bind">bind</a>(string|array $keyOrData, callable|<a href="../Pouch/Container/Item.html"><abbr title="Pouch\Container\Item">Item</abbr></a>|null $data = null)
         
                                             <p>Bind a new element to the replaceables.</p>                </div>
                 <div class="col-md-2"></div>
@@ -345,7 +343,7 @@
                     <a href="../Pouch/Pouch.html"><abbr title="Pouch\Pouch">Pouch</abbr></a>
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_registerNamespaces">registerNamespaces</a>(string|string[] $namespaces, array $overriders = [])
+                    <a href="#method_registerNamespaces">registerNamespaces</a>(string|string[] $namespaces)
         
                                             <p>Register one or more namespaces for automatic resolution.</p>                </div>
                 <div class="col-md-2"></div>
@@ -382,6 +380,17 @@
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
+                    $this|<a href="../Pouch/Container/Item.html"><abbr title="Pouch\Container\Item">Item</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_named">named</a>(bool|<a target="_blank" href="http://php.net/Closure">Closure</a>|<a href="../Pouch/Container/Item.html"><abbr title="Pouch\Container\Item">Item</abbr></a> $isNamedOrCallableOrItem = true)
+        
+                                            <p class="no-description">No description</p>
+                                    </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
                     bool
                 </div>
                 <div class="col-md-8 type">
@@ -402,12 +411,32 @@
             </div>
                     <div class="row">
                 <div class="col-md-2 type">
+                    <a href="../Pouch/Helpers/HookManager.html"><abbr title="Pouch\Helpers\HookManager">HookManager</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_getHookManager">getHookManager</a>()
+        
+                                            <p>Returns the hook manager.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
                     string
                 </div>
                 <div class="col-md-8 type">
                     <a href="#method___toString">__toString</a>()
         
                                             <p>String representation of a pouch instance.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    int
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_count">count</a>()
+        
+                                            <p>Count elements of the container.</p>                </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
@@ -428,9 +457,9 @@
             <div id="method-details">
                     <div class="method-item">
                     <h3 id="method_register">
-        <div class="location">in <a href="../Pouch/Helpers/AliasTrait.html#method_register"><abbr title="Pouch\Helpers\AliasTrait">AliasTrait</abbr></a> at         line 18</div>
+        <div class="location">in <a href="../Pouch/Helpers/AliasTrait.html#method_register"><abbr title="Pouch\Helpers\AliasTrait">AliasTrait</abbr></a> at         line 17</div>
         <code>                    <a href="../Pouch/Helpers/AliasTrait.html"><abbr title="Pouch\Helpers\AliasTrait">AliasTrait</abbr></a>
-    <strong>register</strong>(string|array $keyOrData, callable|null $data = null, bool $resolveByName = false)
+    <strong>register</strong>(string|array $keyOrData, callable|null $data = null)
         </code>
     </h3>
     <div class="details">
@@ -451,11 +480,6 @@
                     <tr>
                 <td>callable|null</td>
                 <td>$data</td>
-                <td></td>
-            </tr>
-                    <tr>
-                <td>bool</td>
-                <td>$resolveByName</td>
                 <td></td>
             </tr>
             </table>
@@ -478,9 +502,9 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_set">
-        <div class="location">in <a href="../Pouch/Helpers/AliasTrait.html#method_set"><abbr title="Pouch\Helpers\AliasTrait">AliasTrait</abbr></a> at         line 32</div>
+        <div class="location">in <a href="../Pouch/Helpers/AliasTrait.html#method_set"><abbr title="Pouch\Helpers\AliasTrait">AliasTrait</abbr></a> at         line 30</div>
         <code>                    <a href="../Pouch/Helpers/AliasTrait.html"><abbr title="Pouch\Helpers\AliasTrait">AliasTrait</abbr></a>
-    <strong>set</strong>(string|array $keyOrData, callable|null $data = null, bool $resolveByName = false)
+    <strong>set</strong>(string|array $keyOrData, callable|null $data = null)
         </code>
     </h3>
     <div class="details">
@@ -503,11 +527,6 @@
                 <td>$data</td>
                 <td></td>
             </tr>
-                    <tr>
-                <td>bool</td>
-                <td>$resolveByName</td>
-                <td></td>
-            </tr>
             </table>
 
             
@@ -528,7 +547,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_resolve">
-        <div class="location">in <a href="../Pouch/Helpers/AliasTrait.html#method_resolve"><abbr title="Pouch\Helpers\AliasTrait">AliasTrait</abbr></a> at         line 44</div>
+        <div class="location">in <a href="../Pouch/Helpers/AliasTrait.html#method_resolve"><abbr title="Pouch\Helpers\AliasTrait">AliasTrait</abbr></a> at         line 42</div>
         <code>                    mixed
     <strong>resolve</strong>(string $key)
         </code>
@@ -568,7 +587,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method_contains">
-        <div class="location">in <a href="../Pouch/Helpers/AliasTrait.html#method_contains"><abbr title="Pouch\Helpers\AliasTrait">AliasTrait</abbr></a> at         line 56</div>
+        <div class="location">in <a href="../Pouch/Helpers/AliasTrait.html#method_contains"><abbr title="Pouch\Helpers\AliasTrait">AliasTrait</abbr></a> at         line 54</div>
         <code>                    bool
     <strong>contains</strong>(string $key)
         </code>
@@ -608,7 +627,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method___get">
-        <div class="location">in <a href="../Pouch/Helpers/AliasTrait.html#method___get"><abbr title="Pouch\Helpers\AliasTrait">AliasTrait</abbr></a> at         line 68</div>
+        <div class="location">in <a href="../Pouch/Helpers/AliasTrait.html#method___get"><abbr title="Pouch\Helpers\AliasTrait">AliasTrait</abbr></a> at         line 66</div>
         <code>                    mixed
     <strong>__get</strong>(string $key)
         </code>
@@ -648,7 +667,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method___isset">
-        <div class="location">in <a href="../Pouch/Helpers/AliasTrait.html#method___isset"><abbr title="Pouch\Helpers\AliasTrait">AliasTrait</abbr></a> at         line 80</div>
+        <div class="location">in <a href="../Pouch/Helpers/AliasTrait.html#method___isset"><abbr title="Pouch\Helpers\AliasTrait">AliasTrait</abbr></a> at         line 78</div>
         <code>                    bool
     <strong>__isset</strong>(string $key)
         </code>
@@ -688,7 +707,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method___unset">
-        <div class="location">in <a href="../Pouch/Helpers/AliasTrait.html#method___unset"><abbr title="Pouch\Helpers\AliasTrait">AliasTrait</abbr></a> at         line 92</div>
+        <div class="location">in <a href="../Pouch/Helpers/AliasTrait.html#method___unset"><abbr title="Pouch\Helpers\AliasTrait">AliasTrait</abbr></a> at         line 90</div>
         <code>                    void
     <strong>__unset</strong>(string $key)
         </code>
@@ -728,7 +747,7 @@
             </div>
                     <div class="method-item">
                     <h3 id="method___call">
-        <div class="location">in <a href="../Pouch/Helpers/AliasTrait.html#method___call"><abbr title="Pouch\Helpers\AliasTrait">AliasTrait</abbr></a> at         line 106</div>
+        <div class="location">in <a href="../Pouch/Helpers/AliasTrait.html#method___call"><abbr title="Pouch\Helpers\AliasTrait">AliasTrait</abbr></a> at         line 104</div>
         <code>                    mixed
     <strong>__call</strong>(string $key, array $data)
         </code>
@@ -773,57 +792,8 @@ If an argument is provided: Only the first one will be considered and it must be
 
             </div>
                     <div class="method-item">
-                    <h3 id="method_initCache">
-        <div class="location">in <a href="../Pouch/Helpers/CacheTrait.html#method_initCache"><abbr title="Pouch\Helpers\CacheTrait">CacheTrait</abbr></a> at         line 30</div>
-        <code>        static    protected        void
-    <strong>initCache</strong>(<abbr title="Psr\SimpleCache\CacheInterface">CacheInterface</abbr> $cacheStore = null)
-        </code>
-    </h3>
-    <div class="details">
-            
-    
-
-                    <div class="method-description">
-                                    <p>Store cache instance as a singleton.</p>                                                </div>
-                <div class="tags">
-                            <h4>Parameters</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td><abbr title="Psr\SimpleCache\CacheInterface">CacheInterface</abbr></td>
-                <td>$cacheStore</td>
-                <td></td>
-            </tr>
-            </table>
-
-            
-                            <h4>Return Value</h4>
-
-                    <table class="table table-condensed">
-        <tr>
-            <td>void</td>
-            <td></td>
-        </tr>
-    </table>
-
-            
-                            <h4>Exceptions</h4>
-
-                    <table class="table table-condensed">
-                    <tr>
-                <td><a href="../Pouch/Exceptions/NotFoundException.html"><abbr title="Pouch\Exceptions\NotFoundException">NotFoundException</abbr></a></td>
-                <td></td>
-            </tr>
-            </table>
-
-            
-                    </div>
-    </div>
-
-            </div>
-                    <div class="method-item">
                     <h3 id="method_cache">
-        <div class="location">in <a href="../Pouch/Helpers/CacheTrait.html#method_cache"><abbr title="Pouch\Helpers\CacheTrait">CacheTrait</abbr></a> at         line 48</div>
+        <div class="location">in <a href="../Pouch/Helpers/CacheTrait.html#method_cache"><abbr title="Pouch\Helpers\CacheTrait">CacheTrait</abbr></a> at         line 31</div>
         <code>            protected        mixed
     <strong>cache</strong>(string $key, <a target="_blank" href="http://php.net/Closure">Closure</a> $value)
         </code>
@@ -883,7 +853,7 @@ If an argument is provided: Only the first one will be considered and it must be
                     <h3 id="method_factory">
         <div class="location">in <a href="../Pouch/Helpers/FactoryTrait.html#method_factory"><abbr title="Pouch\Helpers\FactoryTrait">FactoryTrait</abbr></a> at         line 33</div>
         <code>                    $this|<a href="../Pouch/Container/Item.html"><abbr title="Pouch\Container\Item">Item</abbr></a>
-    <strong>factory</strong>(bool|<a target="_blank" href="http://php.net/Closure">Closure</a> $isFactoryOrCallable = true)
+    <strong>factory</strong>(bool|<a target="_blank" href="http://php.net/Closure">Closure</a>|<a href="../Pouch/Container/Item.html"><abbr title="Pouch\Container\Item">Item</abbr></a> $isFactoryOrCallableOrItem = true)
         </code>
     </h3>
     <div class="details">
@@ -897,8 +867,8 @@ If an argument is provided: Only the first one will be considered and it must be
 
                     <table class="table table-condensed">
                     <tr>
-                <td>bool|<a target="_blank" href="http://php.net/Closure">Closure</a></td>
-                <td>$isFactoryOrCallable</td>
+                <td>bool|<a target="_blank" href="http://php.net/Closure">Closure</a>|<a href="../Pouch/Container/Item.html"><abbr title="Pouch\Container\Item">Item</abbr></a></td>
+                <td>$isFactoryOrCallableOrItem</td>
                 <td></td>
             </tr>
             </table>
@@ -921,7 +891,7 @@ If an argument is provided: Only the first one will be considered and it must be
             </div>
                     <div class="method-item">
                     <h3 id="method_withArgs">
-        <div class="location">in <a href="../Pouch/Helpers/FactoryTrait.html#method_withArgs"><abbr title="Pouch\Helpers\FactoryTrait">FactoryTrait</abbr></a> at         line 52</div>
+        <div class="location">in <a href="../Pouch/Helpers/FactoryTrait.html#method_withArgs"><abbr title="Pouch\Helpers\FactoryTrait">FactoryTrait</abbr></a> at         line 54</div>
         <code>                    <a href="../Pouch/Helpers/FactoryTrait.html"><abbr title="Pouch\Helpers\FactoryTrait">FactoryTrait</abbr></a>
     <strong>withArgs</strong>(mixed ...$args)
         </code>
@@ -961,7 +931,7 @@ If an argument is provided: Only the first one will be considered and it must be
             </div>
                     <div class="method-item">
                     <h3 id="method_setFactoryArgs">
-        <div class="location">in <a href="../Pouch/Helpers/FactoryTrait.html#method_setFactoryArgs"><abbr title="Pouch\Helpers\FactoryTrait">FactoryTrait</abbr></a> at         line 66</div>
+        <div class="location">in <a href="../Pouch/Helpers/FactoryTrait.html#method_setFactoryArgs"><abbr title="Pouch\Helpers\FactoryTrait">FactoryTrait</abbr></a> at         line 68</div>
         <code>            protected        <a href="../Pouch/Helpers/FactoryTrait.html"><abbr title="Pouch\Helpers\FactoryTrait">FactoryTrait</abbr></a>
     <strong>setFactoryArgs</strong>(string $key)
         </code>
@@ -1001,9 +971,9 @@ If an argument is provided: Only the first one will be considered and it must be
             </div>
                     <div class="method-item">
                     <h3 id="method_bootstrap">
-        <div class="location">at         line 48</div>
+        <div class="location">at         line 73</div>
         <code>        static            void
-    <strong>bootstrap</strong>(string $rootDir, <abbr title="Psr\SimpleCache\CacheInterface">CacheInterface</abbr> $cacheStore = null)
+    <strong>bootstrap</strong>(string $rootDir, <abbr title="Psr\SimpleCache\CacheInterface">CacheInterface</abbr>|null $cacheStore = null, string|null $startPath = null)
         </code>
     </h3>
     <div class="details">
@@ -1022,10 +992,15 @@ If an argument is provided: Only the first one will be considered and it must be
                 <td>Path to the app's root (Where composer.json is).</td>
             </tr>
                     <tr>
-                <td><abbr title="Psr\SimpleCache\CacheInterface">CacheInterface</abbr></td>
+                <td><abbr title="Psr\SimpleCache\CacheInterface">CacheInterface</abbr>|null</td>
                 <td>$cacheStore</td>
                 <td>PSR-16 compatible cache store instance. Will be used to speed up
                                        Pouch's performance by caching some heavy-ish tasks.</td>
+            </tr>
+                    <tr>
+                <td>string|null</td>
+                <td>$startPath</td>
+                <td></td>
             </tr>
             </table>
 
@@ -1056,7 +1031,7 @@ If an argument is provided: Only the first one will be considered and it must be
             </div>
                     <div class="method-item">
                     <h3 id="method_singleton">
-        <div class="location">at         line 67</div>
+        <div class="location">at         line 102</div>
         <code>        static            mixed
     <strong>singleton</strong>(string $key, <a target="_blank" href="http://php.net/Closure">Closure</a> $data = null)
         </code>
@@ -1110,9 +1085,9 @@ If an argument is provided: Only the first one will be considered and it must be
             </div>
                     <div class="method-item">
                     <h3 id="method_bind">
-        <div class="location">at         line 96</div>
+        <div class="location">at         line 127</div>
         <code>                    <a href="../Pouch/Pouch.html"><abbr title="Pouch\Pouch">Pouch</abbr></a>
-    <strong>bind</strong>(string|array $keyOrData, callable|<a href="../Pouch/Container/Item.html"><abbr title="Pouch\Container\Item">Item</abbr></a>|null $data = null, bool $named = false)
+    <strong>bind</strong>(string|array $keyOrData, callable|<a href="../Pouch/Container/Item.html"><abbr title="Pouch\Container\Item">Item</abbr></a>|null $data = null)
         </code>
     </h3>
     <div class="details">
@@ -1135,13 +1110,6 @@ If an argument is provided: Only the first one will be considered and it must be
                 <td>callable|<a href="../Pouch/Container/Item.html"><abbr title="Pouch\Container\Item">Item</abbr></a>|null</td>
                 <td>$data</td>
                 <td>The data to be bound. Must be provided if $key is a string.</td>
-            </tr>
-                    <tr>
-                <td>bool</td>
-                <td>$named</td>
-                <td>Whether this item should be retrievable by only its name and without a typehint.
-                                      If set to true, you will be able to fetch the value of this item (eg. foo)
-                                      by simply adding $foo as a constructor/method parameter, with no typehint.</td>
             </tr>
             </table>
 
@@ -1176,7 +1144,7 @@ If an argument is provided: Only the first one will be considered and it must be
             </div>
                     <div class="method-item">
                     <h3 id="method_alias">
-        <div class="location">at         line 128</div>
+        <div class="location">at         line 165</div>
         <code>                    <a href="../Pouch/Pouch.html"><abbr title="Pouch\Pouch">Pouch</abbr></a>
     <strong>alias</strong>(string $key, string $referenceKey)
         </code>
@@ -1230,9 +1198,9 @@ If an argument is provided: Only the first one will be considered and it must be
             </div>
                     <div class="method-item">
                     <h3 id="method_registerNamespaces">
-        <div class="location">at         line 150</div>
+        <div class="location">at         line 183</div>
         <code>                    <a href="../Pouch/Pouch.html"><abbr title="Pouch\Pouch">Pouch</abbr></a>
-    <strong>registerNamespaces</strong>(string|string[] $namespaces, array $overriders = [])
+    <strong>registerNamespaces</strong>(string|string[] $namespaces)
         </code>
     </h3>
     <div class="details">
@@ -1250,14 +1218,6 @@ If an argument is provided: Only the first one will be considered and it must be
                 <td>$namespaces</td>
                 <td>List of namespaces to be made resolvable.
                                    Will go recursively through the namespace.</td>
-            </tr>
-                    <tr>
-                <td>array</td>
-                <td>$overriders</td>
-                <td>Overriders can be used to hook into the process of fetching
-                                   namespace paths and allow you to replace the minimal instantiation
-                                   process (which is a simple 'new Class' call to something specific
-                                   for those classes (e.g. provide constructor parameters etc.).</td>
             </tr>
             </table>
 
@@ -1292,7 +1252,7 @@ If an argument is provided: Only the first one will be considered and it must be
             </div>
                     <div class="method-item">
                     <h3 id="method_get">
-        <div class="location">at         line 183</div>
+        <div class="location">at         line 209</div>
         <code>                    mixed
     <strong>get</strong>(string $key)
         </code>
@@ -1341,7 +1301,7 @@ If an argument is provided: Only the first one will be considered and it must be
             </div>
                     <div class="method-item">
                     <h3 id="method_raw">
-        <div class="location">at         line 203</div>
+        <div class="location">at         line 236</div>
         <code>                    <a target="_blank" href="http://php.net/Closure">Closure</a>
     <strong>raw</strong>(string $key)
         </code>
@@ -1390,7 +1350,7 @@ If an argument is provided: Only the first one will be considered and it must be
             </div>
                     <div class="method-item">
                     <h3 id="method_item">
-        <div class="location">at         line 221</div>
+        <div class="location">at         line 256</div>
         <code>                    <a href="../Pouch/Container/Item.html"><abbr title="Pouch\Container\Item">Item</abbr></a>
     <strong>item</strong>(string $key)
         </code>
@@ -1438,8 +1398,46 @@ If an argument is provided: Only the first one will be considered and it must be
 
             </div>
                     <div class="method-item">
+                    <h3 id="method_named">
+        <div class="location">at         line 270</div>
+        <code>                    $this|<a href="../Pouch/Container/Item.html"><abbr title="Pouch\Container\Item">Item</abbr></a>
+    <strong>named</strong>(bool|<a target="_blank" href="http://php.net/Closure">Closure</a>|<a href="../Pouch/Container/Item.html"><abbr title="Pouch\Container\Item">Item</abbr></a> $isNamedOrCallableOrItem = true)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>bool|<a target="_blank" href="http://php.net/Closure">Closure</a>|<a href="../Pouch/Container/Item.html"><abbr title="Pouch\Container\Item">Item</abbr></a></td>
+                <td>$isNamedOrCallableOrItem</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>$this|<a href="../Pouch/Container/Item.html"><abbr title="Pouch\Container\Item">Item</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
                     <h3 id="method_has">
-        <div class="location">at         line 237</div>
+        <div class="location">at         line 290</div>
         <code>                    bool
     <strong>has</strong>(string $key)
         </code>
@@ -1479,7 +1477,7 @@ If an argument is provided: Only the first one will be considered and it must be
             </div>
                     <div class="method-item">
                     <h3 id="method_remove">
-        <div class="location">at         line 249</div>
+        <div class="location">at         line 302</div>
         <code>                    <a href="../Pouch/Pouch.html"><abbr title="Pouch\Pouch">Pouch</abbr></a>
     <strong>remove</strong>(string $key)
         </code>
@@ -1518,8 +1516,38 @@ If an argument is provided: Only the first one will be considered and it must be
 
             </div>
                     <div class="method-item">
+                    <h3 id="method_getHookManager">
+        <div class="location">at         line 316</div>
+        <code>                    <a href="../Pouch/Helpers/HookManager.html"><abbr title="Pouch\Helpers\HookManager">HookManager</abbr></a>
+    <strong>getHookManager</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Returns the hook manager.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../Pouch/Helpers/HookManager.html"><abbr title="Pouch\Helpers\HookManager">HookManager</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
                     <h3 id="method___toString">
-        <div class="location">at         line 263</div>
+        <div class="location">at         line 326</div>
         <code>                    string
     <strong>__toString</strong>()
         </code>
@@ -1548,8 +1576,38 @@ If an argument is provided: Only the first one will be considered and it must be
 
             </div>
                     <div class="method-item">
+                    <h3 id="method_count">
+        <div class="location">at         line 341</div>
+        <code>                    int
+    <strong>count</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Count elements of the container.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>int</td>
+            <td>The custom count as an integer.</td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
                     <h3 id="method_validateData">
-        <div class="location">at         line 280</div>
+        <div class="location">at         line 353</div>
         <code>            protected        void
     <strong>validateData</strong>(mixed $data)
         </code>

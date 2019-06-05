@@ -88,6 +88,27 @@
     
     
     
+            <h2>Properties</h2>
+
+            <table class="table table-condensed">
+                    <tr>
+                <td class="type" id="property_startPath">
+                    static                                                            string|null
+                </td>
+                <td>$startPath</td>
+                <td class="last">The path to be scanned.</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td class="type" id="property_loadDev">
+                    static                                                            bool
+                </td>
+                <td>$loadDev</td>
+                <td class="last">Include autoload-dev in results.</td>
+                <td></td>
+            </tr>
+            </table>
+
     
             <h2>Methods</h2>
 
@@ -97,19 +118,10 @@
                     static&nbsp;
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_setRoot">setRoot</a>(string $dir)
+                    <a href="#method_bootstrap">bootstrap</a>(string $root, string|null $startPath, bool $loadDev = false)
         
-                                            <p>Set the application's root.</p>                </div>
-                <div class="col-md-2"></div>
-            </div>
-                    <div class="row">
-                <div class="col-md-2 type">
-                    static&nbsp;
-                </div>
-                <div class="col-md-8 type">
-                    <a href="#method_loadDev">loadDev</a>(bool $load = false)
-        
-                                            <p>Choose whether to include autoload-dev in the results.</p>                </div>
+                                            <p class="no-description">No description</p>
+                                    </div>
                 <div class="col-md-2"></div>
             </div>
                     <div class="row">
@@ -117,7 +129,7 @@
                     static&nbsp;array
                 </div>
                 <div class="col-md-8 type">
-                    <a href="#method_getClassesInNamespace">getClassesInNamespace</a>(string $namespace)
+                    <a href="#method_unfold">unfold</a>(string $baseNamespace)
         
                                             <p>Get all sub-namespaces recursively for a namespace.</p>                </div>
                 <div class="col-md-2"></div>
@@ -129,56 +141,33 @@
 
             <div id="method-details">
                     <div class="method-item">
-                    <h3 id="method_setRoot">
-        <div class="location">at         line 30</div>
+                    <h3 id="method_bootstrap">
+        <div class="location">at         line 39</div>
         <code>        static            
-    <strong>setRoot</strong>(string $dir)
+    <strong>bootstrap</strong>(string $root, string|null $startPath, bool $loadDev = false)
         </code>
     </h3>
     <div class="details">
             
     
 
-                    <div class="method-description">
-                                    <p>Set the application's root.</p>                                                </div>
                 <div class="tags">
                             <h4>Parameters</h4>
 
                     <table class="table table-condensed">
                     <tr>
                 <td>string</td>
-                <td>$dir</td>
-                <td>string</td>
+                <td>$root</td>
+                <td></td>
             </tr>
-            </table>
-
-            
-            
-            
-                    </div>
-    </div>
-
-            </div>
-                    <div class="method-item">
-                    <h3 id="method_loadDev">
-        <div class="location">at         line 44</div>
-        <code>        static            
-    <strong>loadDev</strong>(bool $load = false)
-        </code>
-    </h3>
-    <div class="details">
-            
-    
-
-                    <div class="method-description">
-                                    <p>Choose whether to include autoload-dev in the results.</p>                                                </div>
-                <div class="tags">
-                            <h4>Parameters</h4>
-
-                    <table class="table table-condensed">
+                    <tr>
+                <td>string|null</td>
+                <td>$startPath</td>
+                <td></td>
+            </tr>
                     <tr>
                 <td>bool</td>
-                <td>$load</td>
+                <td>$loadDev</td>
                 <td></td>
             </tr>
             </table>
@@ -191,10 +180,10 @@
 
             </div>
                     <div class="method-item">
-                    <h3 id="method_getClassesInNamespace">
-        <div class="location">at         line 58</div>
+                    <h3 id="method_unfold">
+        <div class="location">at         line 60</div>
         <code>        static            array
-    <strong>getClassesInNamespace</strong>(string $namespace)
+    <strong>unfold</strong>(string $baseNamespace)
         </code>
     </h3>
     <div class="details">
@@ -209,8 +198,8 @@
                     <table class="table table-condensed">
                     <tr>
                 <td>string</td>
-                <td>$namespace</td>
-                <td>string</td>
+                <td>$baseNamespace</td>
+                <td></td>
             </tr>
             </table>
 

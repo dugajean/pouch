@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="index, follow, all" />
+    <title>Pouch\Helpers\HookManager | Pouch API</title>
+
+            <link rel="stylesheet" type="text/css" href="../../css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="../../css/bootstrap-theme.min.css">
+        <link rel="stylesheet" type="text/css" href="../../css/sami.css">
+        <script src="../../js/jquery-1.11.1.min.js"></script>
+        <script src="../../js/bootstrap.min.js"></script>
+        <script src="../../js/typeahead.min.js"></script>
+        <script src="../../sami.js"></script>
+        <meta name="MobileOptimized" content="width">
+        <meta name="HandheldFriendly" content="true">
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+    
+    
+    </head>
+
+    <body id="class" data-name="class:Pouch_Helpers_HookManager" data-root-path="../../">
+            <div id="content">
+        <div id="left-column">
+                <div id="control-panel">
+                <script>
+            $('option[data-version="'+window.projectVersion+'"]').prop('selected', true);
+        </script>
+        <form id="search-form" action="../../search.html" method="GET">
+            <span class="glyphicon glyphicon-search"></span>
+            <input name="search"
+                   class="typeahead form-control"
+                   type="search"
+                   placeholder="Search">
+        </form>
+    </div>
+
+                <div id="api-tree"></div>
+
+        </div>
+        <div id="right-column">
+                <nav id="site-nav" class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-elements">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="../../index.html">Pouch API</a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-elements">
+                <ul class="nav navbar-nav">
+                    <li><a href="../../classes.html">Classes</a></li>
+                                            <li><a href="../../namespaces.html">Namespaces</a></li>
+                                        <li><a href="../../interfaces.html">Interfaces</a></li>
+                    <li><a href="../../traits.html">Traits</a></li>
+                    <li><a href="../../doc-index.html">Index</a></li>
+                    <li><a href="../../search.html">Search</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+                        <div class="namespace-breadcrumbs">
+            <ol class="breadcrumb">
+                <li><span class="label label-default">class</span></li>
+                        <li><a href="../../Pouch.html">Pouch</a></li><li class="backslash">\</li><li><a href="../../Pouch/Helpers.html">Helpers</a></li><li class="backslash">\</li><li>HookManager</li>
+            </ol>
+        </div>
+                <div id="page-content">
+                
+    <div class="page-header">
+        <h1>
+            HookManager
+                
+        </h1>
+    </div>
+
+    <p>    class
+    <strong>HookManager</strong>
+</p>
+
+        
+    
+
+    
+    
+    
+    
+            <h2>Methods</h2>
+
+            <div class="container-fluid underlined">
+                    <div class="row">
+                <div class="col-md-2 type">
+                    static&nbsp;<a href="../../Pouch/Helpers/HookManager.html"><abbr title="Pouch\Helpers\HookManager">HookManager</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_factory">factory</a>()
+        
+                                            <p>Returns an instance of self.</p>                </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../Pouch/Helpers/HookManager.html"><abbr title="Pouch\Helpers\HookManager">HookManager</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_addBeforeGet">addBeforeGet</a>(array $whenKeys, <a target="_blank" href="http://php.net/Closure">Closure</a> $callback)
+        
+                                            <p class="no-description">No description</p>
+                                    </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../Pouch/Helpers/HookManager.html"><abbr title="Pouch\Helpers\HookManager">HookManager</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_addAfterGet">addAfterGet</a>(array $whenKeys, <a target="_blank" href="http://php.net/Closure">Closure</a> $callback)
+        
+                                            <p class="no-description">No description</p>
+                                    </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../Pouch/Helpers/HookManager.html"><abbr title="Pouch\Helpers\HookManager">HookManager</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_addBeforeSet">addBeforeSet</a>(array $whenKeys, <a target="_blank" href="http://php.net/Closure">Closure</a> $callback)
+        
+                                            <p class="no-description">No description</p>
+                                    </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    <a href="../../Pouch/Helpers/HookManager.html"><abbr title="Pouch\Helpers\HookManager">HookManager</abbr></a>
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_addAfterSet">addAfterSet</a>(array $whenKeys, <a target="_blank" href="http://php.net/Closure">Closure</a> $callback)
+        
+                                            <p class="no-description">No description</p>
+                                    </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    $this
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_addBeforeEachGet">addBeforeEachGet</a>(<a target="_blank" href="http://php.net/Closure">Closure</a> $callback)
+        
+                                            <p class="no-description">No description</p>
+                                    </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    $this
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_addAfterEachGet">addAfterEachGet</a>(<a target="_blank" href="http://php.net/Closure">Closure</a> $callback)
+        
+                                            <p class="no-description">No description</p>
+                                    </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    $this
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_addBeforeEachSet">addBeforeEachSet</a>(<a target="_blank" href="http://php.net/Closure">Closure</a> $callback)
+        
+                                            <p class="no-description">No description</p>
+                                    </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    $this
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_addAfterEachSet">addAfterEachSet</a>(<a target="_blank" href="http://php.net/Closure">Closure</a> $callback)
+        
+                                            <p class="no-description">No description</p>
+                                    </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    $this
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_runBeforeGet">runBeforeGet</a>(<a href="../../Pouch/Pouch.html"><abbr title="Pouch\Pouch">Pouch</abbr></a> $pouch, string $currentKey)
+        
+                                            <p class="no-description">No description</p>
+                                    </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    $this
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_runAfterGet">runAfterGet</a>(<a href="../../Pouch/Pouch.html"><abbr title="Pouch\Pouch">Pouch</abbr></a> $pouch, string $currentKey, <a href="../../Pouch/Container/Item.html"><abbr title="Pouch\Container\Item">Item</abbr></a> $item)
+        
+                                            <p class="no-description">No description</p>
+                                    </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    $this
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_runBeforeSet">runBeforeSet</a>(<a href="../../Pouch/Pouch.html"><abbr title="Pouch\Pouch">Pouch</abbr></a> $pouch, string $currentKey)
+        
+                                            <p class="no-description">No description</p>
+                                    </div>
+                <div class="col-md-2"></div>
+            </div>
+                    <div class="row">
+                <div class="col-md-2 type">
+                    $this
+                </div>
+                <div class="col-md-8 type">
+                    <a href="#method_runAfterSet">runAfterSet</a>(<a href="../../Pouch/Pouch.html"><abbr title="Pouch\Pouch">Pouch</abbr></a> $pouch, string $currentKey, <a href="../../Pouch/Container/Item.html"><abbr title="Pouch\Container\Item">Item</abbr></a> $item)
+        
+                                            <p class="no-description">No description</p>
+                                    </div>
+                <div class="col-md-2"></div>
+            </div>
+            </div>
+
+
+        <h2>Details</h2>
+
+            <div id="method-details">
+                    <div class="method-item">
+                    <h3 id="method_factory">
+        <div class="location">at         line 26</div>
+        <code>        static            <a href="../../Pouch/Helpers/HookManager.html"><abbr title="Pouch\Helpers\HookManager">HookManager</abbr></a>
+    <strong>factory</strong>()
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                    <div class="method-description">
+                                    <p>Returns an instance of self.</p>                                                </div>
+                <div class="tags">
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Pouch/Helpers/HookManager.html"><abbr title="Pouch\Helpers\HookManager">HookManager</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_addBeforeGet">
+        <div class="location">at         line 42</div>
+        <code>                    <a href="../../Pouch/Helpers/HookManager.html"><abbr title="Pouch\Helpers\HookManager">HookManager</abbr></a>
+    <strong>addBeforeGet</strong>(array $whenKeys, <a target="_blank" href="http://php.net/Closure">Closure</a> $callback)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$whenKeys</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a target="_blank" href="http://php.net/Closure">Closure</a></td>
+                <td>$callback</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Pouch/Helpers/HookManager.html"><abbr title="Pouch\Helpers\HookManager">HookManager</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_addAfterGet">
+        <div class="location">at         line 53</div>
+        <code>                    <a href="../../Pouch/Helpers/HookManager.html"><abbr title="Pouch\Helpers\HookManager">HookManager</abbr></a>
+    <strong>addAfterGet</strong>(array $whenKeys, <a target="_blank" href="http://php.net/Closure">Closure</a> $callback)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$whenKeys</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a target="_blank" href="http://php.net/Closure">Closure</a></td>
+                <td>$callback</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Pouch/Helpers/HookManager.html"><abbr title="Pouch\Helpers\HookManager">HookManager</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_addBeforeSet">
+        <div class="location">at         line 64</div>
+        <code>                    <a href="../../Pouch/Helpers/HookManager.html"><abbr title="Pouch\Helpers\HookManager">HookManager</abbr></a>
+    <strong>addBeforeSet</strong>(array $whenKeys, <a target="_blank" href="http://php.net/Closure">Closure</a> $callback)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$whenKeys</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a target="_blank" href="http://php.net/Closure">Closure</a></td>
+                <td>$callback</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Pouch/Helpers/HookManager.html"><abbr title="Pouch\Helpers\HookManager">HookManager</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_addAfterSet">
+        <div class="location">at         line 75</div>
+        <code>                    <a href="../../Pouch/Helpers/HookManager.html"><abbr title="Pouch\Helpers\HookManager">HookManager</abbr></a>
+    <strong>addAfterSet</strong>(array $whenKeys, <a target="_blank" href="http://php.net/Closure">Closure</a> $callback)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td>array</td>
+                <td>$whenKeys</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a target="_blank" href="http://php.net/Closure">Closure</a></td>
+                <td>$callback</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td><a href="../../Pouch/Helpers/HookManager.html"><abbr title="Pouch\Helpers\HookManager">HookManager</abbr></a></td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_addBeforeEachGet">
+        <div class="location">at         line 85</div>
+        <code>                    $this
+    <strong>addBeforeEachGet</strong>(<a target="_blank" href="http://php.net/Closure">Closure</a> $callback)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a target="_blank" href="http://php.net/Closure">Closure</a></td>
+                <td>$callback</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>$this</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_addAfterEachGet">
+        <div class="location">at         line 95</div>
+        <code>                    $this
+    <strong>addAfterEachGet</strong>(<a target="_blank" href="http://php.net/Closure">Closure</a> $callback)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a target="_blank" href="http://php.net/Closure">Closure</a></td>
+                <td>$callback</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>$this</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_addBeforeEachSet">
+        <div class="location">at         line 105</div>
+        <code>                    $this
+    <strong>addBeforeEachSet</strong>(<a target="_blank" href="http://php.net/Closure">Closure</a> $callback)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a target="_blank" href="http://php.net/Closure">Closure</a></td>
+                <td>$callback</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>$this</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_addAfterEachSet">
+        <div class="location">at         line 115</div>
+        <code>                    $this
+    <strong>addAfterEachSet</strong>(<a target="_blank" href="http://php.net/Closure">Closure</a> $callback)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a target="_blank" href="http://php.net/Closure">Closure</a></td>
+                <td>$callback</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>$this</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_runBeforeGet">
+        <div class="location">at         line 126</div>
+        <code>                    $this
+    <strong>runBeforeGet</strong>(<a href="../../Pouch/Pouch.html"><abbr title="Pouch\Pouch">Pouch</abbr></a> $pouch, string $currentKey)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../Pouch/Pouch.html"><abbr title="Pouch\Pouch">Pouch</abbr></a></td>
+                <td>$pouch</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$currentKey</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>$this</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_runAfterGet">
+        <div class="location">at         line 138</div>
+        <code>                    $this
+    <strong>runAfterGet</strong>(<a href="../../Pouch/Pouch.html"><abbr title="Pouch\Pouch">Pouch</abbr></a> $pouch, string $currentKey, <a href="../../Pouch/Container/Item.html"><abbr title="Pouch\Container\Item">Item</abbr></a> $item)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../Pouch/Pouch.html"><abbr title="Pouch\Pouch">Pouch</abbr></a></td>
+                <td>$pouch</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$currentKey</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a href="../../Pouch/Container/Item.html"><abbr title="Pouch\Container\Item">Item</abbr></a></td>
+                <td>$item</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>$this</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_runBeforeSet">
+        <div class="location">at         line 149</div>
+        <code>                    $this
+    <strong>runBeforeSet</strong>(<a href="../../Pouch/Pouch.html"><abbr title="Pouch\Pouch">Pouch</abbr></a> $pouch, string $currentKey)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../Pouch/Pouch.html"><abbr title="Pouch\Pouch">Pouch</abbr></a></td>
+                <td>$pouch</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$currentKey</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>$this</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+                    <div class="method-item">
+                    <h3 id="method_runAfterSet">
+        <div class="location">at         line 161</div>
+        <code>                    $this
+    <strong>runAfterSet</strong>(<a href="../../Pouch/Pouch.html"><abbr title="Pouch\Pouch">Pouch</abbr></a> $pouch, string $currentKey, <a href="../../Pouch/Container/Item.html"><abbr title="Pouch\Container\Item">Item</abbr></a> $item)
+        </code>
+    </h3>
+    <div class="details">
+            
+    
+
+                <div class="tags">
+                            <h4>Parameters</h4>
+
+                    <table class="table table-condensed">
+                    <tr>
+                <td><a href="../../Pouch/Pouch.html"><abbr title="Pouch\Pouch">Pouch</abbr></a></td>
+                <td>$pouch</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td>string</td>
+                <td>$currentKey</td>
+                <td></td>
+            </tr>
+                    <tr>
+                <td><a href="../../Pouch/Container/Item.html"><abbr title="Pouch\Container\Item">Item</abbr></a></td>
+                <td>$item</td>
+                <td></td>
+            </tr>
+            </table>
+
+            
+                            <h4>Return Value</h4>
+
+                    <table class="table table-condensed">
+        <tr>
+            <td>$this</td>
+            <td></td>
+        </tr>
+    </table>
+
+            
+            
+                    </div>
+    </div>
+
+            </div>
+            </div>
+
+    
+            </div>
+                <div id="footer">
+        Generated by <a href="http://sami.sensiolabs.org/">Sami, the API Documentation Generator</a>.
+    </div>
+
+        </div>
+    </div>
+    </body>
+
+</html>
