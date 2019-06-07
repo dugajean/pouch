@@ -66,16 +66,11 @@ final class ClassTree
             throw new NotFoundException('This namespace cannot be found or is not registered in composer.json');
         }
 
-        $inPhar = Phar::running();
         $finderPath = (new Finder)->in($path)->files()->name('*.php');
 
         /** @var Finder $finderPath */
         foreach ($finderPath as $phpFile) {
-            $realPath = $inPhar
-                ? $phpFile->getPath() . '/' . $phpFile->getFilename()
-                : $phpFile->getRealPath();
-
-            $content = file_get_contents($realPath);
+            $content = $phpFile->getContents();
             $phpToken = token_get_all($content);
 
             $namespace = '';
